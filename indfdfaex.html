@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>ERGOTUNER GITAR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+ body{
+   font-family: Arial, sans-serif;
+   text-align:center;
+   margin:20px;
+   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+   background:radial-gradient(circle, rgb(168, 164, 164), white);
+   color:#000;
+ }
+ h1{margin-bottom:10px}
+ #note{font-size:50px;font-weight:bold;margin:10px 0}
+ #freq{font-size:17px;color:#111}
+ button{margin-top:15px;padding:8px 16px;font-size:14px;cursor:pointer;border:1px solid #000;background:#eee;border-radius:8px}
+ #pesan{margin-top:10px;color:red;font-size:14px}
+ footer{margin-top:40px;font-size:13px;color:#444;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<!-- Tombol kanan & kiri atas -->
+<button id="1312" style="position:fixed; top:10px; right:10px;">guide</button>
+<button id="CHORD" style="position:fixed; top:10px; left:10px;">chord</button>
+
+<h1 style="margin-top:60px;">
+  <img src="ERGOPANTEK.png" width="85" style="vertical-align:middle">
+  <span style="margin-left:10px;font-weight:bold;font-size:22px;">ERGOTUNER GITAR</span>
+</h1>
+
+<div id="note">-</div>
+<div id="freq">- Hz</div>
+<button id="tombol">Mulai Tuning 🎸</button>
+<div id="pesan"></div>
+
+<footer>
+  <div style="display:flex;align-items:center">
+    <img src="gitar.png" width="35" style="margin-right:6px">
+    <span style="font-weight:bold">SMA 1 LANGKE REMBONG</span>
+  </div>
+  <div style="display:flex;align-items:center">
+    <img src="ERGOPANTEK.png" width="35" style="margin-right:6px">
+    <span style="font-weight:bold">© ERGOISME 2025</span>
+  </div>
+</footer>
+
+<script>
+let audCtx, mic, membacasuara, simpansuara
+let notPrev = null, wktPrev = 0
+let nada2 = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+
+document.getElementById("tombol").onclick = async function(){
+   if(audCtx) return
+   try {
+     audCtx = new (window.AudioContext||window.webkitAudioContext)()
+     if (audCtx.state === "suspended") {
+        await audCtx.resume()
+     }
+     let str = await navigator.mediaDevices.getUserMedia({audio:true})
+     mic = audCtx.createMediaStreamSource(str)
+     membacasuara = audCtx.createAnalyser()
+     membacasuara.fftSize = 2048
+     simpansuara = new Float32Array(membacasuara.fftSize)
+     mic.connect(membacasuara)
+     this.disabled = true
+     this.innerText = "Mendengarkan..."
+     document.getElementById("pesan").innerText = ""
+     LAKO()
+   } catch(e){
+     document.getElementById("pesan").innerText = "Mic gagal: " + e.message
+     audCtx = null
+   }
+}
+
+function LAKO(){
+   membacasuara.getFloatTimeDomainData(simpansuara) 
+   let frek = korelasi(simpansuara, audCtx.sampleRate)
+   if(frek>0){
+     let jaraknada = Math.round(12*Math.log(frek/440)/Math.log(2)+69)
+     let nama = nada2[((jaraknada%12)+12)%12]
+     let oktaf = Math.floor(jaraknada/12)-1
+     let hasil = nama+oktaf
+     let skrg = performance.now()
+
+     if(notPrev==null || hasil!=notPrev || skrg-wktPrev>=1200){
+        notPrev=hasil; wktPrev=skrg
+        document.getElementById("note").innerText=hasil
+        document.getElementById("freq").innerText=frek.toFixed(1)+" Hz"
+     }
+   }
+   setTimeout(LAKO, 50) // lebih ringan di Android
+}
+
+function korelasi(buf, rate){
+  let SIZE=buf.length, rms=0
+  for(let i=0;i<SIZE;i++){rms+=buf[i]*buf[i]}
+  rms=Math.sqrt(rms/SIZE)
+  if(rms<0.01) return 0
+
+  let r1=0,r2=SIZE-1,thr=0.2
+  for(let i=0;i<SIZE/2;i++){if(Math.abs(buf[i])<thr){r1=i;break}}
+  for(let i=1;i<SIZE/2;i++){if(Math.abs(buf[SIZE-i])<thr){r2=SIZE-i;break}}
+  buf=buf.slice(r1,r2); SIZE=buf.length
+
+  let c=new Array(SIZE).fill(0)
+  for(let i=0;i<SIZE;i++){
+    for(let j=0;j<SIZE-i;j++){c[i]+=buf[j]*buf[j+i]}
+  }
+  let d=0; while(c[d]>c[d+1]) d++
+  let maxval=-1,pos=-1
+  for(let i=d;i<SIZE;i++){if(c[i]>maxval){maxval=c[i];pos=i}}
+  if(pos==-1) return 0
+  return rate/pos
+}
+
+document.getElementById("1312").onclick = ()=> window.open("1312.html","_blank")
+document.getElementById("CHORD").onclick = ()=> window.open("h.html","_blank")
+</script>
+</body>
+</html>
