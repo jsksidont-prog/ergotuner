@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>ERGOTUNER GITAR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+ body{
+   font-family: Arial, sans-serif;
+   text-align:center;
+   margin:20px;
+   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+   background:radial-gradient(circle, rgb(168, 164, 164), white);
+   color:#000;
+ }
+ h1{margin-bottom:10px}
+ #note{font-size:50px;font-weight:bold;margin:10px 0}
+ #freq{font-size:17px;color:#111}
+ button{margin-top:15px;padding:9px 25px;font-size:14px;cursor:pointer;border:1px solid #000;background:#eee;border-radius:8px}
+ #pesan{margin-top:25px;color:rgb(255, 0, 0);font-size:100px}
+ footer{margin-top:40px;font-size:13px;color:#444;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<button id="1312" style="position:fixed; top:10px; right:50px;">guide</button>
+<button id="CHORD" style="position:fixed; top:10px; left:50px;">chord</button>
+
+<h1 style="margin-top:10px;">
+  <img src="ERGOPANTEK.png" width="100" style="vertical-align:middle">
+  <span style="margin-left:10px;margin-top :30px ;font-weight:bold ;font-size:40px;">ERGOTUNER GITAR</span>
+</h1>
+
+<div id="note">-</div>
+<div id="freq">- Hz</div>
+<button id="tombol">HAYUKKK!</button>
+<div id="pesan"></div>
+
+<footer style="margin-top:40px;font-size:13px;color:#444;
+               display:flex;justify-content:space-between;
+               align-items:center;flex-wrap:wrap">
+
+  <div style="display:flex;align-items:center">
+    <img src="gitar.png" width="35" style="margin-right:6px">
+    <span style="font-weight:bold">SMAN 1 LANGKE REMBONG</span>
+  </div>
+
+  <div style="text-align:center; flex:1 ; margin-bottom: 0;">
+    <img src="MONYONG.png" width="250">
+  </div>
+
+  <div style="display:flex;align-items:center">
+    <img src="ERGOPANTEK.png" width="60" style="margin-right:6px">
+    <span style="font-weight:bold; font-size:20px;">© ERGOISME 2025</span>
+  </div>
+</footer>
+
+
+<script>
+var audiokonteks,mic,kawegelombang,simpanreweng; 
+var nada=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+let prevNote=null, lastTime=0;
+
+document.getElementById("tombol").onclick= async function(){
+ if(audiokonteks) return;
+ try{
+   audiokonteks=new (window.AudioContext||window.webkitAudioContext)();
+   if(audiokonteks.state==="suspended"){ await audiokonteks.resume(); }
+   let st=await navigator.mediaDevices.getUserMedia({audio:true});
+   mic=audiokonteks.createMediaStreamSource(st);
+   kawegelombang=audiokonteks.createAnalyser(); kawegelombang.fftSize=2048;
+   simpanreweng=new Float32Array(kawegelombang.fftSize);
+   mic.connect(kawegelombang);
+   this.disabled=true; this.innerText="dengeeee...";
+   document.getElementById("pesan").innerText="";
+   lako()
+ }catch(e){
+   document.getElementById("pesan").innerText="OE ELA PANDE IZIN MIC E: "+e.message;
+   audiokonteks=null
+ }
+}
+
+function lako(){
+ kawegelombang.getFloatTimeDomainData(simpanreweng);
+ let frekuensi=korelasi(simpanreweng,audiokonteks.sampleRate);
+ if(frekuensi>0){
+   let j=Math.round(12*Math.log(frekuensi/440)/Math.log(2)+69);
+   let nm=nada[((j%12)+12)%12]; 
+   let ok=Math.floor(j/12)-1; 
+   let hasil=nm+ok;
+   let now=performance.now();
+   if(prevNote==null||hasil!=prevNote||now-lastTime>1200){
+      prevNote=hasil; lastTime=now;
+      document.getElementById("note").innerText=hasil;
+      document.getElementById("freq").innerText=frekuensi.toFixed(1)+" Hz";
+   }
+ }
+ setTimeout(lako,55) 
+}
+
+function korelasi(b,r){
+ var sz=b.length,rms=0;
+ for(let i=0;i<sz;i++){ rms+=b[i]*b[i]; }
+ rms=Math.sqrt(rms/sz);
+ if(rms<0.01) return 0;
+ var r1=0,r2=sz-1,thr=0.2;
+ for(let i=0;i<sz/2;i++){ if(Math.abs(b[i])<thr){r1=i;break;} }
+ for(let i=1;i<sz/2;i++){ if(Math.abs(b[sz-i])<thr){r2=sz-i;break;} }
+ b=b.slice(r1,r2); sz=b.length;
+ let c=new Array(sz).fill(0);
+ for(var i=0;i<sz;i++){ for(var j=0;j<sz-i;j++){ c[i]+=b[j]*b[j+i]; } }
+ let d=0; while(c[d]>c[d+1]) d++;
+ let mv=-1,p=-1;
+ for(var i=d;i<sz;i++){ if(c[i]>mv){ mv=c[i]; p=i; } }
+ if(p==-1)return 0;
+ return r/p
+}
+
+document.getElementById("1312").onclick=function(){ window.open("1312.html","_blank"); }
+document.getElementById("CHORD").onclick=function(){ window.open("h.html","_blank"); }
+</script>
+
+</body>
+</html>
