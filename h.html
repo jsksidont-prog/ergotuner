@@ -16,40 +16,23 @@
 
    h1 {
      margin-bottom: 25px;
-     font-size: 28px;
+     font-size: 40px;
      border-bottom: 2px solid #ccc;
      padding-bottom: 25px;
      text-align: center;
+     margin-top: 50px;
+     font-weight: bolder;
    }
 
 
-   #search {
-     margin: 20px auto 35px;
-     padding: 10px;
-     width: 80%;
-     max-width: 320px;
-     border-radius: 6px;
-     border: 1px solid #aaa;
-     font-size: 15px;
-   }
 
-   #CHORD {
-  position: sticky;
-  top: 10px;   
-  left: 50px;
-  background-color: #4CAF50;
-  color: #eee;
-  border: 0;
-  padding: 9px 25px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+
 
 
    
    .galeri {
      display: flex;
-     justify-content: center;
+     justify-content: left;
      gap: 35px;
      flex-wrap: wrap;
    }
@@ -106,28 +89,65 @@
 </head>
 <body>
 
-  <h1>LIST CHORD</h1>
+  <h1 style="font-size: 40px;font-weight: bolder;">LIST CHORD</h1>
 
   <button id="CHORD" 
-  style="position:absolute;cursor: pointer; top:20px; left:10px;background-color:#4CAF50; color:#eee; border:0; padding:9px 25px; border-radius:8px;">
+  style="position:absolute;cursor: pointer; top:20px; left:10px;background-color:#4CAF50; color:#eee; border:0; padding:10px 30px; border-radius:8px;">
   chord
 </button>
 
-  
-  <input type="text" id="search" placeholder="Cari chord...">
+<button id="guide" style="top: 20px;right: 10px; padding : 10px 30px ;border-radius: 8px;border:0 ;position: absolute;cursor: pointer; background-color: #4CAF50; color: #eee;"> guide</button>
 
   
+
+  <H1 style="border: 0px;font-weight: bolder;">A</H1>
+  <h2 style="font-family: 'Courier New', Courier, monospace;font-weight: bold;text-align: left; ">A MAJOR</h2>
   <div class="galeri" id="chordList">
+    <div class="item">
+      <img src="A.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AM2.png" alt="Chord ">
+    </div>
+  </div>
+    
+  <h2 style="font-family: 'Courier New', Courier, monospace;font-weight: bold;text-align: left; ">A MINOR</h2>
+  <div class="galeri" id="chordList">
+    <div class="item">
+      <img src="AM.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AM3.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AM5.png" alt="Chord">
+    </div>
+  </div>
+
+   <h2 style="font-family: 'Courier New', Courier, monospace;font-weight: bold;text-align: left; ">A5</h2>
+  <div class="galeri" id="chordList">
+    <div class="item">
+      <img src="AM.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AM3.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AM5.png" alt="Chord">
+    </div>
+  </div>
+
+    <div class="galeri" id="chordList">
     <div class="item">
       <img src="A.png" alt="Chord A Mayor">
       <p>A MAYOR</p>
     </div>
     <div class="item">
-      <img src="B.png" alt="Chord B Mayor">
+      <img src="A.png" alt="Chord B Mayor">
       <p>B MAYOR</p>
     </div>
     <div class="item">
-      <img src="C.png" alt="Chord C Mayor">
+      <img src="AM.png" alt="Chord C Mayor">
       <p>C MAYOR</p>
     </div>
     <div class="item">
@@ -191,23 +211,11 @@
 
   <script>
 
-    const searchInput = document.getElementById("search");
-    const chordList = document.getElementById("chordList");
-    const items = chordList.getElementsByClassName("item");
 
-    searchInput.addEventListener("keyup", function() {
-      let filter = searchInput.value.toLowerCase();
-      for (let i = 0; i < items.length; i++) {
-        let text = items[i].innerText.toLowerCase();
-        if (text.includes(filter)) {
-          items[i].style.display = "";
-        } else {
-          items[i].style.display = "none";
-        }
-      }
-    });
 
     document.getElementById ("CHORD").onclick=function(){ window.open("index.html","_blank"); }
+
+    document.getElementById ("guide").onclick=function() {window.open("1312.html","_blank"); }
   </script>
 
 </body>
