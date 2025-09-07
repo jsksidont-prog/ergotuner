@@ -12,21 +12,37 @@
      background: #f4f4f4;
      text-align: center;
      color: #222;
+     background: linear-gradient(to bottom, #f9f9f9, #fff);
+     max-width: 650px;
+     margin: auto;
    }
 
-   h1 {
-     margin-bottom: 25px;
-     font-size: 40px;
-     border-bottom: 2px solid #ccc;
-     padding-bottom: 25px;
-     text-align: center;
-     margin-top: 50px;
-     font-weight: bolder;
-   }
+    h1 {
+      text-align: center;
+      font-size: 35px;
+      margin-bottom: 25px;
+      border-bottom: 4px solid #ccc;
+      padding-bottom: 10px;
+      margin-top: 50px;
+      display: inline-block;
+      font-family: Arial, Helvetica, sans-serif;
+      
+    }
 
-
-
-
+    h2 {
+      font-size: 35px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      margin-top: 30px;
+    }
+     
+    h3{
+      font-size: 20px;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+     
 
 
    
@@ -55,22 +71,6 @@
      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
    }
 
-   .item p {
-     margin-top: 10px;
-     font-weight: bold;
-     font-size: 16px;
-     color: #333;
-   }
-
- 
-   @media(max-width:600px) {
-     .galeri {
-       gap: 20px;
-     }
-     .item {
-       width: 120px;
-     }
-   }
 
   
    footer {
@@ -89,20 +89,21 @@
 </head>
 <body>
 
-  <h1 style="font-size: 40px;font-weight: bolder;">LIST CHORD</h1>
-
+  <h1>LIST CHORD</h1>
+  
+</div>
   <button id="CHORD" 
   style="position:absolute;cursor: pointer; top:20px; left:10px;background-color:#4CAF50; color:#eee; border:0; padding:10px 30px; border-radius:8px;">
-  chord
+  Tuner
 </button>
 
 <button id="guide" style="top: 20px;right: 10px; padding : 10px 30px ;border-radius: 8px;border:0 ;position: absolute;cursor: pointer; background-color: #4CAF50; color: #eee;"> guide</button>
 
   
 
-  <H1 style="border: 0px;font-weight: bolder;">A</H1>
-  <h2 style="font-family: 'Courier New', Courier, monospace;font-weight: bold;text-align: left; ">A MAJOR</h2>
-  <div class="galeri" id="chordList">
+  <H2 style="border: 0px;">A</H2>
+  <h3 style="text-align: left; ">A MAJOR</h3>
+  <div class="galeri" >
     <div class="item">
       <img src="A.png" alt="Chord ">
     </div>
@@ -111,8 +112,8 @@
     </div>
   </div>
     
-  <h2 style="font-family: 'Courier New', Courier, monospace;font-weight: bold;text-align: left; ">A MINOR</h2>
-  <div class="galeri" id="chordList">
+  <h3 style="text-align: left; ">A MINOR</h3>
+  <div class="galeri" >
     <div class="item">
       <img src="AM.png" alt="Chord ">
     </div>
@@ -124,89 +125,128 @@
     </div>
   </div>
 
-   <h2 style="font-family: 'Courier New', Courier, monospace;font-weight: bold;text-align: left; ">A5</h2>
-  <div class="galeri" id="chordList">
+      <div class="item">
+  </div>
+   <h3 style="text-align: left; ">A5</h3>
+  <div class="galeri">
     <div class="item">
-      <img src="AM.png" alt="Chord ">
+      <img src="A5.png" alt="Chord ">
     </div>
     <div class="item">
-      <img src="AM3.png" alt="Chord ">
+      <img src="A52.png" alt="Chord ">
     </div>
     <div class="item">
-      <img src="AM5.png" alt="Chord">
+      <img src="A53.png" alt="Chord">
     </div>
   </div>
 
-    <div class="galeri" id="chordList">
+    <h3 style="text-align: left; ">A7</h3>
+  <div class="galeri" >
     <div class="item">
-      <img src="A.png" alt="Chord A Mayor">
-      <p>A MAYOR</p>
+      <img src="A7.png" alt="Chord ">
     </div>
     <div class="item">
-      <img src="A.png" alt="Chord B Mayor">
-      <p>B MAYOR</p>
+      <img src="A72.png" alt="Chord ">
     </div>
-    <div class="item">
-      <img src="AM.png" alt="Chord C Mayor">
-      <p>C MAYOR</p>
     </div>
-    <div class="item">
-      <img src="D.png" alt="Chord D Mayor">
-      <p>D MAYOR</p>
-    </div>
-    <div class="item">
-      <img src="E.png" alt="Chord E Mayor">
-      <p>E MAYOR</p>
-    </div>
-    <div class="item">
-      <img src="F.png" alt="Chord F Mayor">
-      <p>F MAYOR</p>
-    </div>
-    <div class="item">
-      <img src="G.png" alt="Chord G Mayor">
-      <p>G MAYOR</p>
-    </div>
-    <div class="item">
-      <img src="AM.png" alt="Chord A Minor">
-      <p>A MINOR</p>
-    </div>
-    <div class="item">
-      <img src="BM.png" alt="Chord B Minor">
-      <p>B MINOR</p>
-    </div>
-    <div class="item">
-      <img src="CM.png" alt="Chord C Minor">
-      <p>C MINOR</p>
-    </div>
-    <div class="item">
-      <img src="DM.png" alt="Chord D Minor">
-      <p>D MINOR</p>
-    </div>
-    <div class="item">
-      <img src="EM.png" alt="Chord E Minor">
-      <p>E MINOR</p>
-    </div>
-    <div class="item">
-      <img src="FM.png" alt="Chord F Minor">
-      <p>F MINOR</p>
-    </div>
-    <div class="item">
-      <img src="GM.png" alt="Chord G Minor">
-      <p>G MINOR</p>
-    </div>
-  </div>
 
+    <h3 style="text-align: left; ">A MAJOR 7 (Amaj7) / AM7</h3>
+  <div class="galeri" >
+    <div class="item">
+      <img src="AMAJ7.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AMAJ72.png" alt="Chord ">
+    </div>
+    </div>
+    
+    <h3 style="text-align: left; ">A MINOR 7 (Am7) </h3>
+  <div class="galeri" >
+    <div class="item">
+      <img src="AM7.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AM71.png" alt="Chord ">
+    </div>
+    </div>
+
+    <H2 style="border: 0px;font-weight: bolder;">A# / Bb</H2>
+    <h3 style="text-align: left; "> A# & Bb </h3>
+  <div class="galeri" >
+    <div class="item">
+      <img src="Ax.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="Axx.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="Bb.png" alt="Chord">
+    </div>
+    <div class="item">
+      <img src="Bb2.png" alt="Chord">
+    </div>
+
+    </div>
+
+    <h3 style="text-align: left; "> A#MINOR & BbMINOR </h3>
+  <div class="galeri" >
+    <div class="item">
+      <img src="AsharpM.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AsharpM2.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="AsharpM3.png" alt="Chord">
+    </div>
+    <div class="item">
+      <img src="BbM1.png" alt="Chord">
+    </div>
+    <div class="item">
+      <img src="BBM2.png" alt="Chord">
+    </div>
+    <div class="item">
+      <img src="BbM3.png" alt="Chord">
+    </div>
+
+    </div>
+    <h3 style="text-align: left; "> A#7 & Bb7 </h3>
+  <div class="galeri">
+    <div class="item">
+      <img src="Asharp51.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="Asharp52.png" alt="Chord ">
+    </div>
+    <div class="item">
+      <img src="Asharp53.png" alt="Chord">
+    </div>
+    <div class="item">
+      <img src="Bb51.png" alt="Chord">
+    </div>
+    <div class="item">
+      <img src="Bb52.png" alt="Chord">
+    </div>
+    <div class="item">
+      <img src="Bb53.png" alt="Chord">
+    </div>
+
+    </div>
+    
  
   <footer>
-    <div style=" display: flex; align-items: center;flex-wrap: wrap;">
-      <img src="ERGOPANTEK.png" width="60" alt="Logo Ergo">
+
+    
+    <div style="width: 100%; display: flex; justify-content: center ;align-items:center;text-align: center;">
+      <img  src="ERGOPANTEK.png" width="60" alt="Logo Ergo">
       <span style="font-weight:bold">© ERGOISME 2025</span>
     </div>
 
+ 
+
     <script async="async" data-cfasync="false" src="//pl27585344.revenuecpmgate.com/e874be7df9381615f960d86381dd7203/invoke.js"></script> <div id="container-e874be7df9381615f960d86381dd7203"></div>
 
-    <script async="async" data-cfasync="false" src="//pl27585344.revenuecpmgate.com/e874be7df9381615f960d86381dd7203/invoke.js"></script>
-<div id="container-e874be7df9381615f960d86381dd7203"></div>
+
   </footer>
 
   <script>
