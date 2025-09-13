@@ -7,22 +7,25 @@
 <style>
  body{
    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-   text-align:center;
-   margin:20px;
-   background:radial-gradient(circle, rgb(168, 164, 164), white);
-   color:#000000;
+   text-align: center;
+   margin: 20px;
+   background: 
+     linear-gradient(rgba(255,255,255,0.6)), 
+     url("ANDIDONT.png") no-repeat center center fixed;
+   background-size: cover;
+   background-attachment: scroll; 
+   color: #000000;
  }
- h1{
-  margin-bottom:10px; 
-  border-bottom: 4px solid #635252;
-       font-size: 40px;
-     padding-bottom: 25px;
-     text-align: center;
-     margin-top: 50px;
-     font-weight: bolder;
-     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 
-}
+ h1{
+   margin-bottom:10px; 
+   font-size: 40px;
+   padding-bottom: 1px;
+   text-align: center;
+   margin-top: 50px;
+   font-weight: bolder;
+   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+ }
 
 #note{
   font-size:50px;
@@ -44,6 +47,7 @@
 }
  #pesan{margin-top:25px;color:rgb(255, 0, 0);font-size:15px}
 
+ 
 
 
 </style>
@@ -96,15 +100,15 @@
 <script>
 var audiokonteks,mic,kawegelombang,simpanreweng; 
 var nada=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
-let prevNote=null, lastTime=0;
+let nadasebelumnya=null, waktuakhir=0;
 
 document.getElementById("tombol").onclick= async function(){
  if(audiokonteks) return;
  try{
    audiokonteks=new (window.AudioContext||window.webkitAudioContext)();
    if(audiokonteks.state==="suspended"){ await audiokonteks.resume(); }
-   let st=await navigator.mediaDevices.getUserMedia({audio:true});
-   mic=audiokonteks.createMediaStreamSource(st);
+   let stream=await navigator.mediaDevices.getUserMedia({audio:true});
+   mic=audiokonteks.createMediaStreamSource(stream);
    kawegelombang=audiokonteks.createAnalyser(); kawegelombang.fftSize=2048;
    simpanreweng=new Float32Array(kawegelombang.fftSize);
    mic.connect(kawegelombang);
@@ -112,7 +116,7 @@ document.getElementById("tombol").onclick= async function(){
    document.getElementById("pesan").innerText="";
    lako()
  }catch(e){
-   document.getElementById("pesan").innerText="OE ELA PANDE IZIN MIC E: "+e.message;
+   document.getElementById("pesan").innerText="OE!!! pande izin mic e: "+e.message;
    audiokonteks=null
  }
 }
@@ -121,18 +125,18 @@ function lako(){
  kawegelombang.getFloatTimeDomainData(simpanreweng);
  let frekuensi=korelasi(simpanreweng,audiokonteks.sampleRate);
  if(frekuensi>0){
-   let j=Math.round(12*Math.log(frekuensi/440)/Math.log(2)+69);
-   let nm=nada[((j%12)+12)%12]; 
-   let ok=Math.floor(j/12)-1; 
-   let hasil=nm+ok;
+   let angkaMIDI=Math.round(12*Math.log(frekuensi/440)/Math.log(2)+69);
+   let namanada=nada[((angkaMIDI%12)+12)%12]; 
+   let oktaf=Math.floor(angkaMIDI/12)-1; 
+   let hasil=namanada+oktaf;
    let now=performance.now();
-   if(prevNote==null||hasil!=prevNote||now-lastTime>1200){
-      prevNote=hasil; lastTime=now;
+   if(nadasebelumnya==null||hasil!=nadasebelumnya||now-waktuakhir>1200){
+      nadasebelumnya=hasil; waktuakhir=now;
       document.getElementById("note").innerText=hasil;
       document.getElementById("freq").innerText=frekuensi.toFixed(1)+" Hz";
    }
  }
- setTimeout(lako,55) 
+ setTimeout(lako,55)
 }
 
 function korelasi(b,r){

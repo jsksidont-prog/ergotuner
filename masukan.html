@@ -3,61 +3,113 @@
 <head>
  <meta charset="utf-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>masukan</title>
+ <title>Masukan</title>
  <style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 15px;
+    margin: 0;
+    background: #f2f9ff;
+  }
 
+  h1 {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-h1{
- font-size: larger;
- text-align: center;
-}
-
-button{
-    display: flex; 
-    position: relative;
-    background-color: aqua;
-    color: rgb(0, 0, 0);
-    margin-top: 20px;
-    padding: 9px 19px;
-    cursor: pointer;}
-
-.tokep {
+  form {
+    max-width: 500px;
+    margin: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 100px;
     flex-direction: column;
+    gap: 15px;
+  }
 
-}
+  textarea {
+    padding: 12px;
+    width: 100%;
+    height: 150px;
+    resize: none;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
 
-button:hover{
-    background-color: rgb(134, 247, 247);
-}
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
 
+  button:hover {
+    background-color: #45a049;
+  }
 
+  #status {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+  }
  </style>
- </head>
+</head>
+<body>
 
- <body>
+  <h1>Kirim Masukan</h1>
 
+  <form id="feedbackForm">
+    <textarea id="message" placeholder="Tulis masukanmu di sini..." required></textarea>
+    <button type="submit">Kirim ke Discord</button>
+  </form>
 
+  <div id="status"></div>
 
-</div>
+  <script>
+    const form = document.getElementById("feedbackForm");
+    const statusEl = document.getElementById("status");
 
-<form
-  action="https://formspree.io/f/mqadwqvz"
-  method="POST"
->
+    // Ganti dengan URL Webhook Discord kamu
+    const webhookURL = "https://discordapp.com/api/webhooks/1415816217993941012/uFGrvmIi_Oe_vAp9hoXRl_gWbG6_UnostnVNacSSfFWm8w4iyFJJhkhJxyP3MKCMvNF_";
 
-  
-  <label style="margin-top: 20px;display: flex; align-items: center;justify-content: center; flex-direction: column;">
-    TULIS MASUKAN MU DIBAWAH INI:
-    <textarea style="padding: 10px;width: 450px; height: 150px;margin-top: 20px;resize: none;" name="message"></textarea>
-  <button type="submit">Send</button>
-</label>
-  
-</form>
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const message = document.getElementById("message").value.trim();
+      if (!message) {
+        statusEl.innerText = "jangan kosong,harus tulis!";
+        statusEl.style.color = "red";
+        return;
+      }
+
+      try {
+        const payload = {
+          content: `ada masukan dari teman:\n${message}`
+        };
+
+        const res = await fetch(webhookURL, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          statusEl.innerText = "✅ Masukan berhasil dikirim ke Discord!";
+          statusEl.style.color = "green";
+          form.reset();
+        } else {
+          statusEl.innerText = "❌ Gagal mengirim. Coba lagi.";
+          statusEl.style.color = "red";
+        }
+      } catch (err) {
+        statusEl.innerText = "⚠️ Error: " + err.message;
+        statusEl.style.color = "red";
+      }
+    });
+  </script>
 
 </body>
-
-  
+</html>
