@@ -47,7 +47,18 @@
 }
  #pesan{margin-top:25px;color:rgb(255, 0, 0);font-size:15px}
 
- 
+ .note-emoji {
+    position: fixed;
+    font-size: 40px;
+    animation: fall 2.5s linear forwards;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
 
 
 </style>
@@ -156,6 +167,23 @@ function korelasi(b,r){
  if(p==-1)return 0;
  return r/p
 }
+
+
+document.body.addEventListener("click", function(e){
+  if(e.target.tagName === "BUTTON") return;
+  const emojis = ["🎵","🎶","🎼"];
+  for(let i=0; i<3; i++){
+    let span = document.createElement("span");
+    span.className = "note-emoji";
+    span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+    span.style.left = Math.random() * window.innerWidth + "px";
+    span.style.top = "-40px";
+    span.style.fontSize = (30 + Math.random()*30) + "px";
+
+    document.body.appendChild(span);
+    setTimeout(()=>{ span.remove(); }, 2500);
+  }
+});
 
 document.getElementById("1312").onclick=function(){ window.open("1312.html","_blank"); }
 document.getElementById("CHORD").onclick=function(){ window.open("h.html","_blank"); }
