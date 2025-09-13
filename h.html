@@ -371,56 +371,61 @@ document.getElementById ("CHORD").onclick=function(){window.open("index.html","_
 document.getElementById ("guide").onclick=function(){window.open("1312.html","_blank")}
 
 const emojis = ["🎵","🎶","🎼"];
-// nada Happy Birthday (C mayor)
+
+// Nada Happy Birthday (dalam Hz, C mayor)
 const song = [
-  264,264,297,264,352,330,   // Happy Birthday to you
-  264,264,297,264,396,352,   // Happy Birthday to you
-  264,264,528,440,352,330,297, // Happy Birthday dear [nama]
-  466,466,440,352,396,352    // Happy Birthday to you
+  264,264,297,264,352,330,        // Happy Birthday to You
+  264,264,297,264,396,352,        // Happy Birthday to You
+  264,264,528,440,352,330,297,    // Happy Birthday dear [Name]
+  466,466,440,352,396,352         // Happy Birthday to You
 ];
 
 let songIndex = 0;
 let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 document.body.addEventListener("click", function(e){
-  if(e.target.tagName === "BUTTON") return; // jangan ganggu tombol
+  if(e.target.tagName === "BUTTON") return;
 
-  // Random emoji muncul di titik klik
+  // 🎵 Random emoji di titik klik
   let span = document.createElement("span");
   span.className = "note-emoji";
   span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
   span.style.left = e.clientX + "px";
   span.style.top = e.clientY + "px";
+  span.style.position = "fixed";
+  span.style.animation = "pop 1.2s ease-out forwards";
   span.style.fontSize = (30 + Math.random()*30) + "px";
+  span.style.pointerEvents = "none";
+  span.style.zIndex = "9999";
 
   document.body.appendChild(span);
   setTimeout(()=>{ span.remove(); }, 1200);
 
   // Mainkan nada sesuai urutan lagu
   let freq = song[songIndex];
-  playTone(freq, 0.5);
+  playTone(freq, 0.6);
 
   songIndex++;
-  if(songIndex >= song.length) songIndex = 0; // ulang lagi dari awal
+  if(songIndex >= song.length) songIndex = 0; // ulang
 });
 
 function playTone(freq, duration){
   let osc = audioCtx.createOscillator();
   let gain = audioCtx.createGain();
 
-  osc.type = "sine";
+  osc.type = "square"; // Bisa "sine", "triangle", "sawtooth"
   osc.frequency.value = freq;
 
-  gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  let now = audioCtx.currentTime;
+  gain.gain.setValueAtTime(0.2, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
   osc.connect(gain);
   gain.connect(audioCtx.destination);
 
-  osc.start();
-  osc.stop(audioCtx.currentTime + duration);
+  osc.start(now);
+  osc.stop(now + duration);
 }
-
   </script>
 
 
