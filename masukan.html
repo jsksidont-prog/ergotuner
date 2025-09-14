@@ -19,6 +19,7 @@
   }
 
   form {
+    width: 100%;
     max-width: 500px;
     margin: auto;
     display: flex;
@@ -31,9 +32,10 @@
     width: 100%;
     height: 150px;
     resize: none;
-    font-size: 14px;
+    font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 6px;
+    box-sizing: border-box;
   }
 
   button {
@@ -44,6 +46,7 @@
     border-radius: 6px;
     font-size: 16px;
     cursor: pointer;
+    width: 100%;
   }
 
   button:hover {
@@ -54,6 +57,23 @@
     text-align: center;
     margin-top: 10px;
     font-size: 14px;
+    color: green;
+  }
+
+  @media (max-width: 400px) {
+    h1 {
+      font-size: 20px;
+    }
+
+    textarea {
+      height: 120px;
+      font-size: 14px;
+    }
+
+    button {
+      font-size: 14px;
+      padding: 10px;
+    }
   }
  </style>
 </head>
@@ -62,8 +82,8 @@
   <h1>Kirim Masukan</h1>
 
   <form id="feedbackForm">
-    <textarea id="message" placeholder="Tulis masukanmu di sini..." required></textarea>
-    <button type="submit">Kirim ke Discord</button>
+    <textarea id="message" placeholder="Tulis masukanmu..." required></textarea>
+    <button type="submit">Kirim</button>
   </form>
 
   <div id="status"></div>
@@ -72,23 +92,16 @@
     const form = document.getElementById("feedbackForm");
     const statusEl = document.getElementById("status");
 
-    // Ganti dengan URL Webhook Discord kamu
     const webhookURL = "https://discordapp.com/api/webhooks/1415816217993941012/uFGrvmIi_Oe_vAp9hoXRl_gWbG6_UnostnVNacSSfFWm8w4iyFJJhkhJxyP3MKCMvNF_";
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const message = document.getElementById("message").value.trim();
-      if (!message) {
-        statusEl.innerText = "jangan kosong,harus tulis!";
-        statusEl.style.color = "red";
-        return;
-      }
+      if (!message) return; 
 
       try {
-        const payload = {
-          content: `ada masukan dari teman:\n${message}`
-        };
+        const payload = { content: `!!!!ada masukan dari teman!!!!:\n${message}` };
 
         const res = await fetch(webhookURL, {
           method: "POST",
@@ -97,16 +110,10 @@
         });
 
         if (res.ok) {
-          statusEl.innerText = "✅ Masukan berhasil dikirim ke Discord!";
-          statusEl.style.color = "green";
+          statusEl.innerText = "Danke";
           form.reset();
-        } else {
-          statusEl.innerText = "❌ Gagal mengirim. Coba lagi.";
-          statusEl.style.color = "red";
         }
       } catch (err) {
-        statusEl.innerText = "⚠️ Error: " + err.message;
-        statusEl.style.color = "red";
       }
     });
   </script>
