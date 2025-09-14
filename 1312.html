@@ -10,8 +10,12 @@
       text-align: center;
       margin: 0;
       padding: 30px 20px;
-      background: linear-gradient(to bottom, #f9f9f9, #fff);
-      color: #222;
+  background: 
+     linear-gradient(rgba(255,255,255,0.6) , rgba(255,255,255,0.85)), 
+     url("paris.png") no-repeat center center fixed;
+     background-size: cover;
+  background-attachment: fixed;
+   color: #000000;
     }
 
     
@@ -138,50 +142,50 @@
     </div>
 
         <div>
-      <h2>3. Double Drop D Tuning</h2>
+      <h2>6. Open D Tuning</h2>
       <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
         <span class="badge">D2</span>
         <span class="badge">A2</span>
         <span class="badge">D3</span>
-        <span class="badge">G3</span>
-        <span class="badge">B3</span>
+        <span class="badge">F#3</span>
+        <span class="badge">A3</span>
         <span class="badge">D4</span>
       </p>
     </div>
 
         <div>
-      <h2>3. Double Drop D Tuning</h2>
+      <h2>7. Open E Tuning</h2>
+      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+        <span class="badge">E2</span>
+        <span class="badge">B2</span>
+        <span class="badge">E3</span>
+        <span class="badge">G#3</span>
+        <span class="badge">B3</span>
+        <span class="badge">E4</span>
+      </p>
+    </div>
+
+        <div>
+      <h2>8. DADGAD Tuning</h2>
       <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
         <span class="badge">D2</span>
         <span class="badge">A2</span>
         <span class="badge">D3</span>
         <span class="badge">G3</span>
-        <span class="badge">B3</span>
+        <span class="badge">A3</span>
         <span class="badge">D4</span>
       </p>
     </div>
 
         <div>
-      <h2>3. Double Drop D Tuning</h2>
+      <h2>9. Open F Tuning</h2>
       <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">D2</span>
+        <span class="badge">F2</span>
         <span class="badge">A2</span>
-        <span class="badge">D3</span>
-        <span class="badge">G3</span>
-        <span class="badge">B3</span>
-        <span class="badge">D4</span>
-      </p>
-    </div>
-
-        <div>
-      <h2>3. Double Drop D Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">D2</span>
-        <span class="badge">A2</span>
-        <span class="badge">D3</span>
-        <span class="badge">G3</span>
-        <span class="badge">B3</span>
-        <span class="badge">D4</span>
+        <span class="badge">C3</span>
+        <span class="badge">F3</span>
+        <span class="badge">C4</span>
+        <span class="badge">F4</span>
       </p>
     </div>
 
@@ -193,6 +197,11 @@
     <span>© ERGOISME 2025</span>
   </div>
 
+  <div id="balls paskah" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:9999;justify-content:center;align-items:center;flex-direction:column;">
+  <span style="width: 150px;color: #ede9e9;bottom: 50px;">MANTAP ANJINK KAU KETEMU EASTER EGG</span>
+  <img src="dino.gif" id="gifnya" style="max-width:400px;border-radius:8px;">
+  <button id="sextape" style="margin-top:15px;padding:8px 20px;background:#4caf50;color:#fff;border:0;border-radius:6px;cursor:pointer;">tekan tombol ho,o</button>
+</div>
 
 <script async="async" data-cfasync="false" src="//pl27585344.revenuecpmgate.com/e874be7df9381615f960d86381dd7203/invoke.js"></script> <div id="container-e874be7df9381615f960d86381dd7203"></div>
 
@@ -202,6 +211,27 @@
   <script>
     document.getElementById("tuner").onclick = function() {window.open("index.html", "_blank");};
     document.getElementById("chord").onclick = function() {window.open ("h.html","_blank");};
+
+var kodekera="BRILLI0011"
+var ketik=""
+var ovr=document.getElementById("balls paskah")
+var tombolKe=document.getElementById("sextape")
+
+document.addEventListener("keydown",function(ev){
+   ketik+=ev.key.toUpperCase()
+   if(kodekera.indexOf(ketik)===0){
+      if(ketik===kodekera){
+        ovr.style.display="flex"
+        ketik=""
+      }
+   }else{
+     ketik=""
+   }
+})
+
+tombolKe.onclick=function(){
+  window.location.href="https://id.pinterest.com/"
+}
 
     </script>
 </body>
