@@ -90,6 +90,15 @@
 
 <div id="pesan"></div>
 
+<canvas id="needle" width="300" height="150" style="margin-top:30px;"></canvas>
+
+<div id="bar-wrap" style="margin:20px auto; width:300px; height:20px; background:#ddd; border-radius:10px; overflow:hidden;">
+  <div id="bar" style="height:100%; width:50%; background:#4CAF50; transition:0.1s;"></div>
+</div>
+<div style="font-size:14px; margin-top:5px;">← Flat | Sharp →</div>
+
+
+
 
 <footer style="margin-top:80px;font-size:13px;color:#444;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
 
@@ -135,20 +144,32 @@ document.getElementById("tombol").onclick= async function(){
 function lako(){
  kawegelombang.getFloatTimeDomainData(simpanreweng);
  let frekuensi=korelasi(simpanreweng,audiokonteks.sampleRate);
- if(frekuensi>0){
-   let angkaMIDI=Math.round(12*Math.log(frekuensi/440)/Math.log(2)+69);
-   let namanada=nada[((angkaMIDI%12)+12)%12]; 
-   let oktaf=Math.floor(angkaMIDI/12)-1; 
-   let hasil=namanada+oktaf;
-   let now=performance.now();
-   if(nadasebelumnya==null||hasil!=nadasebelumnya||now-waktuakhir>1200){
-      nadasebelumnya=hasil; waktuakhir=now;
-      document.getElementById("note").innerText=hasil;
-      document.getElementById("freq").innerText=frekuensi.toFixed(1)+" Hz";
-   }
- }
+if(frekuensi>0){
+  let angkaMIDI = Math.round(12*Math.log(frekuensi/440)/Math.log(2)+69);
+  let namanada = nada[((angkaMIDI%12)+12)%12]; 
+  let oktaf = Math.floor(angkaMIDI/12)-1; 
+  let hasil = namanada+oktaf;
+
+  // frekuensi ideal dari nada target
+  let freqTarget = 440 * Math.pow(2, (angkaMIDI-69)/12);
+  let cents = 1200*Math.log(frekuensi/freqTarget)/Math.log(2); 
+
+  let now = performance.now();
+  if(nadasebelumnya==null||hasil!=nadasebelumnya||now-waktuakhir>1200){
+     nadasebelumnya=hasil; waktuakhir=now;
+     document.getElementById("note").innerText=hasil;
+     document.getElementById("freq").innerText=frekuensi.toFixed(1)+" Hz";
+  }
+
+  updateNeedle(cents);
+  updateBar(cents);
+}
+
  setTimeout(lako,55)
 }
+
+
+
 
 function korelasi(b,r){
  var sz=b.length,rms=0;
@@ -184,6 +205,43 @@ document.body.addEventListener("click", function(e){
     setTimeout(()=>{ span.remove(); }, 2500);
   }
 });
+
+
+function updateNeedle(cents){
+  let canvas = document.getElementById("needle");
+  if(!canvas) return;
+  let ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // gambar lingkaran setengah
+  ctx.beginPath();
+  ctx.arc(150,150,100,Math.PI,0);
+  ctx.strokeStyle="#333";
+  ctx.lineWidth=4;
+  ctx.stroke();
+
+  // jarum
+  let angle = Math.PI + (cents/50)*Math.PI/2; // max ±50 cents
+  let x = 150 + 90*Math.cos(angle);
+  let y = 150 + 90*Math.sin(angle);
+  ctx.beginPath();
+  ctx.moveTo(150,150);
+  ctx.lineTo(x,y);
+  ctx.strokeStyle="red";
+  ctx.lineWidth=3;
+  ctx.stroke();
+}
+
+function updateBar(cents){
+  let bar = document.getElementById("bar");
+  if(!bar) return;
+  let percent = Math.max(0, Math.min(100, 50 + cents));
+  bar.style.width = percent + "%";
+  bar.style.background = Math.abs(cents)<5 ? "limegreen":"#4CAF50";
+}
+
+
+
 
 document.getElementById("1312").onclick=function(){ window.open("1312.html","_blank"); }
 document.getElementById("CHORD").onclick=function(){ window.open("h.html","_blank"); }
