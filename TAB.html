@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>TAB MAKER ERGO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {font-family: monospace; background:#fff; color:#000; text-align:center; padding:10px;}
+  h1 {font-size:1.5em; margin-bottom:10px;}
+  .tab-container {text-align:left; white-space: pre; display:inline-block; margin-top:10px; line-height:1.2em; width:100%; overflow-x:auto; background:#f3f3f3; padding:10px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+  .controls {margin-top:10px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;}
+  button {padding:8px 12px; margin:2px; border:none; border-radius:6px; background:linear-gradient(45deg,#10b981,#059669); color:#fff; cursor:pointer; font-weight:bold; transition: transform 0.1s, box-shadow 0.2s;}
+  button:hover {transform: translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.3);}
+  span.note {cursor:pointer; display:inline-block; min-width:12px;}
+</style>
+</head>
+<body>
+<h1>ERGOTABLATURE</h1>
+
+<div class="controls">
+  <button onclick="downloadTab()">Download Tab</button>
+  <button onclick="clearTab()">Clear Tab</button>
+  <button onclick="addRow()">Tambah Baris</button>
+  <button onclick="previewTab()">Preview</button>
+</div>
+
+<div id="tabContainer" class="tab-container"></div>
+
+<script>
+let numStrings = 6;
+let numPositions = 30;
+let names = ['e','B','G','D','A','E'];
+let tabRows = [];
+let context = new (window.AudioContext || window.webkitAudioContext)();
+
+const baseFreqs = [329.63, 246.94, 196.00, 146.83, 110.00, 82.41];
+
+function createEmptyBar(){return Array(numStrings).fill().map(()=>Array(numPositions).fill('-'));}
+tabRows.push(createEmptyBar());
+
+const tabContainer = document.getElementById('tabContainer');
+
+function renderTab(){
+  tabContainer.innerHTML = '';
+  tabRows.forEach((tab, barIndex)=>{
+    tab.forEach((stringArr,s)=>{
+      let line = names[numStrings-1-s] + '|';
+      for(let i=0;i<numPositions;i++){
+        line += `<span class="note" data-bar="${barIndex}" data-string="${s}" data-pos="${i}">${stringArr[i]}</span>`;
+      }
+      line += '|<br>';
+      tabContainer.innerHTML += line;
+    });
+    tabContainer.innerHTML += '<br>';
+  });
+}
+
+tabContainer.addEventListener('click', function(e){
+  if(e.target.classList.contains('note')){
+    const bar = parseInt(e.target.dataset.bar);
+    const s = parseInt(e.target.dataset.string);
+    const p = parseInt(e.target.dataset.pos);
+    const current = tabRows[bar][s][p];
+    const fret = prompt('Masukkan nomor fret (0-24):', current==='-'?'0':current);
+    if(fret!==null){tabRows[bar][s][p] = fret===''?'-':fret; renderTab();}
+  }
+});
+
+function downloadTab(){
+  let text='';
+  tabRows.forEach(tab=>{
+    for(let s=numStrings-1;s>=0;s--){
+      text += names[s] + '|';
+      for(let i=0;i<numPositions;i++){ text += tab[s][i]; }
+      text += '|\n';
+    }
+    text += '\n';
+  });
+  const blob = new Blob([text], {type:'text/plain'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'tab.txt';
+  link.click();
+}
+
+function clearTab(){tabRows=[createEmptyBar()]; renderTab();}
+function addRow(){tabRows.push(createEmptyBar()); renderTab();}
+
+// Mainkan nada seperti gitar akustik
+function playGuitarAcoustic(freq, startTime, duration){
+  const gainNode = context.createGain();
+  gainNode.connect(context.destination);
+
+  // oscillator utama (sine)
+  const osc1 = context.createOscillator();
+  osc1.type = 'sine';
+  osc1.frequency.value = freq;
+  osc1.connect(gainNode);
+
+  // tambahan harmonik (triangle + saw)
+  const osc2 = context.createOscillator();
+  osc2.type = 'triangle';
+  osc2.frequency.value = freq * 2; // harmonic
+  osc2.connect(gainNode);
+
+  const osc3 = context.createOscillator();
+  osc3.type = 'sawtooth';
+  osc3.frequency.value = freq * 0.5; // subharmonic
+  osc3.connect(gainNode);
+
+  // Envelope ADSR sederhana
+  gainNode.gain.setValueAtTime(0, startTime);
+  gainNode.gain.linearRampToValueAtTime(0.8, startTime + 0.01); // attack
+  gainNode.gain.exponentialRampToValueAtTime(0.4, startTime + duration*0.3); // decay
+  gainNode.gain.setValueAtTime(0.4, startTime + duration*0.7); // sustain
+  gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration); // release
+
+  osc1.start(startTime); osc1.stop(startTime + duration + 0.05);
+  osc2.start(startTime); osc2.stop(startTime + duration + 0.05);
+  osc3.start(startTime); osc3.stop(startTime + duration + 0.05);
+}
+
+// preview tab chord per posisi
+function previewTab(){
+  const positionDuration = 0.4;
+  const restDuration = 0.05;
+  let delay = 0;
+  const now = context.currentTime;
+
+  tabRows.forEach(tab=>{
+    for(let i=0;i<numPositions;i++){
+      const hasNote = tab.some((stringArr,s)=>stringArr[i]!=='-');
+      const duration = hasNote ? positionDuration : restDuration;
+
+      tab.forEach((stringArr,s)=>{
+        const val = stringArr[i];
+        if(val!=='-'){
+          const fret = parseInt(val);
+          const freq = baseFreqs[s]*Math.pow(2, fret/12);
+          playGuitarAcoustic(freq, now + delay, duration);
+        }
+      });
+      delay += duration;
+    }
+  });
+}
+
+renderTab();
+</script>
+</body>
+</html>
