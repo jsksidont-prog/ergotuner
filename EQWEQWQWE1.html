@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ergoscale</title>
+<style>
+  :root{
+    --bg:#f7f8fc; --panel:#ffffff; --ink:#0f1220;
+    --sub:#5b6472; --accent:#1769aa; --accent2:#17a673; --root:#e5a100;
+    --fret:#d9dde7; --string:#c7ccd7; --marker:#eef1f7; --pill:#eef1f7;
+    --dot:#94a0b2; --note:#2ac2aa; --note2:#7a61e7;
+    --radius:12px; --headerH:78px;
+    color-scheme: light;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+
+.site-header {
+  padding: 14px 18px;
+  background: linear-gradient(180deg,#fff,rgba(255,255,255,.9));
+  border-bottom: 1px solid #e6e9f2;
+}
+
+.brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;                 
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand img{
+  height: clamp(28px, 4vw, 40px); 
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.site-header h1{
+  margin: 0;
+  font-size: clamp(18px, 2.4vw, 28px);
+  font-weight: 800;
+  letter-spacing: .4px;
+}
+
+
+body {
+  margin: 0;
+  background: linear-gradient(rgba(255, 255, 255, 0.6)), 
+              url("BGSC.jpg") no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: scroll;
+  color: #000000;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+}
+
+  /* Header absolute */
+  header{
+    position:absolute; inset:0 auto auto 0; width:100%; height:var(--headerH);
+    padding:14px 18px; background:linear-gradient(180deg,#fff,rgba(255,255,255,.9));
+    border-bottom:1px solid #e6e9f2; z-index:5;
+  }
+  h1{margin:0 0 6px; font-size:clamp(18px,2.4vw,24px)}
+  .sub{color:var(--sub); font-size:12.5px}
+  .header-spacer{height:var(--headerH)}
+
+  .wrap{padding:14px}
+  .controls{display:grid; gap:12px; grid-template-columns:repeat(6,minmax(0,1fr)); align-items:end}
+  .card{background:var(--panel); border:1px solid #e6e9f2; border-radius:var(--radius); padding:12px; box-shadow:0 1px 2px rgba(20,30,50,.04)}
+  .field{display:flex; flex-direction:column; gap:6px}
+  label{font-size:12px; color:var(--sub)}
+  select,input[type="text"],input[type="number"]{
+    background:#f6f8fd; color:var(--ink); border:1px solid #dae1f0; border-radius:10px; padding:10px 12px; outline:none; width:100%;
+  }
+  input[type="range"]{width:100%}
+  .toggles{display:flex; gap:8px; flex-wrap:wrap}
+  .toggle{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+    background:var(--pill); border:1px solid #dfe5f3; user-select:none; font-size:13px; color:var(--ink);}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  button{background:linear-gradient(180deg,#1f8ad1,#1769aa); border:none; color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700}
+  .btn-icon{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 12px; border-radius:10px; border:1px solid #dbe2f2; background:#e9eef9; color:#0f1220}
+  .btn-icon svg{width:18px; height:18px}
+
+  .board-wrap{margin-top:14px}
+  .fretboard{width:100%; background:var(--marker); border-radius:14px; border:1px solid #e6e9f2; overflow:auto; padding:10px}
+  svg{display:block; width:100%}
+  .legend{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; font-size:13px; color:var(--sub)}
+  .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; background:#f6f8fd; border:1px solid #dae1f0; border-radius:999px}
+  .dot{width:12px; height:12px; border-radius:50%}
+  .dot-root{background:var(--root)} .dot-scale{background:var(--note)} .muted{opacity:.7}
+  footer{padding:16px; color:var(--sub); font-size:12px}
+
+  @media (max-width:900px){ .controls{grid-template-columns:1fr 1fr} :root{--headerH:86px} }
+</style>
+</head>
+<body>
+<header>
+   <div class="brand">
+    <img
+      src="ERGOPANTEK.png"          
+      alt="ERGOSCALE logo"
+      width="40" height="40"
+      loading="eager" fetchpriority="high"
+    />
+    <h1>ERGOSCALE</h1>
+  </div>
+
+</header>
+<div class="header-spacer"></div>
+
+<div class="wrap">
+  <section class="card">
+    <div class="controls">
+      <div class="field">
+        <label for="root">Root</label>
+        <select id="root" aria-label="Root note"></select>
+      </div>
+      <div class="field">
+        <label for="accidentals">Notasi</label>
+        <select id="accidentals">
+          <option value="sharp">♯ / sharps</option>
+          <option value="flat">♭ / flats</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="scale">Scale</label>
+        <select id="scale" aria-label="Scale"></select>
+      </div>
+      <div class="field">
+        <label for="frets">Total frets: <span id="fretCount">24</span></label>
+        <input id="frets" type="range" min="12" max="24" value="24" />
+      </div>
+      <div class="field">
+        <label for="tuning">Tuning</label>
+        <select id="tuning">
+          <option value="E2,A2,D3,G3,B3,E4">Standard (E A D G B E)</option>
+          <option value="D2,A2,D3,G3,B3,E4">Drop D</option>
+          <option value="D2,G2,C3,F3,A3,D4">D Standard</option>
+          <option value="C2,G2,C3,F3,A3,D4">Drop C</option>
+          <option value="E2,B2,E3,A3,C#4,F#4">Open E</option>
+          <option value="D2,A2,D3,F#3,A3,D4">Open D</option>
+          <option value="D2,G2,D3,G3,B3,D4">Open G</option>
+          <option value="CUSTOM">Custom…</option>
+        </select>
+      </div>
+      <div class="field" id="customBox" style="display:none">
+        <label for="custom">Custom tuning (6 nada, koma): contoh E2,A2,D3,G3,B3,E4</label>
+        <input id="custom" type="text" placeholder="E2,A2,D3,G3,B3,E4" />
+      </div>
+
+      <!-- Jendela manual -->
+      <div class="field">
+        <label for="startFret">Mulai fret</label>
+        <input id="startFret" type="number" min="0" max="24" step="1" value="0"/>
+      </div>
+      <div class="field">
+        <label for="span">Lebar (frets)</label>
+        <select id="span">
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="7">7</option>
+          <option value="12">12</option>
+        </select>
+      </div>
+
+      <!-- CAGED -->
+      <div class="field">
+        <label for="cagedMode">Mode CAGED</label>
+        <select id="cagedMode">
+          <option value="off" selected>Off</option>
+          <option value="C">C shape</option>
+          <option value="A">A shape</option>
+          <option value="G">G shape</option>
+          <option value="E">E shape</option>
+          <option value="D">D shape</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="cagedFollow">Penjajaran</label>
+        <select id="cagedFollow" title="Bagaimana box disejajarkan">
+          <option value="nearest" selected>Ke root terdekat</option>
+          <option value="lowest">Ke root terendah</option>
+        </select>
+      </div>
+
+      <!-- Toggles yang dipakai -->
+      <div class="toggles" style="grid-column:1/-1">
+        <label class="toggle"><input id="showNotes" type="checkbox" checked/> Tampilkan nama nada</label>
+        <label class="toggle"><input id="octaveDots" type="checkbox" checked/> Dots posisi 3/5/7/9/12…</label>
+        <label class="toggle"><input id="windowOnly" type="checkbox"/> Fokus area saja</label>
+        <label class="toggle"><input id="audio" type="checkbox" checked/> Bunyi saat klik</label>
+      </div>
+
+      <div class="actions" style="grid-column:1/-1">
+        <button id="downloadPNG">Unduh PNG</button>
+        <!-- Reset jadi ikon stopwatch -->
+        <button id="reset" class="btn-icon" title="Reset">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 2h10v2H7zM12 6a8 8 0 1 1-8 8h2a6 6 0 1 0 6-6v2l-4-3 4-3v2z" fill="currentColor"/>
+          </svg>
+          <span class="sr-only" style="position:absolute;left:-9999px">Reset</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="board-wrap card" aria-live="polite">
+    <div class="fretboard" id="fretboard" role="img" aria-label="Fretboard diagram"></div>
+    <div class="legend">
+      <span class="chip"><span class="dot dot-root"></span> Root</span>
+      <span class="chip"><span class="dot dot-scale"></span> Nada scale</span>
+      <span class="chip muted">Klik nada = bunyi (jika aktif)</span>
+    </div>
+  </section>
+</div>
+
+
+
+<script>
+/* ===== Teori ===== */
+const NOTE_NAMES_SHARP=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const NOTE_NAMES_FLAT =["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+const SCALES={
+  "Major (Ionian)":[0,2,4,5,7,9,11],
+  "Natural Minor (Aeolian)":[0,2,3,5,7,8,10],
+  "Harmonic Minor":[0,2,3,5,7,8,11],
+  "Melodic Minor (Asc.)":[0,2,3,5,7,9,11],
+  "Major Pentatonic":[0,2,4,7,9],
+  "Minor Pentatonic":[0,3,5,7,10],
+  "Blues (Hexatonic)":[0,3,5,6,7,10],
+  "Dorian":[0,2,3,5,7,9,10],
+  "Phrygian":[0,1,3,5,7,8,10],
+  "Lydian":[0,2,4,6,7,9,11],
+  "Mixolydian":[0,2,4,5,7,9,10],
+  "Locrian":[0,1,3,5,6,8,10],
+};
+const mod=(n,m)=>((n%m)+m)%m;
+
+/* ===== Audio ===== */
+let audioCtx=null; const midiToFreq=m=>440*Math.pow(2,(m-69)/12);
+function playFreq(freq,secs=0.4){
+  if(!document.getElementById('audio').checked) return;
+  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+  o.type="sine"; o.frequency.value=freq;
+  g.gain.setValueAtTime(0.0001,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.25,audioCtx.currentTime+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+secs);
+  o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+secs+0.05);
+}
+
+/* ===== Elemen UI ===== */
+const els={
+  root:document.getElementById('root'),
+  acc:document.getElementById('accidentals'),
+  scale:document.getElementById('scale'),
+  frets:document.getElementById('frets'),
+  fretCount:document.getElementById('fretCount'),
+  tuning:document.getElementById('tuning'),
+  customBox:document.getElementById('customBox'),
+  custom:document.getElementById('custom'),
+  showNotes:document.getElementById('showNotes'),
+  dots:document.getElementById('octaveDots'),
+  windowOnly:document.getElementById('windowOnly'),
+  startFret:document.getElementById('startFret'),
+  span:document.getElementById('span'),
+  cagedMode:document.getElementById('cagedMode'),
+  cagedFollow:document.getElementById('cagedFollow'),
+  board:document.getElementById('fretboard'),
+  download:document.getElementById('downloadPNG'),
+  reset:document.getElementById('reset'),
+  audio:document.getElementById('audio'),
+};
+
+/* Helpers teori & fretboard */
+function parseNoteName(n){
+  const i=NOTE_NAMES_SHARP.indexOf(n); if(i>=0) return i;
+  const j=NOTE_NAMES_FLAT.indexOf(n);  if(j>=0) return j;
+  throw new Error("Nada tidak dikenali: "+n);
+}
+function midiFromNoteName(nn){
+  const m=nn.match(/^([A-Ga-g])([b#]?)(\d)$/);
+  if(!m) throw new Error("Format nada tidak valid: "+nn);
+  const name=m[1].toUpperCase()+(m[2]||""); const oct=+m[3];
+  return 12+parseNoteName(name)+oct*12; // C0=12
+}
+function buildFretboard(open,fretCount){
+  return open.map(o=>Array.from({length:fretCount+1},(_,f)=>({midi:o+f,pitch:mod(o+f,12),fret:f,open:o})));
+}
+function currentTuning(){
+  const val=els.tuning.value==="CUSTOM"?(els.custom.value||"").trim():els.tuning.value;
+  const parts=val.split(",").map(s=>s.trim()).filter(Boolean);
+  const names=parts.length===6?parts:"E2,A2,D3,G3,B3,E4".split(",");
+  return names.map(midiFromNoteName); // E2..E4
+}
+// tampilan: senar 1 di atas → 6 di bawah
+function visualMIDIs(){ return [...currentTuning()].reverse(); }
+
+/* Init */
+(function populate(){
+  NOTE_NAMES_SHARP.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;els.root.appendChild(o);});
+  Object.keys(SCALES).forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;els.scale.appendChild(o);});
+  els.root.value="C"; els.scale.value="Major (Ionian)";
+})();
+
+/* Events */
+els.frets.addEventListener('input',()=>{els.fretCount.textContent=els.frets.value; render();});
+["acc","scale","root"].forEach(k=>els[k].addEventListener('change',render));
+els.tuning.addEventListener('change',()=>{els.customBox.style.display=els.tuning.value==="CUSTOM"?"":"none"; render();});
+els.custom.addEventListener('change',render);
+["showNotes","dots","windowOnly","audio"].forEach(id=>els[id].addEventListener('change',render));
+els.startFret.addEventListener('input',render);
+els.span.addEventListener('change',render);
+els.cagedMode.addEventListener('change',render);
+els.cagedFollow.addEventListener('change',render);
+els.download.addEventListener('click',downloadPNG);
+els.reset.addEventListener('click', resetAll);
+
+/* Reset */
+function resetAll(){
+  els.root.value="C"; els.acc.value="sharp"; els.scale.value="Major (Ionian)";
+  els.frets.value=24; els.fretCount.textContent="24";
+  els.tuning.value="E2,A2,D3,G3,B3,E4"; els.customBox.style.display="none"; els.custom.value="";
+  els.showNotes.checked=true; els.dots.checked=true; els.windowOnly.checked=false; els.audio.checked=true;
+  els.startFret.value=0; els.span.value=4; els.cagedMode.value="off"; els.cagedFollow.value="nearest";
+  els.board.scrollLeft = 0; els.board.replaceChildren();
+  render(true);
+}
+
+const CAGED_INFO = {
+  C:{rootString:5, span:5},
+  A:{rootString:5, span:4},
+  G:{rootString:6, span:5},
+  E:{rootString:6, span:4},
+  D:{rootString:4, span:4},
+};
+
+function findRootFretsOnString(stringNo, tuningMIDIs, rootIdx, maxFret){
+
+  const sIdx = stringNo-1;
+  const open = tuningMIDIs.slice().reverse()[sIdx];
+  const list=[];
+  for(let f=0; f<=maxFret; f++){
+    const pitch = mod(open+f,12);
+    if(pitch===rootIdx) list.push(f);
+  }
+  return list;
+}
+
+function render(forceTop=false){
+  const useSharps=els.acc.value==="sharp";
+  const names=useSharps?NOTE_NAMES_SHARP:NOTE_NAMES_FLAT;
+  const rootIdx=parseNoteName(els.root.value);
+  const pattern=SCALES[els.scale.value];
+  const fretCount=+els.frets.value;
+
+  let start=Math.max(0, Math.min(24, +els.startFret.value||0));
+  let span =+els.span.value;
+
+  const caged = els.cagedMode.value;
+  let cagedCenterFret = null;
+  if(caged !== "off"){
+    const info = CAGED_INFO[caged];
+    const rootFrets = findRootFretsOnString(info.rootString, currentTuning(), rootIdx, fretCount);
+    if(rootFrets.length){
+      const method = els.cagedFollow.value;
+      if(method==="lowest") cagedCenterFret = rootFrets[0];
+      else {
+ 
+        const target = start;
+        cagedCenterFret = rootFrets.reduce((a,b)=> Math.abs(b-target)<Math.abs(a-target)? b:a, rootFrets[0]);
+      }
+      span = info.span;
+      start = Math.max(0, Math.min(fretCount, Math.round(cagedCenterFret - Math.floor(span/2))));
+    }
+  }
+  const end  = Math.min(fretCount, start+span);
+
+  const MIDIs=visualMIDIs();
+  const matrix=buildFretboard(MIDIs, fretCount);
+
+  const narrow=window.matchMedia("(max-width:520px)").matches;
+  const cellW=narrow?42:58, gapY=narrow?44:58, padX=narrow?64:70, padY=narrow?24:28;
+  const strings=6, width=padX*2+cellW*(fretCount+1), height=padY*2+gapY*(strings-1);
+
+  const svgNS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(svgNS,"svg");
+  svg.setAttribute("viewBox",`0 0 ${width} ${height}`);
+  svg.setAttribute("role","img");
+  svg.setAttribute("aria-label",`Scale ${els.scale.value} di ${els.root.value}; CAGED=${caged}`);
+
+  svg.appendChild(rect(0,0,width,height,14,14,"#ffffff"));
+
+  for(let s=0;s<strings;s++){
+    const y=padY+gapY*s;
+    svg.appendChild(lineEl(padX,y,width-padX+8,y,'var(--string)',2+(s)*0.25));
+  }
+  svg.appendChild(rect(padX - cellW/2, padY - 16, 8, height - (padY*2) + 32, 4,4,"#cfd6e5",0.6));
+  for(let f=1; f<=fretCount; f++){
+    const x=padX+cellW*f - cellW/2;
+    svg.appendChild(lineEl(x,padY-12,x,height-padY+12,'var(--fret)',2));
+  }
+
+  for(let f=0; f<=fretCount; f++){
+    const x=padX+cellW*f; textEl(String(f),x,height-4,10,'middle','var(--sub)');
+  }
+  // label 1–6 kiri
+  for(let s=0;s<strings;s++){
+    const y=padY+gapY*s; textEl(String(s+1), padX - cellW*0.65, y+1, 13, 'middle', '#0f1220', true);
+  }
+
+  // highlight window (manual atau CAGED)
+  const xStart=padX+cellW*start - cellW/2;
+  const w=cellW*(end-start+1);
+  svg.appendChild(rect(xStart, padY-gapY*0.95, w, gapY*(strings-1)+gapY*1.9, 10,10, caged!=="off" ? "#4caf5025" : "#ffc10722", 1));
+  const edgeColor = caged!=="off" ? "#2e7d32" : "#ffb300";
+  svg.appendChild(lineEl(xStart,   padY-14, xStart,   height-padY+14, edgeColor, 2));
+  svg.appendChild(lineEl(xStart+w, padY-14, xStart+w, height-padY+14, edgeColor, 2));
+
+  // dots (inlay)
+  const markers=els.dots.checked?[3,5,7,9,12,15,17,19,21,24]:[];
+  markers.forEach(f=>{ if(f>fretCount) return; const x=padX+cellW*f - cellW/2; const y=height/2; const r=(f%12===0)?8:5;
+    dot(x,y,r,'var(--dot)',.25); if(f%12===0){ dot(x,y-gapY*0.9,4,'var(--dot)',.25); dot(x,y+gapY*0.9,4,'var(--dot)',.25); }
+  });
+
+  // scale notes
+  const scaleSet=new Set(SCALES[els.scale.value].map(x=>mod(rootIdx+x,12)));
+  const onlyWindow=els.windowOnly.checked;
+  matrix.forEach((row,sIndex)=>{
+    row.forEach(cell=>{
+      const inRange = cell.fret>=start && cell.fret<=end;
+      if(onlyWindow && !inRange) return;
+      if(!scaleSet.has(cell.pitch)) return;
+      const x=padX+cellW*cell.fret; const y=padY+gapY*sIndex;
+      const isRoot=(cell.pitch===rootIdx);
+      const r=isRoot?16:11;
+      const fill=isRoot?'var(--root)':'var(--note)';
+      const c=dot(x,y,r,fill,0.98,true);
+      c.setAttribute('tabindex','0'); c.setAttribute('role','button');
+      c.addEventListener('click',()=>playFreq(midiToFreq(cell.midi)));
+      c.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ playFreq(midiToFreq(cell.midi)); e.preventDefault(); }});
+
+      if(els.showNotes.checked){
+        const nm = (els.acc.value==="sharp")? NOTE_NAMES_SHARP : NOTE_NAMES_FLAT;
+        textEl(nm[cell.pitch], x, y+3, 11, 'middle', '#ffffff', true);
+      }
+    });
+  });
+
+  // bila CAGED aktif: beri label di atas box + mark root yg dipakai
+  if(caged!=="off" && cagedCenterFret!=null){
+    const labelX = xStart + w/2;
+    textEl(`CAGED: ${caged} shape`, labelX, padY-26, 12, 'middle', '#2e7d32', true);
+    // titik root kecil di string yang relevan (visual)
+    const rs = CAGED_INFO[caged].rootString; // 1..6
+    const y = padY + (rs-1) * (narrow?44:58);
+    const rx = padX + cellW * cagedCenterFret;
+    dot(rx, y, 6, '#2e7d32', 1, true);
+  }
+
+  els.board.replaceChildren(svg);
+
+  // autoscroll
+  requestAnimationFrame(()=>{
+    els.board.scrollLeft = forceTop ? 0 : Math.max(0, xStart - els.board.clientWidth/2 + w/2);
+  });
+
+  /* Helpers */
+  function rect(x,y,w,h,rx=0,ry=0,fill='#fff',opacity=1){
+    const r=document.createElementNS(svgNS,'rect');
+    r.setAttribute('x',x); r.setAttribute('y',y); r.setAttribute('width',w); r.setAttribute('height',h);
+    r.setAttribute('rx',rx); r.setAttribute('ry',ry||rx); r.setAttribute('fill',fill); r.setAttribute('opacity',opacity);
+    return r;
+  }
+  function lineEl(x1,y1,x2,y2,stroke='#ccc',sw=2){
+    const l=document.createElementNS(svgNS,'line');
+    l.setAttribute('x1',x1); l.setAttribute('y1',y1); l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+    l.setAttribute('stroke',stroke); l.setAttribute('stroke-width',sw);
+    return l;
+  }
+  function dot(x,y,r,fill,opacity=1,stroke=false){
+    const c=document.createElementNS(svgNS,'circle');
+    c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',r);
+    c.setAttribute('fill',fill); c.setAttribute('opacity',opacity);
+    if(stroke){ c.setAttribute('stroke','#0b0e1d22'); c.setAttribute('stroke-width','2'); }
+    svg.appendChild(c); return c;
+  }
+  function textEl(txt,x,y,size=12,anchor='start',fill='#111',bold=false){
+    const t=document.createElementNS(svgNS,'text');
+    t.setAttribute('x',x); t.setAttribute('y',y);
+    t.setAttribute('font-size',size); t.setAttribute('text-anchor',anchor);
+    t.setAttribute('dominant-baseline','middle'); t.setAttribute('font-weight', bold?'700':'500');
+    t.setAttribute('fill',fill); t.textContent=txt; svg.appendChild(t); return t;
+  }
+}
+
+/* Unduh PNG dari SVG */
+function downloadPNG(){
+  const svg=document.querySelector('#fretboard svg'); if(!svg) return;
+  const xml=new XMLSerializer().serializeToString(svg);
+  const blob=new Blob([xml],{type:'image/svg+xml;charset=utf-8'}); const url=URL.createObjectURL(blob);
+  const img=new Image();
+  img.onload=function(){
+    const canvas=document.createElement('canvas'); const box=svg.viewBox.baseVal;
+    canvas.width=box.width; canvas.height=box.height; const ctx=canvas.getContext('2d');
+    ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--marker')||'#fff';
+    ctx.fillRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0);
+    canvas.toBlob(b=>{const a=document.createElement('a'); a.download=`fretboard_${Date.now()}.png`; a.href=URL.createObjectURL(b); a.click(); URL.revokeObjectURL(a.href);});
+    URL.revokeObjectURL(url);
+  };
+  img.src=url;
+}
+
+/* start */
+render(true);
+window.addEventListener('resize',()=>{ clearTimeout(window.__rf); window.__rf=setTimeout(()=>render(),120); });
+</script>
+</body>
+</html>

@@ -1,30 +1,156 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>TAB MAKER ERGO</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ErgoTablature</title>
 <style>
-  body {font-family: monospace; background:#fff; color:#000; text-align:center; padding:10px;}
-  h1 {font-size:1.5em; margin-bottom:10px;}
-  .tab-container {text-align:left; white-space: pre; display:inline-block; margin-top:10px; line-height:1.2em; width:100%; overflow-x:auto; background:#f3f3f3; padding:10px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);}
-  .controls {margin-top:10px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;}
-  button {padding:8px 12px; margin:2px; border:none; border-radius:6px; background:linear-gradient(45deg,#10b981,#059669); color:#fff; cursor:pointer; font-weight:bold; transition: transform 0.1s, box-shadow 0.2s;}
-  button:hover {transform: translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.3);}
-  span.note {cursor:pointer; display:inline-block; min-width:12px;}
+  :root{
+    --bg:#ffffff;
+    --fg:#0b0b0c;
+    --brand:#10b981;
+    --brand-2:#059669;
+    --panel:#f3f4f6;
+    --border:#e5e7eb;
+    --shadow:0 6px 18px rgba(0,0,0,.12);
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:var(--mono);
+    background:var(--bg);
+    color:var(--fg);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+      background: 
+     linear-gradient(rgba(255,255,255,0.6) , rgba(255,255,255,0.85)), 
+     url("paris.png") no-repeat center center fixed;
+     background-size: cover;
+  background-attachment: fixed;
+   color: #000000;
+  }
+
+  /* Header */
+  header{
+    width:100%;
+    border-bottom:1px solid var(--border);
+    box-shadow:var(--shadow);
+    padding:25px 0 15px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+
+  /* Judul + logo */
+  .title-wrapper{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+  }
+  .title-wrapper img{
+    width:48px;
+    height:48px;
+    object-fit:contain;
+  }
+  header h1{
+    font-size:2.4rem;
+    font-weight:900;
+    margin:0;
+    color:var(--brand-2);
+    letter-spacing:0.5px;
+    color: #000;
+  }
+
+  /* Toolbar */
+  .toolbar{
+    margin-top:15px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+  }
+  button.btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:10px 14px;
+    border:none;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform .1s ease, box-shadow .2s ease;
+  }
+  button.btn:hover{ transform:translateY(-2px);}
+  .btn.download{background:linear-gradient(45deg,var(--brand),var(--brand-2)); color:#fff;}
+  .btn.secondary{background:#f1f5f9; color:#000;}
+  .btn.preview{background:linear-gradient(45deg,#16a34a,#22c55e); color:#fff;}
+
+  /* Kontainer utama */
+  main{
+    max-width:1000px;
+    width:100%;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  /* Panel tab */
+  .panel{
+    width:100%;
+    background:var(--panel);
+    border-radius:10px;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    overflow-x:auto;
+    padding:15px;
+  }
+
+  .tab-container{
+    white-space:pre;
+    font-family:var(--mono);
+    line-height:1.3em;
+    font-size:15px;
+  }
+  .string-label{margin-right:6px; font-weight:700; color:#6b7280;}
+  .note{
+    display:inline-block;
+    min-width:1.1ch;
+    text-align:center;
+    cursor:pointer;
+    border-radius:3px;
+    transition:background .12s;
+  }
+  .note:hover{background:rgba(0,0,0,0.08);}
 </style>
 </head>
 <body>
-<h1>ERGOTABLATURE</h1>
 
-<div class="controls">
-  <button onclick="downloadTab()">Download Tab</button>
-  <button onclick="clearTab()">Clear Tab</button>
-  <button onclick="addRow()">Tambah Baris</button>
-  <button onclick="previewTab()">Preview</button>
-</div>
+<header>
+  <div class="title-wrapper">
+    <img src="ERGOPANTEK.png" alt="Logo ErgoTablature">
+    <h1>ErgoTablature</h1>
+  </div>
 
-<div id="tabContainer" class="tab-container"></div>
+  <div class="toolbar">
+    <button class="btn download" id="downloadBtn">Download</button>
+    <button class="btn secondary" id="copyBtn">Copy</button>
+    <button class="btn secondary" id="clearBtn">Bersihkan</button>
+    <button class="btn secondary" id="addRowBtn">Tambah Baris</button>
+    <button class="btn preview" id="previewBtn">Preview</button>
+  </div>
+</header>
+
+<main>
+  <div class="panel">
+    <div id="tabContainer" class="tab-container"></div>
+  </div>
+</main>
 
 <script>
 let numStrings = 6;
@@ -32,120 +158,111 @@ let numPositions = 30;
 let names = ['e','B','G','D','A','E'];
 let tabRows = [];
 let context = new (window.AudioContext || window.webkitAudioContext)();
-
 const baseFreqs = [329.63, 246.94, 196.00, 146.83, 110.00, 82.41];
 
 function createEmptyBar(){return Array(numStrings).fill().map(()=>Array(numPositions).fill('-'));}
 tabRows.push(createEmptyBar());
-
 const tabContainer = document.getElementById('tabContainer');
 
 function renderTab(){
-  tabContainer.innerHTML = '';
+  let html='';
   tabRows.forEach((tab, barIndex)=>{
-    tab.forEach((stringArr,s)=>{
-      let line = names[numStrings-1-s] + '|';
+    for(let s=numStrings-1; s>=0; s--){
+      html += `<span class="string-label">${names[s]}</span>|`;
       for(let i=0;i<numPositions;i++){
-        line += `<span class="note" data-bar="${barIndex}" data-string="${s}" data-pos="${i}">${stringArr[i]}</span>`;
+        const val = tab[numStrings-1 - s][i];
+        html += `<span class="note" data-bar="${barIndex}" data-string="${numStrings-1 - s}" data-pos="${i}">${val}</span>`;
       }
-      line += '|<br>';
-      tabContainer.innerHTML += line;
-    });
-    tabContainer.innerHTML += '<br>';
+      html += '|<br>';
+    }
+    html += '<br>';
   });
+  tabContainer.innerHTML = html;
 }
-
-tabContainer.addEventListener('click', function(e){
+tabContainer.addEventListener('click', e=>{
   if(e.target.classList.contains('note')){
-    const bar = parseInt(e.target.dataset.bar);
-    const s = parseInt(e.target.dataset.string);
-    const p = parseInt(e.target.dataset.pos);
-    const current = tabRows[bar][s][p];
-    const fret = prompt('Masukkan nomor fret (0-24):', current==='-'?'0':current);
-    if(fret!==null){tabRows[bar][s][p] = fret===''?'-':fret; renderTab();}
+    const bar=parseInt(e.target.dataset.bar);
+    const s=parseInt(e.target.dataset.string);
+    const p=parseInt(e.target.dataset.pos);
+    const current=tabRows[bar][s][p];
+    const fret=prompt('Masukkan nomor fret (0-24):', current==='-'?'0':current);
+    if(fret!==null){tabRows[bar][s][p]=fret===''?'-':fret; renderTab();}
   }
 });
 
-function downloadTab(){
+function buildPlainText(){
   let text='';
   tabRows.forEach(tab=>{
-    for(let s=numStrings-1;s>=0;s--){
-      text += names[s] + '|';
-      for(let i=0;i<numPositions;i++){ text += tab[s][i]; }
-      text += '|\n';
+    for(let s=numStrings-1; s>=0; s--){
+      text+=names[s]+'|';
+      for(let i=0;i<numPositions;i++){text+=tab[numStrings-1 - s][i];}
+      text+='|\n';
     }
-    text += '\n';
+    text+='\n';
   });
-  const blob = new Blob([text], {type:'text/plain'});
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'tab.txt';
+  return text;
+}
+function downloadTab(){
+  const text=buildPlainText();
+  const blob=new Blob([text],{type:'text/plain'});
+  const link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download='tab.txt';
   link.click();
 }
-
+function copyTab(){navigator.clipboard.writeText(buildPlainText());}
 function clearTab(){tabRows=[createEmptyBar()]; renderTab();}
 function addRow(){tabRows.push(createEmptyBar()); renderTab();}
 
-// Mainkan nada seperti gitar akustik
-function playGuitarAcoustic(freq, startTime, duration){
-  const gainNode = context.createGain();
+function playGuitarAcoustic(freq,startTime,duration){
+  const gainNode=context.createGain();
   gainNode.connect(context.destination);
-
-  // oscillator utama (sine)
-  const osc1 = context.createOscillator();
-  osc1.type = 'sine';
-  osc1.frequency.value = freq;
-  osc1.connect(gainNode);
-
-  // tambahan harmonik (triangle + saw)
-  const osc2 = context.createOscillator();
-  osc2.type = 'triangle';
-  osc2.frequency.value = freq * 2; // harmonic
-  osc2.connect(gainNode);
-
-  const osc3 = context.createOscillator();
-  osc3.type = 'sawtooth';
-  osc3.frequency.value = freq * 0.5; // subharmonic
-  osc3.connect(gainNode);
-
-  // Envelope ADSR sederhana
-  gainNode.gain.setValueAtTime(0, startTime);
-  gainNode.gain.linearRampToValueAtTime(0.8, startTime + 0.01); // attack
-  gainNode.gain.exponentialRampToValueAtTime(0.4, startTime + duration*0.3); // decay
-  gainNode.gain.setValueAtTime(0.4, startTime + duration*0.7); // sustain
-  gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration); // release
-
-  osc1.start(startTime); osc1.stop(startTime + duration + 0.05);
-  osc2.start(startTime); osc2.stop(startTime + duration + 0.05);
-  osc3.start(startTime); osc3.stop(startTime + duration + 0.05);
+  const osc1=context.createOscillator();
+  osc1.type='sine'; osc1.frequency.value=freq; osc1.connect(gainNode);
+  const osc2=context.createOscillator();
+  osc2.type='triangle'; osc2.frequency.value=freq*2; osc2.connect(gainNode);
+  const osc3=context.createOscillator();
+  osc3.type='sawtooth'; osc3.frequency.value=freq*0.5; osc3.connect(gainNode);
+  gainNode.gain.setValueAtTime(0,startTime);
+  gainNode.gain.linearRampToValueAtTime(0.8,startTime+0.01);
+  gainNode.gain.exponentialRampToValueAtTime(0.4,startTime+duration*0.3);
+  gainNode.gain.setValueAtTime(0.4,startTime+duration*0.7);
+  gainNode.gain.exponentialRampToValueAtTime(0.001,startTime+duration);
+  osc1.start(startTime); osc1.stop(startTime+duration+0.05);
+  osc2.start(startTime); osc2.stop(startTime+duration+0.05);
+  osc3.start(startTime); osc3.stop(startTime+duration+0.05);
 }
 
-// preview tab chord per posisi
 function previewTab(){
-  const positionDuration = 0.4;
-  const restDuration = 0.05;
-  let delay = 0;
-  const now = context.currentTime;
-
+  const positionDuration=0.4;
+  const restDuration=0.05;
+  let delay=0;
+  const now=context.currentTime;
   tabRows.forEach(tab=>{
     for(let i=0;i<numPositions;i++){
-      const hasNote = tab.some((stringArr,s)=>stringArr[i]!=='-');
-      const duration = hasNote ? positionDuration : restDuration;
-
+      const hasNote=tab.some((stringArr)=>stringArr[i]!=='-');
+      const duration=hasNote?positionDuration:restDuration;
       tab.forEach((stringArr,s)=>{
-        const val = stringArr[i];
+        const val=stringArr[i];
         if(val!=='-'){
-          const fret = parseInt(val);
-          const freq = baseFreqs[s]*Math.pow(2, fret/12);
-          playGuitarAcoustic(freq, now + delay, duration);
+          const fret=parseInt(val);
+          const freq=baseFreqs[s]*Math.pow(2,fret/12);
+          playGuitarAcoustic(freq,now+delay,duration);
         }
       });
-      delay += duration;
+      delay+=duration;
     }
   });
 }
 
+document.getElementById('downloadBtn').onclick=downloadTab;
+document.getElementById('copyBtn').onclick=copyTab;
+document.getElementById('clearBtn').onclick=clearTab;
+document.getElementById('addRowBtn').onclick=addRow;
+document.getElementById('previewBtn').onclick=previewTab;
+
 renderTab();
 </script>
+
 </body>
 </html>
