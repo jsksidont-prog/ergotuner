@@ -1,70 +1,94 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ERGOGRESS</title>
-<style>
-  :root{
-    --bg:#ffffff; --panel:#ffffff; --card:#ffffff; --muted:#5b6470; --txt:#0b1220; --accent:#10b981; --border:#e5e7eb;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:linear-gradient(180deg,#f7fafc 0%, #ffffff 60%); color:var(--txt);
-    font:500 16px/1.55 Inter,system-ui,Segoe UI,Roboto,Arial;
-    display:flex; min-height:100vh; align-items:flex-start; justify-content:center; padding:24px;
-    background:
-      linear-gradient(rgba(255,255,255,0.6)),
-      url("ANDIDONT.png") no-repeat center center fixed;
-    background-size: cover;
-    background-attachment: scroll;
-    color: #000000;
-  }
-  .wrap{width:min(980px, 96vw); display:flex; flex-direction:column; gap:16px}
-  header{
-    background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px 16px;
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    box-shadow:0 8px 30px rgba(0,0,0,.06);
-  }
-  .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.3px}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ERGOGRESS</title>
 
-  /* LOGO pakai ERGOVHORD.PNG */
-  .logo{
-    width:26px; height:26px; border-radius:6px; object-fit:cover; display:block;
-  }
+  <style>
+    :root{
+      --bg:#ffffff; --panel:#ffffff; --card:#ffffff; --muted:#5b6470; --txt:#0b1220; --accent:#10b981; --border:#e5e7eb;
+    }
+    *{box-sizing:border-box}
 
-  select{
-    background:#f8fafc; color:var(--txt); border:1px solid var(--border); border-radius:10px;
-    padding:10px 12px; font:600 15px/1 Inter,system-ui; min-width:240px; outline:none;
-  }
+    body{
+      margin:0;
+      color:var(--txt);
+      font:500 16px/1.55 Inter,system-ui,Segoe UI,Roboto,Arial;
+      display:flex; min-height:100vh; align-items:flex-start; justify-content:center;
+      padding:24px;
+      background:
+        linear-gradient(180deg,#f7fafc 0%, #ffffff 60%),
+        linear-gradient(rgba(255,255,255,0.6)),
+        url("ANDIDONT.png") no-repeat center/cover fixed;
+    }
 
-  .list{ display:grid; grid-template-columns:1fr; gap:10px }
-  .item{
-    background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px;
-    box-shadow:0 10px 24px rgba(0,0,0,.05);
-    cursor:pointer; transition:transform .06s ease, border-color .2s ease, background .2s ease;
-  }
-  .item:hover{ transform:translateY(-1px); border-color:#d1d5db; background:#fbfdff }
-  .roman{color:var(--muted); font-size:13px; margin-bottom:6px}
-  .row{ display:flex; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap }
-  .chords{font-size:18px; font-weight:800; letter-spacing:.3px}
-  .meta{display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
-  .pill{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:6px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:#0f172a; background:#f8fafc;
-  }
-  .pill b{font-weight:800}
-  .artists{opacity:.9}
-  footer{color:var(--muted); font-size:12px; text-align:center; margin-top:2px}
-</style>
+    .wrap{width:min(980px, 96vw); display:flex; flex-direction:column; gap:16px}
+
+    header{
+      background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; /* allow wrap */
+      box-shadow:0 8px 30px rgba(0,0,0,.06);
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.3px;
+      flex:1 1 auto; /* let it shrink on small screens */
+    }
+
+    /* LOGO pakai ERGOVHORD.PNG */
+    .logo{
+      width:26px; height:26px; border-radius:6px; object-fit:cover; display:block;
+    }
+
+    select{
+      background:#f8fafc; color:var(--txt); border:1px solid var(--border); border-radius:10px;
+      padding:10px 12px; font:600 15px/1 Inter,system-ui; min-width:240px; outline:none;
+      max-width:100%; /* prevent overflow */
+    }
+
+    .list{ display:grid; grid-template-columns:1fr; gap:10px }
+    .item{
+      background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px;
+      box-shadow:0 10px 24px rgba(0,0,0,.05);
+      cursor:pointer; transition:transform .06s ease, border-color .2s ease, background .2s ease;
+    }
+    .item:hover{ transform:translateY(-1px); border-color:#d1d5db; background:#fbfdff }
+    .roman{color:var(--muted); font-size:13px; margin-bottom:6px}
+    .row{ display:flex; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap } /* wrap */
+    .chords{font-size:18px; font-weight:800; letter-spacing:.3px; word-break:break-word} /* avoid overflow */
+    .meta{display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:#0f172a; background:#f8fafc;
+    }
+    .pill b{font-weight:800}
+    .artists{opacity:.9}
+    footer{color:var(--muted); font-size:12px; text-align:center; margin-top:2px}
+
+    /* ====== Mobile tweaks ====== */
+    @media (max-width: 600px){
+      body{ padding:12px }             /* smaller outer padding */
+      .wrap{ width:100% }
+      header{ gap:10px }
+      select{
+        min-width:0;                   /* allow shrink */
+        width:100%;                    /* full row on mobile */
+        order:2;                       /* place under brand */
+      }
+      .brand{ order:1; width:100% }    /* brand full row */
+    }
+  </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
       <div class="brand">
-        <img src="ERGOVHORD.PNG" alt="ErgoVhord Logo" class="logo" />
+        <img src="ERGOPANTEK.PNG" alt="ErgoVhord Logo" class="logo" />
         ErgoChord — List Progress
       </div>
+
       <select id="keySelect" aria-label="Pilih kunci">
         <optgroup label="Mayor">
           <option>C Major</option><option>G Major</option><option>D Major</option><option>A Major</option>
@@ -80,186 +104,185 @@
     </header>
 
     <div class="list" id="list"></div>
-    <footer>Klik baris untuk menyalin progresi (nama chord). Genre & artis banyak dan menyesuaikan kunci.</footer>
   </div>
 
-<script>
-(() => {
-  // ==== Nada & enharmonik (SATU KALI SAJA) ====
-  const NOTE_INDEX = {'C':0,'B#':0,'C#':1,'Db':1,'D':2,'D#':3,'Eb':3,'E':4,'Fb':4,'F':5,'E#':5,'F#':6,'Gb':6,'G':7,'G#':8,'Ab':8,'A':9,'A#':10,'Bb':10,'B':11,'Cb':11};
-  const PITCH_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-  const PITCH_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
-  const FLAT_MAJOR = new Set(['F','Bb','Eb','Ab','Db','Gb','Cb']);
-  const FLAT_MINOR = new Set(['D','G','C','F','Bb','Eb','Ab']);
+  <script>
+  (() => {
+    // ==== Nada & enharmonik (SATU KALI SAJA) ====
+    const NOTE_INDEX = {'C':0,'B#':0,'C#':1,'Db':1,'D':2,'D#':3,'Eb':3,'E':4,'Fb':4,'F':5,'E#':5,'F#':6,'Gb':6,'G':7,'G#':8,'Ab':8,'A':9,'A#':10,'Bb':10,'B':11,'Cb':11};
+    const PITCH_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    const PITCH_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+    const FLAT_MAJOR = new Set(['F','Bb','Eb','Ab','Db','Gb','Cb']);
+    const FLAT_MINOR = new Set(['D','G','C','F','Bb','Eb','Ab']);
 
-  const SCALE_MAJOR = [0,2,4,5,7,9,11];
-  const SCALE_MINOR = [0,2,3,5,7,8,10];
-  const MAJOR_DEGREE_QUAL = ['','m','m','','','m','dim'];
-  const MINOR_DEGREE_QUAL = ['m','dim','','m','m','',''];
+    const SCALE_MAJOR = [0,2,4,5,7,9,11];
+    const SCALE_MINOR = [0,2,3,5,7,8,10];
+    const MAJOR_DEGREE_QUAL = ['','m','m','','','m','dim'];
+    const MINOR_DEGREE_QUAL = ['m','dim','','m','m','',''];
 
-  const PRESETS_MAJOR = ['I–V–vi–IV','I–vi–IV–V','vi–IV–I–V','I–IV–V','I–V–IV','ii–V–I','I–V–ii–IV','I–iii–vi–IV','I–IV–vi–V'];
-  const PRESETS_MINOR = ['i–VI–III–VII','i–VII–VI–VII','i–iv–v','i–iv–VII–III','i–v–VI–VII'];
+    const PRESETS_MAJOR = ['I–V–vi–IV','I–vi–IV–V','vi–IV–I–V','I–IV–V','I–V–IV','ii–V–I','I–V–ii–IV','I–iii–vi–IV','I–IV–vi–V'];
+    const PRESETS_MINOR = ['i–VI–III–VII','i–VII–VI–VII','i–iv–v','i–iv–VII–III','i–v–VI–VII'];
 
-  const META_KEY_MAJOR = {
-    'C':  { genre: ['Pop','Ballad Pop','Acoustic Pop','Adult Contemporary','Singer-Songwriter','CCM/Worship','Indie Pop','Soft Rock','Britpop','Folk Pop','K-Pop Ballad','Lo-fi Pop'],
-            artists:['Adele','Ed Sheeran','Coldplay','Sam Smith','Jason Mraz','John Legend','Lewis Capaldi','Shawn Mendes','LANY','Dido','Westlife','OneRepublic'] },
-    'G':  { genre: ['Folk','Country Pop','Bluegrass Pop','Americana','Acoustic Folk','Indie Folk','Celtic Pop','Country Rock','Alt Folk','Roots'],
-            artists:['Taylor Swift','The Lumineers','Mumford & Sons','Vance Joy','Passenger','Kacey Musgraves','Zac Brown Band','Sheryl Crow','Keith Urban','Lady A'] },
-    'D':  { genre: ['Country','Pop-Rock','Heartland Rock','Indie Pop-Rock','Worship','Christian Pop','Folk Rock','Nashville Pop','Adult Pop'],
-            artists:['OneRepublic','Imagine Dragons','U2','Tom Petty','Chris Tomlin','Hillsong','Dan + Shay','Rascal Flatts','Goo Goo Dolls'] },
-    'A':  { genre: ['Rock','Indie Rock','Alt Rock','Pop-Punk','Garage Rock','Arena Rock','J-Rock Pop','Brit Rock'],
-            artists:['Paramore','Arctic Monkeys','The Killers','U2','Foo Fighters','Oasis','The 1975','Jimmy Eat World','Feeder'] },
-    'E':  { genre: ['Blues Rock','Classic Rock','Pop-Rock','Country Rock','Modern Worship','Alt Pop'],
-            artists:['John Mayer','The Beatles','Eagles','Johnny Cash','Kings of Leon','Switchfoot','Fray'] },
-    'B':  { genre: ['Modern Pop','Electropop','K-Pop','Hyperpop','Dance Pop','Future Pop','Urban Pop'],
-            artists:['Dua Lipa','BTS','Billie Eilish','Ariana Grande','Charlie Puth','Olivia Rodrigo','Troye Sivan'] },
-    'F#': { genre: ['EDM','Synth Pop','Dance Pop','Future Bass','Tropical House','Deep House','Electro House','Progressive House'],
-            artists:['Zedd','Kygo','Martin Garrix','Avicii','Calvin Harris','Disclosure','Alesso','Illenium'] },
-    'C#': { genre: ['R&B Pop','Alt Pop','Lo-fi R&B','Bedroom Pop','Neo-Soul Pop','Indietronica'],
-            artists:['Bruno Mars','Halsey','SZA','Kehlani','The Weeknd','Tinashe','Khalid','Lorde'] },
-    'F':  { genre: ['Soul','R&B','Neo-Soul','Retro Pop','Funk Pop','Motown Pop','Gospel Pop'],
-            artists:['Alicia Keys','Amy Winehouse','Stevie Wonder','John Legend','Adele','Sam Smith','Leon Bridges'] },
-    'Bb': { genre: ['Jazz-Pop','Soul','Swing Pop','Lounge Pop','Bossa Pop','Crooner Pop'],
-            artists:['Norah Jones','Michael Bublé','Sam Smith','Jamie Cullum','Diana Krall','Frank Sinatra'] },
-    'Eb': { genre: ['Funk','Disco','Neo-Soul','Boogie','City Pop','R&B Funk','Nu-Disco'],
-            artists:['Daft Punk','Bruno Mars','Jamiroquai','Vulfpeck','Tuxedo','Parcels'] },
-    'Ab': { genre: ['Soul Pop','Gospel','Ballad R&B','Urban AC','Worship Ballad','Contemporary Soul'],
-            artists:['John Legend','Adele','Mary Mary','Kirk Franklin','Leona Lewis','Ari Lennox'] },
-  };
-
-  const META_KEY_MINOR = {
-    'A':  { genre: ['Rock Minor','EDM','Alt Pop Minor','Emo Pop','Trap Pop','Indie Electronica','Synthwave'],
-            artists:['Linkin Park','Evanescence','Avicii','The Weeknd','Billie Eilish','CHVRCHES','M83'] },
-    'E':  { genre: ['Folk Rock','Indie Folk','Post-Rock Light','Dream Pop','Shoegaze Pop'],
-            artists:['Mumford & Sons','Bon Iver','Radiohead','Cigarettes After Sex','The Cranberries'] },
-    'B':  { genre: ['Alt Pop','EDM Pop','Electropop','Dark Pop','Future Bass','Hyperpop'],
-            artists:['Billie Eilish','Zedd','The Weeknd','Grimes','Porter Robinson','Madeon'] },
-    'F#': { genre: ['Cinematic','Synthwave','Ambient Pop','Electro Rock','Darkwave'],
-            artists:['Hans Zimmer','M83','Kavinsky','CHVRCHES','Depeche Mode','Trent Reznor'] },
-    'C#': { genre: ['Dark Pop','Trap','Alt R&B','Drill Pop','Sad Pop'],
-            artists:['Halsey','Post Malone','SZA','The Weeknd','Doja Cat','ROSALÍA'] },
-    'G#': { genre: ['Electropop','House','Future House','Eurodance','EDM Ballad'],
-            artists:['Calvin Harris','Disclosure','Kygo','David Guetta','Alesso','Avicii'] },
-    'D#': { genre: ['Future Bass','Alt R&B','Chill Trap','UK Garage Pop'],
-            artists:['Flume','Khalid','James Blake','SG Lewis','Snakehips'] },
-    'A#': { genre: ['Latin Pop','Reggaeton Pop','Dance Latin','Bachata Pop'],
-            artists:['Shakira','Enrique Iglesias','Becky G','Camila Cabello','Maluma'] },
-    'D':  { genre: ['Folk Minor','Indie','Baroque Pop','Cinematic Folk'],
-            artists:['The Cranberries','Florence + The Machine','Aurora','Lana Del Rey','Of Monsters and Men'] },
-    'G':  { genre: ['Alt Rock Minor','Grunge','Nu Metal','Post-Grunge'],
-            artists:['Nirvana','Radiohead','Muse','Linkin Park','Evanescence'] },
-    'C':  { genre: ['Blues Minor','Lo-fi','Neo-Soul Minor','Jazz Hop'],
-            artists:['John Mayer','Joji','Tom Misch','FKJ','J Dilla'] },
-    'F':  { genre: ['Soul Minor','R&B','Urban Pop','Gospel Minor'],
-            artists:['Alicia Keys','The Weeknd','Ari Lennox','H.E.R.','Snoh Aalegra'] },
-  };
-
-  const PICKER_MAJOR = {'I–V–vi–IV':'Pop','I–vi–IV–V':'Pop','vi–IV–I–V':'Rock','I–IV–V':'Blues','I–V–IV':'Country','ii–V–I':'Jazz','I–V–ii–IV':'Pop','I–iii–vi–IV':'Pop','I–IV–vi–V':'Pop'};
-  const PICKER_MINOR = {'i–VI–III–VII':'Rock','i–VII–VI–VII':'Latin','i–iv–v':'Folk','i–iv–VII–III':'Rock','i–v–VI–VII':'Metal'};
-
-  // ==== Util nada ====
-  function parseKeyLabel(label){ const parts = label.trim().split(/\s+/); return { tonic: parts[0], mode: (parts[1]||'Major') }; }
-  function preferFlat(label){ const { tonic, mode } = parseKeyLabel(label); return (mode === 'Major') ? FLAT_MAJOR.has(tonic) : FLAT_MINOR.has(tonic); }
-  function tonicIndex(label){ const { tonic } = parseKeyLabel(label); return (NOTE_INDEX[tonic] ?? -1); }
-  function buildScale(tonicIdx, mode, names){ const pattern = (mode === 'Major') ? SCALE_MAJOR : SCALE_MINOR; return pattern.map(semi => names[(tonicIdx + semi) % 12]); }
-  function chordsInKey(label){
-    const { mode } = parseKeyLabel(label);
-    const names = preferFlat(label) ? PITCH_FLAT : PITCH_SHARP;
-    const tIdx = tonicIndex(label);
-    if (tIdx < 0) return Array(7).fill('(?)');
-    const scale = buildScale(tIdx, mode, names);
-    const qual  = (mode === 'Major') ? MAJOR_DEGREE_QUAL : MINOR_DEGREE_QUAL;
-    return scale.map((root, i) => root + (qual[i] === 'dim' ? 'dim' : qual[i]));
-  }
-
-  // ==== Selector pseudo-random stabil ====
-  function hashStr(s){
-    let h = 0x811c9dc5;
-    for (let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h += (h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24); }
-    return h >>> 0;
-  }
-  function rng(seed){
-    let x = (seed>>>0) || 123456789;
-    return () => {
-      x ^= x << 13; x ^= x >>> 17; x ^= x << 5; x >>>= 0;
-      return x / 0xffffffff;
+    const META_KEY_MAJOR = {
+      'C':  { genre: ['Pop','Ballad Pop','Acoustic Pop','Adult Contemporary','Singer-Songwriter','CCM/Worship','Indie Pop','Soft Rock','Britpop','Folk Pop','K-Pop Ballad','Lo-fi Pop'],
+              artists:['Adele','Ed Sheeran','Coldplay','Sam Smith','Jason Mraz','John Legend','Lewis Capaldi','Shawn Mendes','LANY','Dido','Westlife','OneRepublic'] },
+      'G':  { genre: ['Folk','Country Pop','Bluegrass Pop','Americana','Acoustic Folk','Indie Folk','Celtic Pop','Country Rock','Alt Folk','Roots'],
+              artists:['Taylor Swift','The Lumineers','Mumford & Sons','Vance Joy','Passenger','Kacey Musgraves','Zac Brown Band','Sheryl Crow','Keith Urban','Lady A'] },
+      'D':  { genre: ['Country','Pop-Rock','Heartland Rock','Indie Pop-Rock','Worship','Christian Pop','Folk Rock','Nashville Pop','Adult Pop'],
+              artists:['OneRepublic','Imagine Dragons','U2','Tom Petty','Chris Tomlin','Hillsong','Dan + Shay','Rascal Flatts','Goo Goo Dolls'] },
+      'A':  { genre: ['Rock','Indie Rock','Alt Rock','Pop-Punk','Garage Rock','Arena Rock','J-Rock Pop','Brit Rock'],
+              artists:['Paramore','Arctic Monkeys','The Killers','U2','Foo Fighters','Oasis','The 1975','Jimmy Eat World','Feeder'] },
+      'E':  { genre: ['Blues Rock','Classic Rock','Pop-Rock','Country Rock','Modern Worship','Alt Pop'],
+              artists:['John Mayer','The Beatles','Eagles','Johnny Cash','Kings of Leon','Switchfoot','Fray'] },
+      'B':  { genre: ['Modern Pop','Electropop','K-Pop','Hyperpop','Dance Pop','Future Pop','Urban Pop'],
+              artists:['Dua Lipa','BTS','Billie Eilish','Ariana Grande','Charlie Puth','Olivia Rodrigo','Troye Sivan'] },
+      'F#': { genre: ['EDM','Synth Pop','Dance Pop','Future Bass','Tropical House','Deep House','Electro House','Progressive House'],
+              artists:['Zedd','Kygo','Martin Garrix','Avicii','Calvin Harris','Disclosure','Alesso','Illenium'] },
+      'C#': { genre: ['R&B Pop','Alt Pop','Lo-fi R&B','Bedroom Pop','Neo-Soul Pop','Indietronica'],
+              artists:['Bruno Mars','Halsey','SZA','Kehlani','The Weeknd','Tinashe','Khalid','Lorde'] },
+      'F':  { genre: ['Soul','R&B','Neo-Soul','Retro Pop','Funk Pop','Motown Pop','Gospel Pop'],
+              artists:['Alicia Keys','Amy Winehouse','Stevie Wonder','John Legend','Adele','Sam Smith','Leon Bridges'] },
+      'Bb': { genre: ['Jazz-Pop','Soul','Swing Pop','Lounge Pop','Bossa Pop','Crooner Pop'],
+              artists:['Norah Jones','Michael Bublé','Sam Smith','Jamie Cullum','Diana Krall','Frank Sinatra'] },
+      'Eb': { genre: ['Funk','Disco','Neo-Soul','Boogie','City Pop','R&B Funk','Nu-Disco'],
+              artists:['Daft Punk','Bruno Mars','Jamiroquai','Vulfpeck','Tuxedo','Parcels'] },
+      'Ab': { genre: ['Soul Pop','Gospel','Ballad R&B','Urban AC','Worship Ballad','Contemporary Soul'],
+              artists:['John Legend','Adele','Mary Mary','Kirk Franklin','Leona Lewis','Ari Lennox'] },
     };
-  }
-  function pickMany(arr, n, rnd){
-    if (!arr?.length) return [];
-    const idx = arr.map((_,i)=>i);
-    for (let i=0;i<Math.min(n,idx.length);i++){
-      const j = i + Math.floor(rnd()*(idx.length - i));
-      [idx[i],idx[j]] = [idx[j],idx[i]];
+
+    const META_KEY_MINOR = {
+      'A':  { genre: ['Rock Minor','EDM','Alt Pop Minor','Emo Pop','Trap Pop','Indie Electronica','Synthwave'],
+              artists:['Linkin Park','Evanescence','Avicii','The Weeknd','Billie Eilish','CHVRCHES','M83'] },
+      'E':  { genre: ['Folk Rock','Indie Folk','Post-Rock Light','Dream Pop','Shoegaze Pop'],
+              artists:['Mumford & Sons','Bon Iver','Radiohead','Cigarettes After Sex','The Cranberries'] },
+      'B':  { genre: ['Alt Pop','EDM Pop','Electropop','Dark Pop','Future Bass','Hyperpop'],
+              artists:['Billie Eilish','Zedd','The Weeknd','Grimes','Porter Robinson','Madeon'] },
+      'F#': { genre: ['Cinematic','Synthwave','Ambient Pop','Electro Rock','Darkwave'],
+              artists:['Hans Zimmer','M83','Kavinsky','CHVRCHES','Depeche Mode','Trent Reznor'] },
+      'C#': { genre: ['Dark Pop','Trap','Alt R&B','Drill Pop','Sad Pop'],
+              artists:['Halsey','Post Malone','SZA','The Weeknd','Doja Cat','ROSALÍA'] },
+      'G#': { genre: ['Electropop','House','Future House','Eurodance','EDM Ballad'],
+              artists:['Calvin Harris','Disclosure','Kygo','David Guetta','Alesso','Avicii'] },
+      'D#': { genre: ['Future Bass','Alt R&B','Chill Trap','UK Garage Pop'],
+              artists:['Flume','Khalid','James Blake','SG Lewis','Snakehips'] },
+      'A#': { genre: ['Latin Pop','Reggaeton Pop','Dance Latin','Bachata Pop'],
+              artists:['Shakira','Enrique Iglesias','Becky G','Camila Cabello','Maluma'] },
+      'D':  { genre: ['Folk Minor','Indie','Baroque Pop','Cinematic Folk'],
+              artists:['The Cranberries','Florence + The Machine','Aurora','Lana Del Rey','Of Monsters and Men'] },
+      'G':  { genre: ['Alt Rock Minor','Grunge','Nu Metal','Post-Grunge'],
+              artists:['Nirvana','Radiohead','Muse','Linkin Park','Evanescence'] },
+      'C':  { genre: ['Blues Minor','Lo-fi','Neo-Soul Minor','Jazz Hop'],
+              artists:['John Mayer','Joji','Tom Misch','FKJ','J Dilla'] },
+      'F':  { genre: ['Soul Minor','R&B','Urban Pop','Gospel Minor'],
+              artists:['Alicia Keys','The Weeknd','Ari Lennox','H.E.R.','Snoh Aalegra'] },
+    };
+
+    const PICKER_MAJOR = {'I–V–vi–IV':'Pop','I–vi–IV–V':'Pop','vi–IV–I–V':'Rock','I–IV–V':'Blues','I–V–IV':'Country','ii–V–I':'Jazz','I–V–ii–IV':'Pop','I–iii–vi–IV':'Pop','I–IV–vi–V':'Pop'};
+    const PICKER_MINOR = {'i–VI–III–VII':'Rock','i–VII–VI–VII':'Latin','i–iv–v':'Folk','i–iv–VII–III':'Rock','i–v–VI–VII':'Metal'};
+
+    // ==== Util nada ====
+    function parseKeyLabel(label){ const parts = label.trim().split(/\s+/); return { tonic: parts[0], mode: (parts[1]||'Major') }; }
+    function preferFlat(label){ const { tonic, mode } = parseKeyLabel(label); return (mode === 'Major') ? FLAT_MAJOR.has(tonic) : FLAT_MINOR.has(tonic); }
+    function tonicIndex(label){ const { tonic } = parseKeyLabel(label); return (NOTE_INDEX[tonic] ?? -1); }
+    function buildScale(tonicIdx, mode, names){ const pattern = (mode === 'Major') ? SCALE_MAJOR : SCALE_MINOR; return pattern.map(semi => names[(tonicIdx + semi) % 12]); }
+    function chordsInKey(label){
+      const { mode } = parseKeyLabel(label);
+      const names = preferFlat(label) ? PITCH_FLAT : PITCH_SHARP;
+      const tIdx = tonicIndex(label);
+      if (tIdx < 0) return Array(7).fill('(?)');
+      const scale = buildScale(tIdx, mode, names);
+      const qual  = (mode === 'Major') ? MAJOR_DEGREE_QUAL : MINOR_DEGREE_QUAL;
+      return scale.map((root, i) => root + (qual[i] === 'dim' ? 'dim' : qual[i]));
     }
-    return idx.slice(0, Math.min(n,idx.length)).map(i=>arr[i]);
-  }
 
-  function explodeMeta(theme, want, nGenres=6, nArtists=3, rnd){
-    if (!theme) return { genres:['—'], artists:['—'] };
-    const { genre, artists } = theme;
-    let first = genre.find(g => g.toLowerCase().includes((want||'').toLowerCase()));
-    const pool = genre.filter(g => g !== first);
-    const rest = pickMany(pool, nGenres- (first?1:0), rnd);
-    const genres = first ? [first, ...rest] : pickMany(genre, nGenres, rnd);
-    const arts = pickMany(artists, nArtists, rnd);
-    return { genres, artists: arts };
-  }
+    // ==== Selector pseudo-random stabil ====
+    function hashStr(s){
+      let h = 0x811c9dc5;
+      for (let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h += (h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24); }
+      return h >>> 0;
+    }
+    function rng(seed){
+      let x = (seed>>>0) || 123456789;
+      return () => {
+        x ^= x << 13; x ^= x >>> 17; x ^= x << 5; x >>>= 0;
+        return x / 0xffffffff;
+      };
+    }
+    function pickMany(arr, n, rnd){
+      if (!arr?.length) return [];
+      const idx = arr.map((_,i)=>i);
+      for (let i=0;i<Math.min(n,idx.length);i++){
+        const j = i + Math.floor(rnd()*(idx.length - i));
+        [idx[i],idx[j]] = [idx[j],idx[i]];
+      }
+      return idx.slice(0, Math.min(n,idx.length)).map(i=>arr[i]);
+    }
 
-  function metaForProgression(labelKey, progression){
-    const { tonic, mode } = parseKeyLabel(labelKey);
-    const base = (mode === 'Major') ? META_KEY_MAJOR[tonic] : META_KEY_MINOR[tonic];
-    const want = (mode === 'Major') ? PICKER_MAJOR[progression] : PICKER_MINOR[progression];
-    const seed = hashStr(labelKey + '|' + progression);
-    const rnd = rng(seed);
-    return explodeMeta(base, want, 6, 3, rnd);
-  }
+    function explodeMeta(theme, want, nGenres=6, nArtists=3, rnd){
+      if (!theme) return { genres:['—'], artists:['—'] };
+      const { genre, artists } = theme;
+      let first = genre.find(g => g.toLowerCase().includes((want||'').toLowerCase()));
+      const pool = genre.filter(g => g !== first);
+      const rest = pickMany(pool, nGenres- (first?1:0), rnd);
+      const genres = first ? [first, ...rest] : pickMany(genre, nGenres, rnd);
+      const arts = pickMany(artists, nArtists, rnd);
+      return { genres, artists: arts };
+    }
 
-  // ==== Render ====
-  function render(){
-    const keySel = document.getElementById('keySelect');
-    const listEl = document.getElementById('list');
-    const label = keySel.value;
-    const mode = /Minor$/.test(label) ? 'Minor' : 'Major';
-    const triads = chordsInKey(label);
-    const presets = (mode === 'Major') ? PRESETS_MAJOR : PRESETS_MINOR;
+    function metaForProgression(labelKey, progression){
+      const { tonic, mode } = parseKeyLabel(labelKey);
+      const base = (mode === 'Major') ? META_KEY_MAJOR[tonic] : META_KEY_MINOR[tonic];
+      const want = (mode === 'Major') ? PICKER_MAJOR[progression] : PICKER_MINOR[progression];
+      const seed = hashStr(labelKey + '|' + progression);
+      const rnd = rng(seed);
+      return explodeMeta(base, want, 6, 3, rnd);
+    }
 
-    listEl.innerHTML = '';
-    presets.forEach(p => {
-      const tokens = p.split(/[\s–—−-]+/);
-      const chordNames = tokens.map(tok => {
-        const degMap = {'I':0,'II':1,'III':2,'IV':3,'V':4,'VI':5,'VII':6,'i':0,'ii':1,'iii':2,'iv':3,'v':4,'vi':5,'vii':6};
-        const deg = degMap[tok];
-        return typeof deg === 'number' ? (triads[deg] || '(?)') : '(?)';
-      });
+    // ==== Render ====
+    function render(){
+      const keySel = document.getElementById('keySelect');
+      const listEl = document.getElementById('list');
+      const label = keySel.value;
+      const mode = /Minor$/.test(label) ? 'Minor' : 'Major';
+      const triads = chordsInKey(label);
+      const presets = (mode === 'Major') ? PRESETS_MAJOR : PRESETS_MINOR;
 
-      const meta = metaForProgression(label, p);
+      listEl.innerHTML = '';
+      presets.forEach(p => {
+        const tokens = p.split(/[\s–—−-]+/);
+        const chordNames = tokens.map(tok => {
+          const degMap = {'I':0,'II':1,'III':2,'IV':3,'V':4,'VI':5,'VII':6,'i':0,'ii':1,'iii':2,'iv':3,'v':4,'vi':5,'vii':6};
+          const deg = degMap[tok];
+          return typeof deg === 'number' ? (triads[deg] || '(?)') : '(?)';
+        });
 
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.innerHTML = `
-        <div class="roman">${p}</div>
-        <div class="row">
-          <div class="chords">${chordNames.join('  •  ')}</div>
-          <div class="meta">
-            ${meta.genres.map(g=>`<span class="pill">🎵 <b>${g}</b></span>`).join('')}
-            <span class="pill artists">👤 ${meta.artists.join(', ')}</span>
+        const meta = metaForProgression(label, p);
+
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.innerHTML = `
+          <div class="roman">${p}</div>
+          <div class="row">
+            <div class="chords">${chordNames.join('  •  ')}</div>
+            <div class="meta">
+              ${meta.genres.map(g=>`<span class="pill">🎵 <b>${g}</b></span>`).join('')}
+              <span class="pill artists">👤 ${meta.artists.join(', ')}</span>
+            </div>
           </div>
-        </div>
-      `;
-      item.addEventListener('click', () => {
-        const text = chordNames.join(' ');
-        navigator.clipboard?.writeText(text);
-        item.style.borderColor = 'var(--accent)';
-        setTimeout(()=> item.style.borderColor = 'var(--border)', 450);
+        `;
+        item.addEventListener('click', () => {
+          const text = chordNames.join(' ');
+          navigator.clipboard?.writeText(text);
+          item.style.borderColor = 'var(--accent)';
+          setTimeout(()=> item.style.borderColor = 'var(--border)', 450); // fixed typo
+        });
+        listEl.appendChild(item);
       });
-      listEl.appendChild(item);
-    });
-  }
+    }
 
-  document.getElementById('keySelect').addEventListener('change', render);
-  render();
-})();
-</script>
+    document.getElementById('keySelect').addEventListener('change', render);
+    render();
+  })();
+  </script>
 </body>
 </html>
