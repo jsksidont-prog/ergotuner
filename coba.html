@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>List Progress Chord • ErgoChord</title>
+<title>ERGOGRESS</title>
 <style>
   :root{
     --bg:#ffffff; --panel:#ffffff; --card:#ffffff; --muted:#5b6470; --txt:#0b1220; --accent:#10b981; --border:#e5e7eb;
@@ -13,6 +13,12 @@
     margin:0; background:linear-gradient(180deg,#f7fafc 0%, #ffffff 60%); color:var(--txt);
     font:500 16px/1.55 Inter,system-ui,Segoe UI,Roboto,Arial;
     display:flex; min-height:100vh; align-items:flex-start; justify-content:center; padding:24px;
+    background:
+      linear-gradient(rgba(255,255,255,0.6)),
+      url("ANDIDONT.png") no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: scroll;
+    color: #000000;
   }
   .wrap{width:min(980px, 96vw); display:flex; flex-direction:column; gap:16px}
   header{
@@ -21,7 +27,12 @@
     box-shadow:0 8px 30px rgba(0,0,0,.06);
   }
   .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.3px}
-  .logo{width:22px; height:22px; border-radius:6px; background:linear-gradient(45deg,var(--accent),#34d399)}
+
+  /* LOGO pakai ERGOVHORD.PNG */
+  .logo{
+    width:26px; height:26px; border-radius:6px; object-fit:cover; display:block;
+  }
+
   select{
     background:#f8fafc; color:var(--txt); border:1px solid var(--border); border-radius:10px;
     padding:10px 12px; font:600 15px/1 Inter,system-ui; min-width:240px; outline:none;
@@ -50,15 +61,16 @@
 <body>
   <div class="wrap">
     <header>
-      <div class="brand"><div class="logo"></div> ErgoChord — List Progress</div>
+      <div class="brand">
+        <img src="ERGOVHORD.PNG" alt="ErgoVhord Logo" class="logo" />
+        ErgoChord — List Progress
+      </div>
       <select id="keySelect" aria-label="Pilih kunci">
-        <!-- Major -->
         <optgroup label="Mayor">
           <option>C Major</option><option>G Major</option><option>D Major</option><option>A Major</option>
           <option>E Major</option><option>B Major</option><option>F# Major</option><option>C# Major</option>
           <option>F Major</option><option>Bb Major</option><option>Eb Major</option><option>Ab Major</option>
         </optgroup>
-        <!-- Minor (natural) -->
         <optgroup label="Minor">
           <option>A Minor</option><option>E Minor</option><option>B Minor</option><option>F# Minor</option>
           <option>C# Minor</option><option>G# Minor</option><option>D# Minor</option><option>A# Minor</option>
@@ -73,7 +85,7 @@
 
 <script>
 (() => {
-  // ==== Nada & enharmonik ====
+  // ==== Nada & enharmonik (SATU KALI SAJA) ====
   const NOTE_INDEX = {'C':0,'B#':0,'C#':1,'Db':1,'D':2,'D#':3,'Eb':3,'E':4,'Fb':4,'F':5,'E#':5,'F#':6,'Gb':6,'G':7,'G#':8,'Ab':8,'A':9,'A#':10,'Bb':10,'B':11,'Cb':11};
   const PITCH_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
   const PITCH_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
@@ -85,11 +97,9 @@
   const MAJOR_DEGREE_QUAL = ['','m','m','','','m','dim'];
   const MINOR_DEGREE_QUAL = ['m','dim','','m','m','',''];
 
-  // === Preset progresi ===
   const PRESETS_MAJOR = ['I–V–vi–IV','I–vi–IV–V','vi–IV–I–V','I–IV–V','I–V–IV','ii–V–I','I–V–ii–IV','I–iii–vi–IV','I–IV–vi–V'];
   const PRESETS_MINOR = ['i–VI–III–VII','i–VII–VI–VII','i–iv–v','i–iv–VII–III','i–v–VI–VII'];
 
-  // ==== META per KEY (MAJOR) — banyak genre + artis ====
   const META_KEY_MAJOR = {
     'C':  { genre: ['Pop','Ballad Pop','Acoustic Pop','Adult Contemporary','Singer-Songwriter','CCM/Worship','Indie Pop','Soft Rock','Britpop','Folk Pop','K-Pop Ballad','Lo-fi Pop'],
             artists:['Adele','Ed Sheeran','Coldplay','Sam Smith','Jason Mraz','John Legend','Lewis Capaldi','Shawn Mendes','LANY','Dido','Westlife','OneRepublic'] },
@@ -117,7 +127,6 @@
             artists:['John Legend','Adele','Mary Mary','Kirk Franklin','Leona Lewis','Ari Lennox'] },
   };
 
-  // ==== META per KEY (MINOR) — banyak genre + artis ====
   const META_KEY_MINOR = {
     'A':  { genre: ['Rock Minor','EDM','Alt Pop Minor','Emo Pop','Trap Pop','Indie Electronica','Synthwave'],
             artists:['Linkin Park','Evanescence','Avicii','The Weeknd','Billie Eilish','CHVRCHES','M83'] },
@@ -145,12 +154,10 @@
             artists:['Alicia Keys','The Weeknd','Ari Lennox','H.E.R.','Snoh Aalegra'] },
   };
 
-  // Mencerahkan rasa progresi → preferensi label (untuk genre pertama)
   const PICKER_MAJOR = {'I–V–vi–IV':'Pop','I–vi–IV–V':'Pop','vi–IV–I–V':'Rock','I–IV–V':'Blues','I–V–IV':'Country','ii–V–I':'Jazz','I–V–ii–IV':'Pop','I–iii–vi–IV':'Pop','I–IV–vi–V':'Pop'};
   const PICKER_MINOR = {'i–VI–III–VII':'Rock','i–VII–VI–VII':'Latin','i–iv–v':'Folk','i–iv–VII–III':'Rock','i–v–VI–VII':'Metal'};
 
   // ==== Util nada ====
-  const ROMAN_TO_DEG = {'I':0,'II':1,'III':2,'IV':3,'V':4,'VI':5,'VII':6,'i':0,'ii':1,'iii':2,'iv':3,'v':4,'vi':5,'vii':6};
   function parseKeyLabel(label){ const parts = label.trim().split(/\s+/); return { tonic: parts[0], mode: (parts[1]||'Major') }; }
   function preferFlat(label){ const { tonic, mode } = parseKeyLabel(label); return (mode === 'Major') ? FLAT_MAJOR.has(tonic) : FLAT_MINOR.has(tonic); }
   function tonicIndex(label){ const { tonic } = parseKeyLabel(label); return (NOTE_INDEX[tonic] ?? -1); }
@@ -165,15 +172,13 @@
     return scale.map((root, i) => root + (qual[i] === 'dim' ? 'dim' : qual[i]));
   }
 
-  // ==== Selector pseudo-random stabil (berdasar key+progression) ====
+  // ==== Selector pseudo-random stabil ====
   function hashStr(s){
-    // FNV-1a 32-bit sederhana
     let h = 0x811c9dc5;
     for (let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h += (h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24); }
     return h >>> 0;
   }
   function rng(seed){
-    // xorshift32
     let x = (seed>>>0) || 123456789;
     return () => {
       x ^= x << 13; x ^= x >>> 17; x ^= x << 5; x >>>= 0;
@@ -183,7 +188,6 @@
   function pickMany(arr, n, rnd){
     if (!arr?.length) return [];
     const idx = arr.map((_,i)=>i);
-    // partial Fisher–Yates hingga n
     for (let i=0;i<Math.min(n,idx.length);i++){
       const j = i + Math.floor(rnd()*(idx.length - i));
       [idx[i],idx[j]] = [idx[j],idx[i]];
@@ -191,17 +195,13 @@
     return idx.slice(0, Math.min(n,idx.length)).map(i=>arr[i]);
   }
 
-  // Ambil beberapa genre + artis dari tema KEY; utamakan label yang “diinginkan” (want)
   function explodeMeta(theme, want, nGenres=6, nArtists=3, rnd){
     if (!theme) return { genres:['—'], artists:['—'] };
     const { genre, artists } = theme;
-
-    // pastikan genre pertama mengandung want bila ada
     let first = genre.find(g => g.toLowerCase().includes((want||'').toLowerCase()));
     const pool = genre.filter(g => g !== first);
     const rest = pickMany(pool, nGenres- (first?1:0), rnd);
     const genres = first ? [first, ...rest] : pickMany(genre, nGenres, rnd);
-
     const arts = pickMany(artists, nArtists, rnd);
     return { genres, artists: arts };
   }
@@ -228,7 +228,8 @@
     presets.forEach(p => {
       const tokens = p.split(/[\s–—−-]+/);
       const chordNames = tokens.map(tok => {
-        const deg = {'I':0,'II':1,'III':2,'IV':3,'V':4,'VI':5,'VII':6,'i':0,'ii':1,'iii':2,'iv':3,'v':4,'vi':5,'vii':6}[tok];
+        const degMap = {'I':0,'II':1,'III':2,'IV':3,'V':4,'VI':5,'VII':6,'i':0,'ii':1,'iii':2,'iv':3,'v':4,'vi':5,'vii':6};
+        const deg = degMap[tok];
         return typeof deg === 'number' ? (triads[deg] || '(?)') : '(?)';
       });
 
