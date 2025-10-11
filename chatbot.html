@@ -1,98 +1,462 @@
-
-
 <!doctype html>
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HTML Chatbot - ErgoChat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gemini 2.5 Chat – Frontend Only (Markdown + Math)</title>
   <style>
-    :root{font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    body{display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px;background:#f6f8fb;color:#111}
-    .chat{width:100%;max-width:720px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(20,20,40,0.06);padding:12px;display:flex;flex-direction:column;gap:12px}
-    .messages{min-height:240px;max-height:60vh;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
-    .msg{padding:10px 12px;border-radius:10px;max-width:78%}
-    .user{align-self:flex-end;background:#e6f0ff}
-    .bot{align-self:flex-start;background:#f2f3f7}
-    .input-row{display:flex;gap:8px}
-    textarea{flex:1;padding:10px;border-radius:8px;border:1px solid #e6e9ef;resize:vertical;min-height:48px}
-    button{padding:10px 14px;border-radius:8px;border:0;background:#2563eb;color:#fff;cursor:pointer}
-    .small{font-size:12px;color:#666}
+    :root{
+      --bg:#ffffff; --panel:#f6f8fc; --accent:#1a73e8; --text:#0b1220; --muted:#5f6b7a;
+      --user:#e8f0fe; --bot:#ffffff; --ring:#e4e8ee; --overlay:rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{ max-width:100%; overflow-x:hidden; }
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    .hamburger-inline{
+      position:fixed; top:12px; left:12px; z-index:1000;
+      width:44px; height:44px; padding:0; display:inline-grid; place-items:center;
+      border:1px solid var(--ring); border-radius:10px; background:#fff; color:var(--text); cursor:pointer;
+      box-shadow:0 2px 8px rgba(0,0,0,.06); line-height:1; font-size:20px;
+    }
+    .hamburger-inline:active{ transform:scale(.98); }
+
+    header.bar{
+      background:linear-gradient(180deg,#fff,#fbfcff);
+      border-bottom:1px solid var(--ring);
+      padding:16px 16px;
+      text-align:center;
+    }
+    header.bar .title{
+      display:inline-flex; align-items:center; gap:10px;
+      margin:0; font-size:18px; font-weight:800; letter-spacing:.3px;
+    }
+    header.bar .title img{ width:26px; height:26px; object-fit:contain; display:inline-block; }
+
+    .drawer{position:fixed; inset:0; z-index:40; display:none}
+    .drawer.open{display:block}
+    .drawer .overlay{position:absolute; inset:0; background:var(--overlay)}
+    .drawer .panel{
+      position:absolute; top:0; left:0; height:100dvh; width:320px; max-width:90vw;
+      background:var(--panel); border-right:1px solid var(--ring);
+      transform:translateX(-100%); transition:transform .25s ease;
+      display:flex; flex-direction:column; box-shadow:0 8px 24px rgba(0,0,0,.08);
+    }
+    .drawer.open .panel{transform:translateX(0)}
+    .panel header{position:sticky; top:0; border-bottom:1px solid var(--ring); padding:12px; background:var(--panel); z-index:1}
+    .panel .content{padding:12px; overflow:auto; height:calc(100dvh - 56px)}
+    .section-title{font-size:12px; color:var(--muted); margin:14px 0 6px}
+    .row{display:flex; gap:10px; align-items:center}
+
+    input, textarea, select, button:not(.hamburger-inline){
+      width:100%; border:1px solid var(--ring); background:#fff; color:var(--text); border-radius:10px; padding:10px 12px; outline:none;
+    }
+    textarea{min-height:80px; resize:vertical}
+    button.primary{background:var(--accent); border:none; color:#fff; font-weight:600; cursor:pointer}
+    button.ghost{background:#fff}
+    .muted{font-size:12px; color:var(--muted)}
+
+    main{display:grid; grid-template-rows:1fr auto; height:calc(100dvh)}
+    .chat{
+      padding:16px; overflow:auto; scroll-behavior:smooth; display:flex; flex-direction:column; gap:14px;
+      max-width:900px; width:100%; margin:0 auto; min-width:0;
+    }
+
+    .bubble{
+      max-width:85%; padding:12px 14px; border-radius:16px;
+      box-shadow:0 2px 12px rgba(0,0,0,.06); border:1px solid var(--ring);
+      white-space:pre-wrap; position:relative; min-width:0;
+      overflow-wrap:anywhere; word-break:break-word;
+    }
+    .bubble *{ min-width:0; }
+    .bubble img, .bubble table{ max-width:100%; height:auto; }
+
+    .me{align-self:flex-end; background:var(--user); color:#0b1220}
+    .bot{align-self:flex-start; background:var(--bot)}
+
+    .copy-btn{
+      position:absolute; bottom:-12px; right:8px;
+      border:1px solid var(--ring); background:#fff;
+      border-radius:8px; padding:6px; line-height:0;
+      cursor:pointer; opacity:.85; transition:opacity .15s ease, transform .06s;
+      box-shadow:0 2px 8px rgba(0,0,0,.06); z-index:2;
+    }
+    .copy-btn:hover{ opacity:1; }
+    .copy-btn:active{ transform:scale(.98); }
+    .copy-btn svg{ width:16px; height:16px; display:block; }
+    .copied-toast{
+      position:absolute; bottom:-44px; right:8px;
+      background:#fff; border:1px solid var(--ring);
+      border-radius:8px; padding:4px 8px; font-size:12px; color:var(--muted);
+      box-shadow:0 2px 8px rgba(0,0,0,.06); z-index:1;
+    }
+
+    .meta{font-size:12px; color:var(--muted); margin:2px 4px}
+    .toolbar{ display:grid; gap:10px; padding:10px 16px; background:var(--panel); border-top:1px solid var(--ring);}
+    .grid-2{display:grid; grid-template-columns:1fr auto; gap:10px}
+    .spinner{ width:18px; height:18px; border:2px solid var(--ring); border-top-color:var(--accent);
+      border-radius:50%; animation:spin .9s linear infinite; display:inline-block; vertical-align:middle;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .bot p{margin:0 0 8px}
+    .bot pre{
+      background:#f9fafc; border:1px solid var(--ring); padding:10px; border-radius:10px;
+      white-space:pre-wrap; word-break:break-word; overflow:auto;
+    }
+    .bot code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .katex-display{margin:10px 0; max-width:100%; overflow:auto;}
+
+    @media (max-width:640px){
+      .bubble{max-width:92%}
+      .grid-2{grid-template-columns:1fr}
+    }
   </style>
+
+  <!-- libs -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
 </head>
 <body>
-  <h2>ErgoChat — Demo Chatbot (local)</h2>
-  <div class="chat">
-    <div class="messages" id="messages" aria-live="polite"></div>
+  <button id="hamburgerBtn" class="hamburger-inline" type="button" aria-label="Open menu">☰</button>
 
-    <div class="input-row">
-      <textarea id="input" placeholder="Tulis pesan... (Enter kirim, Shift+Enter baris baru)"></textarea>
-      <button id="send">Kirim</button>
-    </div>
-    <div class="small">Catatan: jangan simpan kunci API di file frontend. Jalankan server proxy yang tersedia di komentar atas.</div>
+  <header class="bar">
+    <h1 class="title" aria-label="Judul Aplikasi">
+      <img src="ERGOPANTEK.png" alt="ERGOPANTEK" />
+      <span>ERGO AI</span>
+    </h1>
+  </header>
+
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="overlay" id="drawerOverlay"></div>
+    <aside class="panel" role="dialog" aria-label="Settings">
+      <header style="display:flex; align-items:center; gap:8px;">
+        <div style="font-weight:700; flex:1">Menu</div>
+        <button id="closeDrawerBtn" class="ghost" type="button" aria-label="Close menu">✕</button>
+      </header>
+      <div class="content">
+        <div class="section-title">Kunci API</div>
+        <input id="apiKey" type="password" placeholder="Masukkan Google AI API Key (disimpan lokal)" />
+        <div class="row" style="margin-top:8px">
+          <button id="saveKeyBtn" class="primary" type="button">Simpan Kunci</button>
+          <button id="clearKey" class="ghost" type="button">Hapus</button>
+        </div>
+
+        <div class="section-title">Model</div>
+        <select id="model">
+          <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+          <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest</option>
+          <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
+        </select>
+        <div class="row" style="margin-top:8px">
+          <button id="syncModelsBtn" class="ghost" type="button">Sync Models</button>
+        </div>
+
+        <div class="section-title">System Prompt</div>
+
+        <textarea id="systemPrompt" placeholder="isi style / aturan tambahan di sini..."></textarea>
+        <div class="row" style="margin-top:8px">
+          <button id="applySysBtn" class="primary" type="button">Terapkan</button>
+        </div>
+
+        <div class="section-title">Percakapan</div>
+        <div class="row">
+          <button id="newChatBtn" class="ghost" type="button">New Chat</button>
+        </div>
+      </div>
+    </aside>
   </div>
 
+  <main>
+    <div id="chat" class="chat"></div>
+    <div class="toolbar">
+      <div class="grid-2">
+        <textarea id="userInput" placeholder="Apa yang bisa dibantu?"></textarea>
+        <button id="sendBtn" class="primary" type="button">Kirim</button>
+      </div>
+    </div>
+  </main>
+
   <script>
-    const messagesEl = document.getElementById('messages');
-    const inputEl = document.getElementById('input');
-    const sendBtn = document.getElementById('send');
+    // ---------- State ----------
+    const chatEl = document.getElementById('chat');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
 
-    let history = [
-      { role: 'system', content: 'Kamu adalah asisten yang ramah dan membantu.' }
-    ];
+    // Drawer
+    const drawer = document.getElementById('drawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const openDrawerBtn = document.getElementById('hamburgerBtn');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
 
-    function appendMessage(text, who){
-      const div = document.createElement('div');
-      div.className = 'msg ' + (who === 'user' ? 'user' : 'bot');
-      div.textContent = text;
-      messagesEl.appendChild(div);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
+    // Settings
+    const apiKeyInput = document.getElementById('apiKey');
+    const saveKeyBtn = document.getElementById('saveKeyBtn');
+    const clearKeyBtn = document.getElementById('clearKey');
+    const modelSelect = document.getElementById('model');
+    const syncBtn = document.getElementById('syncModelsBtn');
+    const systemPromptEl = document.getElementById('systemPrompt');
+    const applySysBtn = document.getElementById('applySysBtn');
+    const newChatBtn = document.getElementById('newChatBtn');
+
+    const LS_KEY   = 'gemini_api_key';
+    const LS_MODEL = 'gemini_model';
+    const LS_SYS   = 'gemini_system_prompt';
+
+    const contents = [];
+
+    // ---------- Base (hidden) System Prompt ----------
+    const BASE_SYS = 'kamu adalah Ergo ai';
+
+    // ---------- Drawer controls ----------
+    function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
+    function closeDrawer(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+    openDrawerBtn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); openDrawer(); });
+    closeDrawerBtn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); closeDrawer(); });
+    drawerOverlay.addEventListener('click', (e)=>{ if(e.target===drawerOverlay) closeDrawer(); });
+
+    // ---------- Prefs ----------
+    function loadPrefs(){
+      const k = localStorage.getItem(LS_KEY);
+      const m = localStorage.getItem(LS_MODEL) || 'gemini-2.5-flash';
+      const s = localStorage.getItem(LS_SYS) || '';
+      if(k){ apiKeyInput.value = k.replace(/./g,'•'); apiKeyInput.dataset.masked='1'; }
+      modelSelect.value = m; systemPromptEl.value = s;
+    }
+    function savePrefs(){
+      const raw = apiKeyInput.dataset.masked==='1' ? localStorage.getItem(LS_KEY) : apiKeyInput.value.trim();
+      if(raw) localStorage.setItem(LS_KEY, raw);
+      localStorage.setItem(LS_MODEL, modelSelect.value);
+      localStorage.setItem(LS_SYS, systemPromptEl.value.trim());
+      apiKeyInput.value = raw ? raw.replace(/./g,'•') : '';
+      apiKeyInput.dataset.masked='1';
+      toast('Pengaturan disimpan di browser');
+    }
+    function clearApiKey(){ localStorage.removeItem(LS_KEY); apiKeyInput.value=''; delete apiKeyInput.dataset.masked; toast('Kunci API dihapus'); }
+
+    // ---------- UI Helpers ----------
+    function toast(msg){ console.log(msg); }
+
+    function copyIconSVG(){
+      return `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M9 9.5A2.5 2.5 0 0 1 11.5 7h6A2.5 2.5 0 0 1 20 9.5v6A2.5 2.5 0 0 1 17.5 18h-6A2.5 2.5 0 0 1 9 15.5v-6Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M6.5 16.5A2.5 2.5 0 0 1 4 14V8.5A2.5 2.5 0 0 1 6.5 6h6" stroke="currentColor" stroke-width="1.5"/>
+      </svg>`;
     }
 
-    async function send(){
-      const txt = inputEl.value.trim();
-      if (!txt) return;
-      appendMessage(txt, 'user');
-      inputEl.value = '';
+    function attachCopyButton(bubbleEl){
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.type = 'button';
+      btn.title = 'Salin';
+      btn.innerHTML = copyIconSVG();
+      bubbleEl.appendChild(btn);
 
-      // optimistic add a typing placeholder
-      const loadingEl = document.createElement('div');
-      loadingEl.className = 'msg bot';
-      loadingEl.textContent = '...';
-      messagesEl.appendChild(loadingEl);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-
-      history.push({ role: 'user', content: txt });
-
-      try{
-        const resp = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: txt, history })
-        });
-        if (!resp.ok){
-          const txtErr = await resp.text();
-          loadingEl.textContent = 'Terjadi kesalahan: ' + txtErr;
-          return;
+      btn.addEventListener('click', async (e)=>{
+        e.stopPropagation();
+        try{
+          const text = bubbleEl.textContent.trim();
+          await navigator.clipboard.writeText(text);
+          const toastEl = document.createElement('div');
+          toastEl.className = 'copied-toast';
+          toastEl.textContent = 'Tersalin';
+          bubbleEl.appendChild(toastEl);
+          setTimeout(()=> toastEl.remove(), 1200);
+        }catch(err){
+          console.error('Copy failed', err);
+          btn.title = 'Gagal menyalin';
+          setTimeout(()=> btn.title='Salin', 1500);
         }
-        const data = await resp.json();
-        const reply = data.reply || '';
-        history.push({ role: 'assistant', content: reply });
-        loadingEl.textContent = reply;
-      } catch(err){
-        loadingEl.textContent = 'Terjadi kesalahan jaringan.';
-        console.error(err);
-      }
-      messagesEl.scrollTop = messagesEl.scrollHeight;
+      });
     }
 
+    function addBubble(text, who){
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = who==='me' ? 'Anda' : 'ERGO AI';
+
+      const b = document.createElement('div');
+      b.className = 'bubble ' + (who==='me' ? 'me' : 'bot');
+
+      if(who==='me'){
+        b.textContent = text;
+      } else {
+        b.innerHTML = renderRich(text);
+        renderAllMathIn(b);
+        attachCopyButton(b);
+      }
+
+      chatEl.appendChild(meta);
+      chatEl.appendChild(b);
+      b.scrollIntoView({ behavior:'smooth', block:'end' });
+    }
+
+    function addTyping(){
+      const meta = document.createElement('div'); meta.className='meta'; meta.textContent='Ergo Ai sedang mengetik…';
+      const b = document.createElement('div'); b.className='bubble bot'; b.id='typing'; b.innerHTML='<span class="spinner"></span> ';
+      chatEl.appendChild(meta); chatEl.appendChild(b);
+      b.scrollIntoView({ behavior:'smooth', block:'end' });
+    }
+    function removeTyping(){ const el=document.getElementById('typing'); if(el){ el.previousSibling?.remove(); el.remove(); } }
+
+    // ---------- Markdown + Math ----------
+    function renderRich(raw){
+      if(!raw) return '';
+      const codeBlocks=[]; raw = raw.replace(/```([\s\S]*?)```/g,(m,p1)=>{const i=codeBlocks.push(p1)-1; return `@@CODE${i}@@`;});
+      const mathDisplay=[], mathInline=[];
+      raw = raw.replace(/\$\$([\s\S]+?)\$\$/g,(m,p1)=>{const i=mathDisplay.push(p1.trim())-1; return `@@MDIS${i}@@`;});
+      raw = raw.replace(/\$(?!\$)([^\n]+?)\$(?!\$)/g,(m,p1)=>{const i=mathInline.push(p1.trim())-1; return `@@MINL${i}@@`;});
+      raw = raw.replace(/@@CODE(\d+)@@/g,(m,i)=>`\n\n\`\`\n${codeBlocks[+i]}\n\`\`\n\n`);
+      const htmlMd = marked.parse(raw,{breaks:true,gfm:true});
+      const withHolders = htmlMd
+        .replace(/@@MDIS(\d+)@@/g,(m,i)=>`<span class="math-display" data-idx="${i}"></span>`)
+        .replace(/@@MINL(\d+)@@/g,(m,i)=>`<span class="math-inline" data-idx="${i}"></span>`);
+      const clean = DOMPurify.sanitize(withHolders,{ADD_ATTR:['data-idx']});
+      const store = document.createElement('template'); store.innerHTML = clean;
+      store.content.querySelectorAll('.math-display').forEach(el=> el.setAttribute('data-expr', mathDisplay[+el.dataset.idx]||''));
+      store.content.querySelectorAll('.math-inline').forEach(el=> el.setAttribute('data-expr', mathInline[+el.dataset.idx]||''));
+      return store.innerHTML;
+    }
+    function renderAllMathIn(root){
+      root.querySelectorAll('.math-display').forEach(el=>{ try{ katex.render(el.getAttribute('data-expr')||'', el, {displayMode:true, throwOnError:false}); }catch{} });
+      root.querySelectorAll('.math-inline').forEach(el=>{ try{ katex.render(el.getAttribute('data-expr')||'', el, {displayMode:false, throwOnError:false}); }catch{} });
+    }
+
+    // ---------- API Helpers (fallback v1 → v1beta) ----------
+    async function apiGet(path,key){
+      const versions=['v1','v1beta']; let lastErr;
+      for(const v of versions){
+        try{
+          const url=`https://generativelanguage.googleapis.com/${v}/${path}${path.includes('?')?'&':'?'}key=${encodeURIComponent(key)}`;
+          const res=await fetch(url); if(!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+          return await res.json();
+        }catch(e){ lastErr=e; }
+      } throw lastErr;
+    }
+
+    // >>> Kirim field system prompt ganda (base + kustom) kompatibel v1 & v1beta
+    async function apiPostGenerateContent(modelName, key, baseContents, sysText){
+      const versions = ['v1','v1beta'];
+      let lastErr;
+
+      // parts: selalu BASE_SYS + opsional sysText dari UI
+      const sysParts = [{ text: BASE_SYS }];
+      if (sysText && sysText.trim()) sysParts.push({ text: sysText.trim() });
+
+      for(const v of versions){
+        try{
+          const url = `https://generativelanguage.googleapis.com/${v}/models/${encodeURIComponent(modelName)}:generateContent?key=${encodeURIComponent(key)}`;
+          const body = { contents: baseContents.map(x=>x) };
+
+          const sysObj = { parts: sysParts };
+          if(v === 'v1'){ body.systemInstruction  = sysObj; }
+          else          { body.system_instruction = sysObj; }
+
+          const res = await fetch(url, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify(body)
+          });
+          if(!res.ok){ throw new Error(`HTTP ${res.status}: ${await res.text()}`); }
+          return await res.json();
+        }catch(e){ lastErr = e; }
+      }
+      throw lastErr;
+    }
+
+    // ---------- Gemini call ----------
+    async function callGemini(prompt){
+      const key = localStorage.getItem(LS_KEY);
+      if(!key){ alert('Masukkan & simpan API key dulu.'); return null; }
+      const model = (localStorage.getItem(LS_MODEL) || modelSelect.value).trim();
+
+      const sysText = (localStorage.getItem(LS_SYS) || '').trim();
+      const base = contents.concat([{ role:'user', parts:[{text: prompt}] }]);
+
+      return apiPostGenerateContent(model, key, base, sysText);
+    }
+
+    // ---------- Sync models ----------
+    async function syncModels(){
+      const key = localStorage.getItem(LS_KEY);
+      if(!key){ alert('Masukkan & simpan API key dulu.'); return; }
+      try{
+        const data = await apiGet('models', key);
+        const list = (data.models||[]).filter(m=> (m?.supportedGenerationMethods||[]).includes('generateContent'));
+        if(list.length){
+          modelSelect.innerHTML='';
+          list.sort((a,b)=>{
+            const an=a.name||'', bn=b.name||'';
+            const aVer=+(an.match(/(\d+\.\d+)/)?.[1]||0), bVer=+(bn.match(/(\d+\.\d+)/)?.[1]||0);
+            if(bVer!==aVer) return bVer-aVer;
+            const aLatest=an.includes('-latest')?1:0, bLatest=bn.includes('-latest')?1:0;
+            if(bLatest!==aLatest) return bLatest-aLatest;
+            return an.localeCompare(bn);
+          });
+          for(const m of list){
+            const opt=document.createElement('option');
+            opt.value=m.name; opt.textContent=m.name; modelSelect.appendChild(opt);
+          }
+          localStorage.setItem(LS_MODEL, modelSelect.value);
+          addBubble('Daftar model diperbarui. Dipilih: '+modelSelect.value,'bot');
+        }else{
+          addBubble('Tidak ada model yang mendukung generateContent dari ListModels.','bot');
+        }
+      }catch(e){ console.error(e); addBubble('Gagal mengambil daftar model: '+e.message,'bot'); }
+    }
+
+    // ---------- Actions ----------
+    async function send(){
+      const text = userInput.value.trim(); if(!text) return;
+      userInput.value=''; sendBtn.disabled=true; addBubble(text,'me');
+      addTyping();
+      try{
+        const json = await callGemini(text); removeTyping();
+        let reply = (json?.candidates?.[0]?.content?.parts?.map(p=>p.text).join('\n')) ||
+                    (json?.candidates?.[0]?.content?.parts?.[0]?.text) ||
+                    '(tidak ada balasan)';
+        addBubble(reply,'bot');
+        contents.push({role:'user', parts:[{text:text}]});
+        contents.push({role:'model', parts:[{text:reply}]});
+      }catch(err){
+        removeTyping();
+        addBubble(`Gagal memanggil API: ${err.message}`,'bot');
+        console.error(err);
+      } finally {
+        sendBtn.disabled=false; userInput.focus();
+      }
+    }
+
+    function applySystemPrompt(){
+      const s = systemPromptEl.value.trim();
+      localStorage.setItem(LS_SYS, s);
+      addBubble('System Prompt diterapkan. Base aktif: "kamu adalah Ergo ai".' + (s ? ' Tambahan: “'+s+'”' : ''), 'bot');
+    }
+    function newChat(){ contents.splice(0, contents.length); chatEl.innerHTML=''; greeting(); }
+
+    // ---------- Events ----------
+    userInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }});
     sendBtn.addEventListener('click', send);
-    inputEl.addEventListener('keydown', (e)=>{
-      if (e.key === 'Enter' && !e.shiftKey){
-        e.preventDefault();
-        send();
+    saveKeyBtn.addEventListener('click', savePrefs);
+    clearKeyBtn.addEventListener('click', clearApiKey);
+    syncBtn.addEventListener('click', syncModels);
+    applySysBtn.addEventListener('click', applySystemPrompt);
+    newChatBtn.addEventListener('click', ()=>{ newChat(); closeDrawer(); });
+
+    // UX: klik field kunci yg dimask → edit
+    apiKeyInput.addEventListener('focus', ()=>{
+      if(apiKeyInput.dataset.masked==='1'){
+        apiKeyInput.type='text'; apiKeyInput.value=''; delete apiKeyInput.dataset.masked;
       }
     });
+
+    // ---------- Init ----------
+    function greeting(){ addBubble('Hai apakah ada yang bisa aku bantu?', 'bot'); }
+    loadPrefs(); greeting();
   </script>
 </body>
 </html>
