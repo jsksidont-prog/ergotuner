@@ -8,12 +8,16 @@
     :root{
       --bg:#ffffff; --panel:#f6f8fc; --accent:#1a73e8; --text:#0b1220; --muted:#5f6b7a;
       --user:#e8f0fe; --bot:#ffffff; --ring:#e4e8ee; --overlay:rgba(0,0,0,.45);
+      /* tinggi elemen tetap */
+      --hdr:60px;         /* tinggi header fixed */
+      --tool:110px;       /* tinggi toolbar (diset ulang via JS sesuai tinggi nyata) */
     }
     *{box-sizing:border-box}
-    html,body{ max-width:100%; overflow-x:hidden; }
+    html,body{ height:100%; max-width:100%; overflow:hidden; } /* cegah scroll halaman utama */
     body{
       margin:0; background:var(--bg); color:var(--text);
       font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
+      padding-top:var(--hdr); /* ruang untuk header fixed */
     }
 
     .hamburger-inline{
@@ -25,10 +29,11 @@
     .hamburger-inline:active{ transform:scale(.98); }
 
     header.bar{
+      position:fixed; top:0; left:0; right:0; z-index:900;
+      height:var(--hdr); display:flex; align-items:center; justify-content:center;
       background:linear-gradient(180deg,#fff,#fbfcff);
       border-bottom:1px solid var(--ring);
-      padding:16px 16px;
-      text-align:center;
+      padding:0 16px;
     }
     header.bar .title{
       display:inline-flex; align-items:center; gap:10px;
@@ -36,7 +41,7 @@
     }
     header.bar .title img{ width:26px; height:26px; object-fit:contain; display:inline-block; }
 
-    .drawer{position:fixed; inset:0; z-index:40; display:none}
+    .drawer{position:fixed; inset:0; z-index:1000; display:none}
     .drawer.open{display:block}
     .drawer .overlay{position:absolute; inset:0; background:var(--overlay)}
     .drawer .panel{
@@ -59,10 +64,26 @@
     button.ghost{background:#fff}
     .muted{font-size:12px; color:var(--muted)}
 
-    main{display:grid; grid-template-rows:1fr auto; height:calc(100dvh)}
+    /* ---------- Layout utama: hanya area chat yang boleh scroll ---------- */
+    main{
+      position:relative;
+      height:100dvh;          /* fallback penuh viewport */
+      padding-bottom:var(--tool); /* ruang untuk toolbar fixed agar tidak ketumpuk (disinkron JS) */
+    }
     .chat{
-      padding:16px; overflow:auto; scroll-behavior:smooth; display:flex; flex-direction:column; gap:14px;
+      position:relative;
+      height:calc(100dvh - var(--hdr)); /* fallback penuh sisa ruang di bawah header */
+      padding:16px;
+      padding-bottom:calc(var(--tool) + 16px); /* ruang ekstra di bawah agar bubble terakhir aman */
+      overflow:auto;            /* hanya chat yang scroll */
+      scroll-behavior:smooth; display:flex; flex-direction:column; gap:14px;
       max-width:900px; width:100%; margin:0 auto; min-width:0;
+    }
+
+    /* Gunakan viewport modern agar stabil di mobile saat keyboard muncul */
+    @supports (height: 100svh) {
+      main{ height:100svh; }
+      .chat{ height:calc(100svh - var(--hdr)); }
     }
 
     .bubble{
@@ -70,6 +91,7 @@
       box-shadow:0 2px 12px rgba(0,0,0,.06); border:1px solid var(--ring);
       white-space:pre-wrap; position:relative; min-width:0;
       overflow-wrap:anywhere; word-break:break-word;
+      background:var(--bot);
     }
     .bubble *{ min-width:0; }
     .bubble img, .bubble table{ max-width:100%; height:auto; }
@@ -95,11 +117,21 @@
     }
 
     .meta{font-size:12px; color:var(--muted); margin:2px 4px}
-    .toolbar{ display:grid; gap:10px; padding:10px 16px; background:var(--panel); border-top:1px solid var(--ring);}
+
+    /* ---------- Toolbar sticky di bawah ---------- */
+    .toolbar{
+      position:fixed;
+      bottom:0; left:0; right:0;
+      z-index:950;
+      display:grid; gap:10px; padding:10px 16px;
+      background:var(--panel); border-top:1px solid var(--ring);
+      padding-bottom: max(10px, env(safe-area-inset-bottom)); /* aman buat notch/iPhone */
+    }
     .grid-2{display:grid; grid-template-columns:1fr auto; gap:10px}
     .spinner{ width:18px; height:18px; border:2px solid var(--ring); border-top-color:var(--accent);
       border-radius:50%; animation:spin .9s linear infinite; display:inline-block; vertical-align:middle;}
     @keyframes spin{to{transform:rotate(360deg)}}
+
     .bot p{margin:0 0 8px}
     .bot pre{
       background:#f9fafc; border:1px solid var(--ring); padding:10px; border-radius:10px;
@@ -108,9 +140,18 @@
     .bot code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
     .katex-display{margin:10px 0; max-width:100%; overflow:auto;}
 
+    /* --- textarea auto-grow tanpa menutupi layar --- */
+    #userInput{
+      max-height:35dvh;   /* batasi maksimum ~sepertiga layar */
+      overflow:auto;      /* kalau lewat, scroll di dalam textarea */
+      resize:none;        /* biar tidak bentrok dengan auto-grow JS */
+      line-height:1.4;
+    }
+
     @media (max-width:640px){
       .bubble{max-width:92%}
       .grid-2{grid-template-columns:1fr}
+      :root{ --tool:140px; } /* nilai awal; akan ditimpa JS sesuai tinggi real */
     }
   </style>
 
@@ -156,7 +197,6 @@
         </div>
 
         <div class="section-title">System Prompt</div>
-
         <textarea id="systemPrompt" placeholder="isi style / aturan tambahan di sini..."></textarea>
         <div class="row" style="margin-top:8px">
           <button id="applySysBtn" class="primary" type="button">Terapkan</button>
@@ -368,6 +408,25 @@
       throw lastErr;
     }
 
+    // ---------- Toolbar & Textarea sizing helpers ----------
+    const root = document.documentElement;
+    const toolbar = document.querySelector('.toolbar');
+
+    function syncToolHeight(){
+      // set --tool sesuai tinggi toolbar nyata
+      const h = toolbar.getBoundingClientRect().height;
+      root.style.setProperty('--tool', h + 'px');
+    }
+
+    // ---------- Textarea auto-grow ----------
+    function autoGrow(){
+      userInput.style.height = 'auto';
+      const maxPx = Math.round(window.innerHeight * 0.35); // selaras dengan 35dvh di CSS
+      userInput.style.height = Math.min(userInput.scrollHeight, maxPx) + 'px';
+      syncToolHeight();
+    }
+    userInput.addEventListener('input', autoGrow);
+
     // ---------- Gemini call ----------
     async function callGemini(prompt){
       const key = localStorage.getItem(LS_KEY);
@@ -427,6 +486,9 @@
         addBubble(`Gagal memanggil API: ${err.message}`,'bot');
         console.error(err);
       } finally {
+        // reset tinggi textarea & sinkronkan tinggi toolbar
+        userInput.style.height = '';
+        syncToolHeight();
         sendBtn.disabled=false; userInput.focus();
       }
     }
@@ -434,7 +496,7 @@
     function applySystemPrompt(){
       const s = systemPromptEl.value.trim();
       localStorage.setItem(LS_SYS, s);
-      addBubble('System Prompt diterapkan. Base aktif: "kamu adalah Ergo ai".' + (s ? ' Tambahan: “'+s+'”' : ''), 'bot');
+      addBubble('System Prompt diterapkan' + (s ? '  “'+s+'”' : ''), 'bot');
     }
     function newChat(){ contents.splice(0, contents.length); chatEl.innerHTML=''; greeting(); }
 
@@ -447,16 +509,39 @@
     applySysBtn.addEventListener('click', applySystemPrompt);
     newChatBtn.addEventListener('click', ()=>{ newChat(); closeDrawer(); });
 
-    // UX: klik field kunci yg dimask → edit
     apiKeyInput.addEventListener('focus', ()=>{
       if(apiKeyInput.dataset.masked==='1'){
         apiKeyInput.type='text'; apiKeyInput.value=''; delete apiKeyInput.dataset.masked;
       }
     });
 
-    // ---------- Init ----------
+    // ---------- Greeting ----------
     function greeting(){ addBubble('Hai apakah ada yang bisa aku bantu?', 'bot'); }
-    loadPrefs(); greeting();
+
+    // ---------- Keyboard-safe: geser toolbar bila keyboard muncul ----------
+    if (window.visualViewport) {
+      const vv = window.visualViewport;
+      function adjustForKeyboard(){
+        // selisih area yang terpotong oleh keyboard
+        const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        toolbar.style.bottom = offset + 'px';
+      }
+      vv.addEventListener('resize', () => { adjustForKeyboard(); syncToolHeight(); });
+      vv.addEventListener('scroll', () => { adjustForKeyboard(); });
+      adjustForKeyboard();
+    }
+
+    // ---------- Init ----------
+    function init(){
+      loadPrefs(); greeting();
+      // set tinggi awal sesuai toolbar aktual
+      syncToolHeight();
+      // set tinggi textarea awal (agar padding bottom pas)
+      autoGrow();
+      // sinkron saat orientasi/viewport berubah
+      window.addEventListener('resize', syncToolHeight);
+    }
+    init();
   </script>
 </body>
 </html>
