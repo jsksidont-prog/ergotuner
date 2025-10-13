@@ -51,6 +51,16 @@
     100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
   }
 
+ /* chip tuning */
+ .tuning-chip{
+   display:inline-block;
+   padding:4px 8px;
+   border:1px solid #bbb;
+   border-radius:6px;
+   font-size:14px;
+   background:#f3f3f3;
+ }
+
  .hamburger-wrap{
    position: fixed;
    top: 14px;
@@ -130,7 +140,7 @@
   <a class="menu-item" href="EQWEQWQWE1.html">Scale Guitar</a>
   <a class="menu-item" href="coba.html">Progresi Chord</a>
   <a class="menu-item" href="chatbot.html">ChatBot</a>
-  <a class="menu-item" href="toleransi.html" style=color:red>STOP BULLYING & RACISM</a>
+  <a class="menu-item" href="toleransi.html" style="color:red">STOP BULLYING & RACISM</a>
   <a class="menu-item" href="https://craftpix.net/?s=FARM">Download my App</a>
 </nav>
 
@@ -140,31 +150,31 @@
 </h1>
 
 <div style="margin-top: 50px;">
-    <div id="note">-</div>
-    <div id="freq">- Hz</div>
-    <button id="tombol" style="margin-top:15px; padding:12px 25px; font-size:18px; color:#eee; background-color:#4CAF50; border:0px; border-radius:8px; cursor:pointer;">
-      HAYUKKK!
-    </button>
- </div>
+  <div id="note">-</div>
+  <div id="freq">- Hz</div>
+  <button id="tombol" style="margin-top:15px; padding:12px 25px; font-size:18px; color:#eee; background-color:#4CAF50; border:0px; border-radius:8px; cursor:pointer;">
+    HAYUKKK!
+  </button>
+</div>
 
 <div id="pesan"></div>
+
+<div id="tuningWrap" style="margin-top:12px;">
+  <div id="tuningName" style="font-weight:bold; font-size:16px;">Tuning: Standard</div>
+  <div id="tuningNotes" style="margin-top:6px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;"></div>
+</div>
 
 <div id="bar-wrap" style="margin:20px auto; width:300px; height:20px; background:#ddd; border-radius:10px; overflow:hidden;">
   <div id="bar" style="height:100%; width:50%; background:#4CAF50; transition:0.1s;"></div>
 </div>
 <div style="font-size:14px; margin-top:5px;">← Flat | Sharp →</div>
 
-
 <footer style="margin-top:80px;font-size:13px;color:#444;display:flex;flex-direction:column;align-items:center;text-align:center;">
-    <div style="margin-bottom:8px;">
-      <img  src="ERGOPANTEK.png" width="60" alt="Logo Ergo">
-    </div>
-    <span style="font-weight:bold; font-size: 15px;">© ERGOISME 2025</span>
-    <a href="masukan.html" 
-   style="text-decoration:none;font-size:13px; margin-top:5px; align-self:flex-start;">
-   kirim masukan
-</a>
-
+  <div style="margin-bottom:8px;">
+    <img src="ERGOPANTEK.png" width="60" alt="Logo Ergo">
+  </div>
+  <span style="font-weight:bold; font-size: 15px;">© ERGOISME 2025</span>
+  <a href="masukan.html" style="text-decoration:none;font-size:13px; margin-top:5px; align-self:flex-start;">kirim masukan</a>
 </footer>
 
 <script>
@@ -172,7 +182,6 @@
 const hambtn = document.getElementById('hambtn');
 const menu = document.getElementById('menuPanel');
 const overlay = document.getElementById('overlay');
-
 hambtn.onclick = ()=>{ menu.classList.add('show'); overlay.classList.add('show'); };
 overlay.onclick = ()=>{ menu.classList.remove('show'); overlay.classList.remove('show'); };
 document.addEventListener('keydown',(e)=>{ if(e.key==="Escape"){ menu.classList.remove('show'); overlay.classList.remove('show'); }});
@@ -183,64 +192,94 @@ var nada=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 let nadasebelumnya=null, waktuakhir=0;
 
 document.getElementById("tombol").onclick= async function(){
- if(audiokonteks) return;
- try{
-   audiokonteks=new (window.AudioContext||window.webkitAudioContext)();
-   if(audiokonteks.state==="suspended"){ await audiokonteks.resume(); }
-   let stream=await navigator.mediaDevices.getUserMedia({audio:true});
-   mic=audiokonteks.createMediaStreamSource(stream);
-   kawegelombang=audiokonteks.createAnalyser(); kawegelombang.fftSize=2048;
-   simpanreweng=new Float32Array(kawegelombang.fftSize);
-   mic.connect(kawegelombang);
-   this.disabled=true; this.innerText="dengeeee...";
-   document.getElementById("pesan").innerText="";
-   lako()
- }catch(e){
-   document.getElementById("pesan").innerText="OE!!! pande izin mic e: "+e.message;
-   audiokonteks=null
- }
+  if(audiokonteks) return;
+  try{
+    audiokonteks=new (window.AudioContext||window.webkitAudioContext)();
+    if(audiokonteks.state==="suspended"){ await audiokonteks.resume(); }
+    let stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    mic=audiokonteks.createMediaStreamSource(stream);
+    kawegelombang=audiokonteks.createAnalyser(); kawegelombang.fftSize=2048;
+    simpanreweng=new Float32Array(kawegelombang.fftSize);
+    mic.connect(kawegelombang);
+    this.disabled=true; this.innerText="dengeeee...";
+    document.getElementById("pesan").innerText="";
+    lako()
+  }catch(e){
+    document.getElementById("pesan").innerText="OE!!! pande izin mic e: "+e.message;
+    audiokonteks=null
+  }
 }
 
 function lako(){
- kawegelombang.getFloatTimeDomainData(simpanreweng);
- let frekuensi=korelasi(simpanreweng,audiokonteks.sampleRate);
-if(frekuensi>0){
-  let angkaMIDI = Math.round(12*Math.log(frekuensi/440)/Math.log(2)+69);
-  let namanada = nada[((angkaMIDI%12)+12)%12]; 
-  let oktaf = Math.floor(angkaMIDI/12)-1; 
-  let hasil = namanada+oktaf;
+  kawegelombang.getFloatTimeDomainData(simpanreweng);
+  let frekuensi=korelasi(simpanreweng,audiokonteks.sampleRate);
+  if(frekuensi>0){
+    let angkaMIDI = Math.round(12*Math.log(frekuensi/440)/Math.log(2)+69);
+    let namanada = nada[((angkaMIDI%12)+12)%12]; 
+    let oktaf = Math.floor(angkaMIDI/12)-1; 
+    let hasil = namanada+oktaf;
 
-  let freqTarget = 440 * Math.pow(2, (angkaMIDI-69)/12);
-  let cents = 1200*Math.log(frekuensi/freqTarget)/Math.log(2); 
+    let freqTarget = 440 * Math.pow(2, (angkaMIDI-69)/12);
+    let cents = 1200*Math.log(frekuensi/freqTarget)/Math.log(2); 
 
-  let now = performance.now();
-  if(nadasebelumnya==null||hasil!=nadasebelumnya||now-waktuakhir>1200){
-     nadasebelumnya=hasil; waktuakhir=now;
-     document.getElementById("note").innerText=hasil;
-     document.getElementById("freq").innerText=frekuensi.toFixed(1)+" Hz";
+    let now = performance.now();
+    if(nadasebelumnya==null||hasil!=nadasebelumnya||now-waktuakhir>1200){
+      nadasebelumnya=hasil; waktuakhir=now;
+      document.getElementById("note").innerText=hasil;
+      document.getElementById("freq").innerText=frekuensi.toFixed(1)+" Hz";
+    }
+    updateBar(cents);
   }
-  updateBar(cents);
-}
- setTimeout(lako,55)
+  setTimeout(lako,55)
 }
 
 function korelasi(b,r){
- var sz=b.length,rms=0;
- for(let i=0;i<sz;i++){ rms+=b[i]*b[i]; }
- rms=Math.sqrt(rms/sz);
- if(rms<0.01) return 0;
- var r1=0,r2=sz-1,thr=0.2;
- for(let i=0;i<sz/2;i++){ if(Math.abs(b[i])<thr){r1=i;break;} }
- for(let i=1;i<sz/2;i++){ if(Math.abs(b[sz-i])<thr){r2=sz-i;break;} }
- b=b.slice(r1,r2); sz=b.length;
- let c=new Array(sz).fill(0);
- for(var i=0;i<sz;i++){ for(var j=0;j<sz-i;j++){ c[i]+=b[j]*b[j+i]; } }
- let d=0; while(c[d]>c[d+1]) d++;
- let mv=-1,p=-1;
- for(var i=d;i<sz;i++){ if(c[i]>mv){ mv=c[i]; p=i; } }
- if(p==-1)return 0;
- return r/p
+  var sz=b.length,rms=0;
+  for(let i=0;i<sz;i++){ rms+=b[i]*b[i]; }
+  rms=Math.sqrt(rms/sz);
+  if(rms<0.01) return 0;
+  var r1=0,r2=sz-1,thr=0.2;
+  for(let i=0;i<sz/2;i++){ if(Math.abs(b[i])<thr){r1=i;break;} }
+  for(let i=1;i<sz/2;i++){ if(Math.abs(b[sz-i])<thr){r2=sz-i;break;} }
+  b=b.slice(r1,r2); sz=b.length;
+  let c=new Array(sz).fill(0);
+  for(var i=0;i<sz;i++){ for(var j=0;j<sz-i;j++){ c[i]+=b[j]*b[j+i]; } }
+  let d=0; while(c[d]>c[d+1]) d++;
+  let mv=-1,p=-1;
+  for(var i=d;i<sz;i++){ if(c[i]>mv){ mv=c[i]; p=i; } }
+  if(p==-1)return 0;
+  return r/p
 }
+
+function renderSelectedTuning(){
+  const defaultTuning = { 
+    name: 'Standard',
+    notes: ['E2','A2','D3','G3','B3','E4']
+  };
+
+  let selected = null;
+  try{
+    selected = JSON.parse(localStorage.getItem('selectedTuning'));
+  }catch(e){ selected = null; }
+
+  if(!selected || !Array.isArray(selected.notes) || !selected.notes.length){
+    selected = defaultTuning;
+  }
+
+  const nameEl = document.getElementById('tuningName');
+  const notesEl = document.getElementById('tuningNotes');
+  if(nameEl) nameEl.textContent = 'Tuning: ' + selected.name;
+  if(notesEl){
+    notesEl.innerHTML = '';
+    selected.notes.forEach(n=>{
+      const s = document.createElement('span');
+      s.className = 'tuning-chip';
+      s.textContent = n;
+      notesEl.appendChild(s);
+    });
+  }
+}
+document.addEventListener('DOMContentLoaded', renderSelectedTuning);
 
 document.body.addEventListener("click", function(e){
   if(e.target.tagName === "BUTTON") return;

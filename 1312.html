@@ -81,113 +81,159 @@
   <div style="margin: auto;text-align: left;max-width: 600px;">
     
 
-    <div>
-      <h2>1. Standard Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201); cursor: pointer ;background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">E2</span>
-        <span class="badge">A2</span>
-        <span class="badge">D3</span>
-        <span class="badge">G3</span>
-        <span class="badge">B3</span>
-        <span class="badge">E4</span>
-      </p>
-    </div>
+<!-- 1. Standard Tuning -->
+<div>
+  <h2>1. Standard Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201); cursor: pointer ;background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">E2</span>
+    <span class="badge">A2</span>
+    <span class="badge">D3</span>
+    <span class="badge">G3</span>
+    <span class="badge">B3</span>
+    <span class="badge">E4</span>
+  </p>
+  <button onclick="applyTuning('Standard', ['E2','A2','D3','G3','B3','E4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
 
-    <div>
-      <h2>2. Drop D Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">D2</span>
-        <span class="badge">A2</span>
-        <span class="badge">D3</span>
-        <span class="badge">G3</span>
-        <span class="badge">B3</span>
-        <span class="badge">E4</span>
-      </p>
-    </div>
+<!-- 2. Drop D -->
+<div>
+  <h2>2. Drop D Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">D2</span>
+    <span class="badge">A2</span>
+    <span class="badge">D3</span>
+    <span class="badge">G3</span>
+    <span class="badge">B3</span>
+    <span class="badge">E4</span>
+  </p>
+  <button onclick="applyTuning('Drop D', ['D2','A2','D3','G3','B3','E4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
 
-    <div>
-      <h2>3. Double Drop D Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201); cursor: pointer ;background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">D2</span>
-        <span class="badge">A2</span>
-        <span class="badge">D3</span>
-        <span class="badge">G3</span>
-        <span class="badge">B3</span>
-        <span class="badge">D4</span>
-      </p>
-    </div>
+<!-- 3. Double Drop D -->
+<div>
+  <h2>3. Double Drop D Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201); cursor: pointer ;background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">D2</span>
+    <span class="badge">A2</span>
+    <span class="badge">D3</span>
+    <span class="badge">G3</span>
+    <span class="badge">B3</span>
+    <span class="badge">D4</span>
+  </p>
+  <button onclick="applyTuning('Double Drop D', ['D2','A2','D3','G3','B3','D4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
 
-        <div>
-      <h2>4. Open G Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">D2</span>
-        <span class="badge">G2</span>
-        <span class="badge">D3</span>
-        <span class="badge">G3</span>
-        <span class="badge">B3</span>
-        <span class="badge">D4</span>
-      </p>
-    </div>
+<!-- 4. Open G -->
+<div>
+  <h2>4. Open G Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">D2</span>
+    <span class="badge">G2</span>
+    <span class="badge">D3</span>
+    <span class="badge">G3</span>
+    <span class="badge">B3</span>
+    <span class="badge">D4</span>
+  </p>
+  <button onclick="applyTuning('Open G', ['D2','G2','D3','G3','B3','D4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
 
-        <div>
-      <h2>5. Open A Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">E2</span>
-        <span class="badge">A2</span>
-        <span class="badge">E3</span>
-        <span class="badge">A3</span>
-        <span class="badge">C#4</span>
-        <span class="badge">E4</span>
-      </p>
-    </div>
+<!-- 5. Open A -->
+<div>
+  <h2>5. Open A Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">E2</span>
+    <span class="badge">A2</span>
+    <span class="badge">E3</span>
+    <span class="badge">A3</span>
+    <span class="badge">C#4</span>
+    <span class="badge">E4</span>
+  </p>
+  <button onclick="applyTuning('Open A', ['E2','A2','E3','A3','C#4','E4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
 
-        <div>
-      <h2>6. Open D Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">D2</span>
-        <span class="badge">A2</span>
-        <span class="badge">D3</span>
-        <span class="badge">F#3</span>
-        <span class="badge">A3</span>
-        <span class="badge">D4</span>
-      </p>
-    </div>
+<!-- 6. Open D -->
+<div>
+  <h2>6. Open D Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">D2</span>
+    <span class="badge">A2</span>
+    <span class="badge">D3</span>
+    <span class="badge">F#3</span>
+    <span class="badge">A3</span>
+    <span class="badge">D4</span>
+  </p>
+  <button onclick="applyTuning('Open D', ['D2','A2','D3','F#3','A3','D4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
 
-        <div>
-      <h2>7. Open E Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">E2</span>
-        <span class="badge">B2</span>
-        <span class="badge">E3</span>
-        <span class="badge">G#3</span>
-        <span class="badge">B3</span>
-        <span class="badge">E4</span>
-      </p>
-    </div>
+<!-- 7. Open E -->
+<div>
+  <h2>7. Open E Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">E2</span>
+    <span class="badge">B2</span>
+    <span class="badge">E3</span>
+    <span class="badge">G#3</span>
+    <span class="badge">B3</span>
+    <span class="badge">E4</span>
+  </p>
+  <button onclick="applyTuning('Open E', ['E2','B2','E3','G#3','B3','E4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
 
-        <div>
-      <h2>8. DADGAD Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">D2</span>
-        <span class="badge">A2</span>
-        <span class="badge">D3</span>
-        <span class="badge">G3</span>
-        <span class="badge">A3</span>
-        <span class="badge">D4</span>
-      </p>
-    </div>
+<!-- 8. DADGAD -->
+<div>
+  <h2>8. DADGAD Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">D2</span>
+    <span class="badge">A2</span>
+    <span class="badge">D3</span>
+    <span class="badge">G3</span>
+    <span class="badge">A3</span>
+    <span class="badge">D4</span>
+  </p>
+  <button onclick="applyTuning('DADGAD', ['D2','A2','D3','G3','A3','D4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
 
-        <div>
-      <h2>9. Open F Tuning</h2>
-      <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-        <span class="badge">F2</span>
-        <span class="badge">A2</span>
-        <span class="badge">C3</span>
-        <span class="badge">F3</span>
-        <span class="badge">C4</span>
-        <span class="badge">F4</span>
-      </p>
-    </div>
+<!-- 9. Open F -->
+<div>
+  <h2>9. Open F Tuning</h2>
+  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
+    <span class="badge">F2</span>
+    <span class="badge">A2</span>
+    <span class="badge">C3</span>
+    <span class="badge">F3</span>
+    <span class="badge">C4</span>
+    <span class="badge">F4</span>
+  </p>
+  <button onclick="applyTuning('Open F', ['F2','A2','C3','F3','C4','F4'])"
+    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
+    Terapkan
+  </button>
+</div>
+
 
   </div>
 
@@ -209,6 +255,16 @@
 </footer>
 
   <script>
+
+  function applyTuning(name, notes){
+    try{
+      localStorage.setItem('selectedTuning', JSON.stringify({name, notes}));
+    }catch(e){}
+    window.location.href = 'index.html';
+  }
+
+
+
     document.getElementById("tuner").onclick = function() {window.open("index.html", "_blank");};
     document.getElementById("chord").onclick = function() {window.open ("h.html","_blank");};
 
