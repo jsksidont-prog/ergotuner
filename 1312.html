@@ -5,290 +5,185 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LIST TUNING MODE</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 30px 20px;
-  background: 
-     linear-gradient(rgba(255,255,255,0.6) , rgba(255,255,255,0.85)), 
-     url("paris.png") no-repeat center center fixed;
-     background-size: cover;
-  background-attachment: fixed;
-   color: #000000;
-    }
-
-    
-    h1 {
-      text-align: center;
-      font-size: 35px;
-      margin-bottom: 25px;
-      border-bottom: 4px solid #ccc;
-      padding-bottom: 10px;
-      margin-top: 50px;
-      display: inline-block;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    h2 {
-      font-size: 20px;
-      margin-bottom: 5px;
-      color: #333;
-    }
-
-   
-    .badge {
-      
-      
-      
-      padding: 0px 10px;
-      margin: 2px;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 15px;
-
-    }
-
-    p:hover {
-      transform: scale(1.05);
-      box-shadow: 0px 4px 10px rgba(0, 0,0,0.2);
-    }
-
-    p {
-      transition: transform 0.3s , box-shadow 0.3s;
-      
-    }
-
-  
-
+    body{font-family:Arial, sans-serif;text-align:center;margin:0;padding:30px 20px;
+      background:linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.85)),url("paris.png") no-repeat center/cover fixed;color:#000}
+    h1{font-size:35px;margin:50px 0 25px;border-bottom:4px solid #ccc;padding-bottom:10px;display:inline-block}
+    h2{font-size:20px;margin:4px 0 6px;color:#333}
+    .badge{padding:0 10px;margin:2px;border-radius:6px;font-weight:bold;font-size:15px;display:inline-block;background:#fff;border:1px solid #ddd}
+    p{transition:transform .3s, box-shadow .3s;display:inline-block;background:#ede9e9;border:1px solid #c9c9c9;border-radius:8px;padding:10px 15px}
+    p:hover{transform:scale(1.05);box-shadow:0 4px 10px rgba(0,0,0,.2)}
+    .row{margin:14px 0;text-align:left}
+    .apply-btn{margin-left:8px;padding:6px 12px;border:0;background:#45a049;color:#fff;border-radius:6px;cursor:pointer}
+    .toolbar{max-width:900px;margin:0 auto 12px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+    select{padding:8px 10px;border-radius:8px;border:1px solid #c9c9c9;background:#fff;cursor:pointer}
+    .container{margin:auto;text-align:left;max-width:900px}
+    .card{background:#f6f6f6;border:1px solid #e0e0e0;border-radius:10px;padding:12px 14px}
+    footer{display:flex;align-items:center;max-width:650px;margin:24px auto 0;flex-wrap:wrap;font-weight:bold;justify-content:center;gap:12px}
+    .corner-btn{border:0;background:#45a049;cursor:pointer;position:absolute;border-radius:8px;top:10px;padding:9px 18px;color:#fff}
+    #tuner{right:15px} #chord{left:15px}
   </style>
 </head>
 <body>
+<button id="tuner" class="corner-btn">Tuner</button>
+<button id="chord" class="corner-btn">Chord</button>
 
- 
-<button id="tuner" 
-  style="border: 0px; background-color:#45a049; cursor: pointer; position: absolute; border-radius: 8px; top: 10px; right: 15px; padding: 9px 30px; color:#fff;">
-  Tuner
-</button>
+<h1>GUIDE TUNING MODE</h1>
 
-<button id="chord" 
-  style="border: 0px; cursor: pointer; position: absolute; border-radius: 8px; top: 10px; left: 15px; padding: 9px 30px; background-color:#45a049; color:#fff;">
-  Chord
-</button>
-
-<h1>GUIDE TUNING GITAR MODE</h1>
-
-  <div style="margin: auto;text-align: left;max-width: 600px;">
-    
-
-<!-- 1. Standard Tuning -->
-<div>
-  <h2>1. Standard Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201); cursor: pointer ;background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">E2</span>
-    <span class="badge">A2</span>
-    <span class="badge">D3</span>
-    <span class="badge">G3</span>
-    <span class="badge">B3</span>
-    <span class="badge">E4</span>
-  </p>
-  <button onclick="applyTuning('Standard', ['E2','A2','D3','G3','B3','E4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
+<div class="toolbar">
+  <label for="instrument"><strong>Pilih Instrumen:</strong></label>
+  <select id="instrument">
+    <option value="guitar">Gitar</option>
+    <option value="bass4">Bass 4 Senar</option>
+    <option value="bass5">Bass 5 Senar</option>
+    <option value="bass6">Bass 6 Senar</option>
+    <option value="ukulele_reentrant">Ukulele (Reentrant GCEA)</option>
+    <option value="ukulele_lowg">Ukulele (Low-G GCEA)</option>
+    <option value="ukulele_baritone">Ukulele (Baritone DGBE)</option>
+    <option value="mandolin">Mandolin</option>
+    <option value="banjo5">Banjo 5 Senar</option>
+  </select>
 </div>
 
-<!-- 2. Drop D -->
-<div>
-  <h2>2. Drop D Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">D2</span>
-    <span class="badge">A2</span>
-    <span class="badge">D3</span>
-    <span class="badge">G3</span>
-    <span class="badge">B3</span>
-    <span class="badge">E4</span>
-  </p>
-  <button onclick="applyTuning('Drop D', ['D2','A2','D3','G3','B3','E4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
+<div class="container">
+  <div class="card" id="list"></div>
 </div>
 
-<!-- 3. Double Drop D -->
-<div>
-  <h2>3. Double Drop D Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201); cursor: pointer ;background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">D2</span>
-    <span class="badge">A2</span>
-    <span class="badge">D3</span>
-    <span class="badge">G3</span>
-    <span class="badge">B3</span>
-    <span class="badge">D4</span>
-  </p>
-  <button onclick="applyTuning('Double Drop D', ['D2','A2','D3','G3','B3','D4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
-</div>
-
-<!-- 4. Open G -->
-<div>
-  <h2>4. Open G Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">D2</span>
-    <span class="badge">G2</span>
-    <span class="badge">D3</span>
-    <span class="badge">G3</span>
-    <span class="badge">B3</span>
-    <span class="badge">D4</span>
-  </p>
-  <button onclick="applyTuning('Open G', ['D2','G2','D3','G3','B3','D4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
-</div>
-
-<!-- 5. Open A -->
-<div>
-  <h2>5. Open A Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">E2</span>
-    <span class="badge">A2</span>
-    <span class="badge">E3</span>
-    <span class="badge">A3</span>
-    <span class="badge">C#4</span>
-    <span class="badge">E4</span>
-  </p>
-  <button onclick="applyTuning('Open A', ['E2','A2','E3','A3','C#4','E4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
-</div>
-
-<!-- 6. Open D -->
-<div>
-  <h2>6. Open D Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">D2</span>
-    <span class="badge">A2</span>
-    <span class="badge">D3</span>
-    <span class="badge">F#3</span>
-    <span class="badge">A3</span>
-    <span class="badge">D4</span>
-  </p>
-  <button onclick="applyTuning('Open D', ['D2','A2','D3','F#3','A3','D4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
-</div>
-
-<!-- 7. Open E -->
-<div>
-  <h2>7. Open E Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">E2</span>
-    <span class="badge">B2</span>
-    <span class="badge">E3</span>
-    <span class="badge">G#3</span>
-    <span class="badge">B3</span>
-    <span class="badge">E4</span>
-  </p>
-  <button onclick="applyTuning('Open E', ['E2','B2','E3','G#3','B3','E4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
-</div>
-
-<!-- 8. DADGAD -->
-<div>
-  <h2>8. DADGAD Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">D2</span>
-    <span class="badge">A2</span>
-    <span class="badge">D3</span>
-    <span class="badge">G3</span>
-    <span class="badge">A3</span>
-    <span class="badge">D4</span>
-  </p>
-  <button onclick="applyTuning('DADGAD', ['D2','A2','D3','G3','A3','D4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
-</div>
-
-<!-- 9. Open F -->
-<div>
-  <h2>9. Open F Tuning</h2>
-  <p style="border: 1px solid rgb(201, 201, 201);cursor: pointer ; background-color: #ede9e9;display: inline-block;border-radius: 8px;padding: 10px 15px;">
-    <span class="badge">F2</span>
-    <span class="badge">A2</span>
-    <span class="badge">C3</span>
-    <span class="badge">F3</span>
-    <span class="badge">C4</span>
-    <span class="badge">F4</span>
-  </p>
-  <button onclick="applyTuning('Open F', ['F2','A2','C3','F3','C4','F4'])"
-    style="margin-left:8px; padding:6px 12px; border:0; background:#45a049; color:#fff; border-radius:6px; cursor:pointer;">
-    Terapkan
-  </button>
-</div>
-
-
-  </div>
-
-<footer style="display: flex; align-items: center;max-width: 650px;margin: auto;flex-wrap: wrap;margin-top: 20px;font-weight: bold;justify-content: center;">
-  <div style="display: flex;align-items: center;gap: 10px;">
+<footer>
+  <div style="display:flex;align-items:center;gap:10px;">
     <img src="ERGOPANTEK.png" width="60" alt="ergotuner">
     <span>© ERGOISME 2025</span>
   </div>
 
-  <div id="balls paskah" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:9999;justify-content:center;align-items:center;flex-direction:column;">
-  <span style="width: 150px;color: #ede9e9;bottom: 50px;">MANTAP ANJINK KAU KETEMU EASTER EGG</span>
-  <img src="dino.gif" id="gifnya" style="max-width:400px;border-radius:8px;">
-  <button id="sextape" style="margin-top:15px;padding:8px 20px;background:#4caf50;color:#fff;border:0;border-radius:6px;cursor:pointer;">tekan tombol ho,o</button>
-</div>
+  <!-- id tanpa spasi -->
+  <div id="balls_paskah" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:9999;justify-content:center;align-items:center;flex-direction:column;">
+    <span style="width:150px;color:#ede9e9;bottom:50px;">MANTAP … KETEMU EASTER EGG</span>
+    <img src="dino.gif" id="gifnya" style="max-width:400px;border-radius:8px;">
+    <button id="sextape" style="margin-top:15px;padding:8px 20px;background:#4caf50;color:#fff;border:0;border-radius:6px;cursor:pointer;">tekan tombol</button>
+  </div>
 
-<script async="async" data-cfasync="false" src="//pl27585344.revenuecpmgate.com/e874be7df9381615f960d86381dd7203/invoke.js"></script> <div id="container-e874be7df9381615f960d86381dd7203"></div>
-
-
+  <script async data-cfasync="false" src="//pl27585344.revenuecpmgate.com/e874be7df9381615f960d86381dd7203/invoke.js"></script>
+  <div id="container-e874be7df9381615f960d86381dd7203"></div>
 </footer>
 
-  <script>
+<script>
+  // ===== Data Tuning (pakai # untuk half-step down) =====
+  const TUNINGS = {
+    guitar: [
+      {name:'Standard', notes:['E2','A2','D3','G3','B3','E4']},
+      {name:'Half Step Down (D# Standard)', notes:['D#2','G#2','C#3','F#3','A#3','D#4']},
+      {name:'Half Step Up (F Standard)', notes:['F2','A#2','D#3','G#3','C4','F4']},
+      {name:'Drop D', notes:['D2','A2','D3','G3','B3','E4']},
+      {name:'Double Drop D', notes:['D2','A2','D3','G3','B3','D4']},
+      {name:'Drop C', notes:['C2','G2','C3','F3','A3','D4']},
+      {name:'Open G', notes:['D2','G2','D3','G3','B3','D4']},
+      {name:'Open A', notes:['E2','A2','E3','A3','C#4','E4']},
+      {name:'Open D', notes:['D2','A2','D3','F#3','A3','D4']},
+      {name:'Open E', notes:['E2','B2','E3','G#3','B3','E4']},
+      {name:'Open C (CGCGCE)', notes:['C2','G2','C3','G3','C4','E4']},
+      {name:'DADGAD', notes:['D2','A2','D3','G3','A3','D4']},
+      {name:'C6 (C A C G C E)', notes:['C2','A2','C3','G3','C4','E4']},
+      {name:'Nashville (butuh senar 12)', notes:['E3','A3','D4','G4','B3','E4']},
+    ],
+    bass4: [
+      {name:'Standard (EADG)', notes:['E1','A1','D2','G2']},
+      {name:'Half Step Down', notes:['D#1','G#1','C#2','F#2']},
+      {name:'Drop D', notes:['D1','A1','D2','G2']},
+      {name:'D Standard', notes:['D1','G1','C2','F2']},
+      {name:'C Standard', notes:['C1','F1','A#1','D#2']},
+    ],
+    bass5: [
+      {name:'Standard (BEADG)', notes:['B0','E1','A1','D2','G2']},
+      {name:'Half Step Down', notes:['A#0','D#1','G#1','C#2','F#2']},
+      {name:'E–C (High C)', notes:['E1','A1','D2','G2','C3']},
+      {name:'Drop A', notes:['A0','E1','A1','D2','G2']},
+    ],
+    bass6: [
+      {name:'Standard (BEADGC)', notes:['B0','E1','A1','D2','G2','C3']},
+      {name:'Half Step Down', notes:['A#0','D#1','G#1','C#2','F#2','B2']},
+    ],
+    ukulele_reentrant: [
+      {name:'GCEA (Reentrant High-G)', notes:['G4','C4','E4','A4']},
+      {name:'Half Step Down', notes:['F#4','B3','D#4','G#4']},
+      {name:'Half Step Up', notes:['G#4','C#4','F4','A#4']},
+      {name:'D Tuning (ADF#B)', notes:['A4','D4','F#4','B4']},
+    ],
+    ukulele_lowg: [
+      {name:'GCEA (Low-G)', notes:['G3','C4','E4','A4']},
+      {name:'Half Step Down', notes:['F#3','B3','D#4','G#4']},
+      {name:'Half Step Up', notes:['G#3','C#4','F4','A#4']},
+    ],
+    ukulele_baritone: [
+      {name:'Baritone (DGBE)', notes:['D3','G3','B3','E4']},
+      {name:'Half Step Down', notes:['C#3','F#3','A#3','D#4']},
+      {name:'Half Step Up', notes:['D#3','G#3','C4','F4']},
+    ],
+    mandolin: [
+      {name:'Standard (GDAE)', notes:['G3','D4','A4','E5']},
+      {name:'Celtic (GDAD)', notes:['G3','D4','A4','D5']},
+    ],
+    banjo5: [
+      {name:'Open G (gDGBD)', notes:['G4','D3','G3','B3','D4']},
+      {name:'Double C (gCGCD)', notes:['G4','C3','G3','C4','D4']},
+      {name:'Sawmill/Modal (gDGCD)', notes:['G4','D3','G3','C4','D4']},
+      {name:'Half Step Down (f#C#F#A#C#)', notes:['F#4','C#3','F#3','A#3','C#4']},
+    ],
+  };
 
-  function applyTuning(name, notes){
-    try{
-      localStorage.setItem('selectedTuning', JSON.stringify({name, notes}));
-    }catch(e){}
-    window.location.href = 'index.html';
+  function createNoteGroup(notes){
+    const wrap=document.createElement('p');
+    notes.forEach(n=>{
+      const s=document.createElement('span');
+      s.className='badge'; s.textContent=n;
+      wrap.appendChild(s);
+    });
+    return wrap;
   }
 
+  function renderList(){
+    const list=document.getElementById('list');
+    const instrument=document.getElementById('instrument').value;
+    const data=TUNINGS[instrument]||[];
+    list.innerHTML='';
+    data.forEach((it, idx)=>{
+      const row=document.createElement('div');
+      row.className='row';
+      row.innerHTML=`<h2>${idx+1}. ${it.name}</h2>`;
+      row.appendChild(createNoteGroup(it.notes));
+      const btn=document.createElement('button');
+      btn.className='apply-btn';
+      btn.textContent='Terapkan';
+      btn.onclick=()=>applyTuning(instrument, it.name, it.notes);
+      row.appendChild(btn);
+      list.appendChild(row);
+    });
+  }
 
+  function applyTuning(instrument, name, notes){
+    try{ localStorage.setItem('selectedTuning', JSON.stringify({instrument, name, notes})); }catch(e){}
+    window.location.href='index.html';
+  }
+  window.applyTuning=applyTuning;
 
-    document.getElementById("tuner").onclick = function() {window.open("index.html", "_blank");};
-    document.getElementById("chord").onclick = function() {window.open ("h.html","_blank");};
+  // tombol navigasi
+  document.getElementById('tuner').onclick=()=>window.open('index.html','_blank');
+  document.getElementById('chord').onclick=()=>window.open('h.html','_blank');
 
-var kodekera="BRILLI0011"
-var ketik=""
-var ovr=document.getElementById("balls paskah")
-var tombolKe=document.getElementById("sextape")
+  // Easter egg: perbaikan toUpperCase & id
+  const kodekera="BRILLI0011";
+  let ketik="";
+  const ovr=document.getElementById("balls_paskah");
+  const tombolKe=document.getElementById("sextape");
+  document.addEventListener("keydown",ev=>{
+    ketik += (ev.key||'').toUpperCase();
+    if(kodekera.indexOf(ketik)===0){
+      if(ketik===kodekera){ ovr.style.display="flex"; ketik=""; }
+    }else{ ketik=""; }
+  });
+  if(tombolKe){ tombolKe.onclick=()=>{ window.location.href="https://id.pinterest.com/"; }; }
 
-document.addEventListener("keydown",function(ev){
-   ketik+=ev.key.toUpperCase()
-   if(kodekera.indexOf(ketik)===0){
-      if(ketik===kodekera){
-        ovr.style.display="flex"
-        ketik=""
-      }
-   }else{
-     ketik=""
-   }
-})
-
-tombolKe.onclick=function(){
-  window.location.href="https://id.pinterest.com/"
-}
-
-    </script>
+  // init
+  document.getElementById('instrument').addEventListener('change', renderList);
+  renderList();
+</script>
 </body>
 </html>
