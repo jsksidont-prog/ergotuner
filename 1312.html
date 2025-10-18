@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LIST TUNING MODE</title>
+  <title>preset tuning</title>
   <style>
-    body{font-family:Arial, sans-serif;text-align:center;margin:0;padding:30px 20px;
-      background:linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.85)),url("paris.png") no-repeat center/cover fixed;color:#000}
+    body{
+      font-family:Arial, sans-serif;text-align:center;margin:0;padding:30px 20px;
+      background:linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.85)),url("paris.png") no-repeat center/cover fixed;color:#000
+    }
     h1{font-size:35px;margin:50px 0 25px;border-bottom:4px solid #ccc;padding-bottom:10px;display:inline-block}
     h2{font-size:20px;margin:4px 0 6px;color:#333}
     .badge{padding:0 10px;margin:2px;border-radius:6px;font-weight:bold;font-size:15px;display:inline-block;background:#fff;border:1px solid #ddd}
@@ -20,19 +22,69 @@
     .card{background:#f6f6f6;border:1px solid #e0e0e0;border-radius:10px;padding:12px 14px}
     footer{display:flex;align-items:center;max-width:650px;margin:24px auto 0;flex-wrap:wrap;font-weight:bold;justify-content:center;gap:12px}
     .corner-btn{border:0;background:#45a049;cursor:pointer;position:absolute;border-radius:8px;top:10px;padding:9px 18px;color:#fff}
-    #tuner{right:15px} #chord{left:15px}
+    #tuner{right:15px}
+    /* geser chord agar tidak nabrak hamburger */
+    #chord{left:15px; top:60px}
+
+    /* ========== HAMBURGER MENU (dari ERGOTUNER) ========== */
+    .hamburger-wrap{
+      position: fixed; top: 14px; left: 14px; z-index: 60;
+    }
+    .hamburger{
+      width:40px; height:32px; background:#fff; border:1px solid #ccc; border-radius:6px;
+      display:flex; align-items:center; justify-content:center; cursor:pointer;
+    }
+    .hamburger .bar{ width:20px; height:2px; background:#000; position:relative; }
+    .hamburger .bar::before,.hamburger .bar::after{
+      content:""; position:absolute; left:0; width:20px; height:2px; background:#000;
+    }
+    .hamburger .bar::before{ top:-6px; } .hamburger .bar::after{ top:6px; }
+
+    .overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,0.4);
+      opacity:0; pointer-events:none; transition:0.2s; z-index:50;
+    }
+    .overlay.show{ opacity:1; pointer-events:auto; }
+
+    .menu-panel{
+      position: fixed; top: 0; left: 0; width:220px; height:100%;
+      background:#fff; box-shadow:2px 0 10px rgba(0,0,0,0.3);
+      transform:translateX(-100%); transition:0.3s; z-index:55; padding-top:60px; text-align:left;
+    }
+    .menu-panel.show{ transform:translateX(0); }
+    .menu-item{
+      display:block; padding:12px 18px; text-decoration:none; color:#000; border-radius:6px; transition:0.3s; font-size:16px;
+    }
+    .menu-item:hover{ background:#f76c6c; color:#fff; }
   </style>
 </head>
 <body>
-<button id="tuner" class="corner-btn">Tuner</button>
-<button id="chord" class="corner-btn">Chord</button>
 
-<h1>GUIDE TUNING MODE</h1>
+<!-- HAMBURGER -->
+<div class="hamburger-wrap">
+  <div class="hamburger" id="hambtn"><span class="bar"></span></div>
+</div>
+<div class="overlay" id="overlay"></div>
+<nav id="menuPanel" class="menu-panel">
+  <a class="menu-item" href="index.html">Home</a>
+  <a class="menu-item" href="h.html">Chord</a>
+  <a class="menu-item" href="1312.html">Preset</a>
+  <a class="menu-item" href="metro.html">Metronom</a>
+  <a class="menu-item" href="TAB.html">Tab Maker</a>
+  <a class="menu-item" href="EQWEQWQWE1.html">Scale Guitar</a>
+  <a class="menu-item" href="coba.html">Progresi Chord</a>
+  <a class="menu-item" href="chatbot.html">ChatBot</a>
+  <a class="menu-item" href="toleransi.html" style="color:red">STOP BULLYING & RACISM</a>
+  <a class="menu-item" href="https://craftpix.net/?s=FARM" target="_blank" rel="noopener">Download my App</a>
+</nav>
+
+
+<h1>PRESET TUNING</h1>
 
 <div class="toolbar">
   <label for="instrument"><strong>Pilih Instrumen:</strong></label>
   <select id="instrument">
-    <!-- Gitar & keluarga -->
+
     <option value="guitar">Gitar</option>
     <option value="baritone_guitar">Gitar Baritone</option>
     <option value="guitar12">Gitar 12 Senar</option>
@@ -43,36 +95,30 @@
     <option value="banjitar6">Banjitar (Gitar Banjo 6)</option>
     <option value="guitarlele">Guitarlele (A–D–G–C–E–A)</option>
 
-    <!-- Bass -->
     <option value="bass4">Bass 4 Senar</option>
     <option value="bass5">Bass 5 Senar</option>
     <option value="bass6">Bass 6 Senar</option>
 
-    <!-- Ukulele & kerabat -->
     <option value="ukulele_reentrant">Ukulele (Reentrant GCEA)</option>
     <option value="ukulele_lowg">Ukulele (Low-G GCEA)</option>
     <option value="ukulele_baritone">Ukulele (Baritone DGBE)</option>
     <option value="cavaquinho">Cavaquinho</option>
     <option value="charango">Charango</option>
 
-    <!-- Mandolin family -->
     <option value="mandolin">Mandolin</option>
     <option value="octave_mandolin">Octave Mandolin</option>
     <option value="mandola">Mandola</option>
     <option value="mandocello">Mandocello</option>
 
-    <!-- Banjo -->
     <option value="banjo5">Banjo 5 Senar</option>
     <option value="banjo4_tenor">Banjo Tenor 4 Senar</option>
     <option value="banjo4_plectrum">Banjo Plectrum (4 Senar)</option>
 
-    <!-- Lain-lain -->
     <option value="bouzouki">Bouzouki</option>
-    <option value="balalaika_prima">Balalaika (Prima)</option>
+    <option value="balalaika_prima">Balalaika </option>
     <option value="shamisen">Shamisen</option>
-    <option value="cavaquinho_port">Cavaquinho (Portugis)</option>
+    <option value="cavaquinho_port">Cavaquinho </option>
 
-    <!-- Orkestra dawai -->
     <option value="violin">Violin</option>
     <option value="viola">Viola</option>
     <option value="cello">Cello</option>
@@ -101,67 +147,68 @@
 </footer>
 
 <script>
-  // ===== Data Tuning (gunakan notasi oktaf ilmiah; gunakan '/' untuk pasangan senar 12-string) =====
+
+  const hambtn = document.getElementById('hambtn');
+  const menu = document.getElementById('menuPanel');
+  const overlay = document.getElementById('overlay');
+  hambtn.onclick = ()=>{ menu.classList.add('show'); overlay.classList.add('show'); };
+  overlay.onclick = ()=>{ menu.classList.remove('show'); overlay.classList.remove('show'); };
+  document.addEventListener('keydown',(e)=>{ if(e.key==="Escape"){ menu.classList.remove('show'); overlay.classList.remove('show'); }});
+
+  // ===== Data Tuning (pakai notasi oktaf ilmiah; '/' utk pasangan senar di 12-string) =====
   const TUNINGS = {
-    // ===================== GITAR 6 =====================
     guitar: [
       {name:'Standard', notes:['E2','A2','D3','G3','B3','E4']},
-      {name:'Half Step Down (D# Standard)', notes:['D#2','G#2','C#3','F#3','A#3','D#4']},
-      {name:'Whole Step Down (D Standard)', notes:['D2','G2','C3','F3','A3','D4']},
+      {name:'Half Step Down ', notes:['D#2','G#2','C#3','F#3','A#3','D#4']},
+      {name:'Whole Step Down ', notes:['D2','G2','C3','F3','A3','D4']},
       {name:'C Standard', notes:['C2','F2','A#2','D#3','G3','C4']},
       {name:'B Standard', notes:['B1','E2','A2','D3','F#3','B3']},
-      {name:'A# (Bb) Standard', notes:['A#1','D#2','G#2','C#3','F3','A#3']},
+      {name:'A# Standard', notes:['A#1','D#2','G#2','C#3','F3','A#3']},
       {name:'A Standard', notes:['A1','D2','G2','C3','E3','A3']},
 
       {name:'Drop D', notes:['D2','A2','D3','G3','B3','E4']},
       {name:'Double Drop D', notes:['D2','A2','D3','G3','B3','D4']},
       {name:'Drop C', notes:['C2','G2','C3','F3','A3','D4']},
       {name:'Drop B', notes:['B1','F#2','B2','E3','G#3','C#4']},
-      {name:'Drop A# (Drop Bb)', notes:['A#1','F2','A#2','D#3','G3','C4']},
+      {name:'Drop A# ', notes:['A#1','F2','A#2','D#3','G3','C4']},
       {name:'Drop A', notes:['A1','E2','A2','D3','F#3','B3']},
       {name:'Drop G#', notes:['G#1','D#2','G#2','C#3','F3','A#3']},
       {name:'Drop G', notes:['G1','D2','G2','C3','F3','A3']},
 
-      {name:'Open G (D G D G B D)', notes:['D2','G2','D3','G3','B3','D4']},
-      {name:'Open G Minor (D G D G A# D)', notes:['D2','G2','D3','G3','A#3','D4']},
-      {name:'Open D (D A D F# A D) / Vestapol', notes:['D2','A2','D3','F#3','A3','D4']},
-      {name:'Open D Minor (D A D F A D)', notes:['D2','A2','D3','F3','A3','D4']},
-      {name:'Open E (E B E G# B E)', notes:['E2','B2','E3','G#3','B3','E4']},
-      {name:'Open E Minor (E B E G B E)', notes:['E2','B2','E3','G3','B3','E4']},
-      {name:'Open A (E A E A C# E)', notes:['E2','A2','E3','A3','C#4','E4']},
-      {name:'Open A Minor (E A E A C E)', notes:['E2','A2','E3','A3','C4','E4']},
-      {name:'Open C (C G C G C E)', notes:['C2','G2','C3','G3','C4','E4']},
-      {name:'Open C Minor (C G C G C D#)', notes:['C2','G2','C3','G3','C4','D#4']},
-      {name:'Open F (C F C F A C)', notes:['C2','F2','C3','F3','A3','C4']},
-      {name:'Open F Minor (C F C F G# C)', notes:['C2','F2','C3','F3','G#3','C4']},
-      {name:'Open Gsus4 (D G D G C D)', notes:['D2','G2','D3','G3','C4','D4']},
+      {name:'Open G ', notes:['D2','G2','D3','G3','B3','D4']},
+      {name:'Open G Minor ', notes:['D2','G2','D3','G3','A#3','D4']},
+      {name:'Open D ', notes:['D2','A2','D3','F#3','A3','D4']},
+      {name:'Open D Minor ', notes:['D2','A2','D3','F3','A3','D4']},
+      {name:'Open E ', notes:['E2','B2','E3','G#3','B3','E4']},
+      {name:'Open E Minor ', notes:['E2','B2','E3','G3','B3','E4']},
+      {name:'Open A', notes:['E2','A2','E3','A3','C#4','E4']},
+      {name:'Open A Minor ', notes:['E2','A2','E3','A3','C4','E4']},
+      {name:'Open C ', notes:['C2','G2','C3','G3','C4','E4']},
+      {name:'Open C Minor ', notes:['C2','G2','C3','G3','C4','D#4']},
+      {name:'Open F ', notes:['C2','F2','C3','F3','A3','C4']},
+      {name:'Open F Minor ', notes:['C2','F2','C3','F3','G#3','C4']},
+      {name:'Open Gsus4 ', notes:['D2','G2','D3','G3','C4','D4']},
       {name:'DADGAD', notes:['D2','A2','D3','G3','A3','D4']},
-      {name:'Csus2 (C G C G C D)', notes:['C2','G2','C3','G3','C4','D4']},
-      {name:'C6 (C A C G C E)', notes:['C2','A2','C3','G3','C4','E4']},
-      {name:'Nashville (butuh senar 12)', notes:['E3','A3','D4','G4','B3','E4']},
+      {name:'Csus2 ', notes:['C2','G2','C3','G3','C4','D4']},
+      {name:'C6 ', notes:['C2','A2','C3','G3','C4','E4']},
+      {name:'Nashville ', notes:['E3','A3','D4','G4','B3','E4']},
       {name:'All Fourths', notes:['E2','A2','D3','G3','C4','F4']},
       {name:'New Standard Tuning (C G D A E G)', notes:['C2','G2','D3','A3','E4','G4']}
     ],
-
-    // ===================== BARITONE GUITAR =====================
     baritone_guitar: [
-      {name:'Standard (B E A D F# B)', notes:['B1','E2','A2','D3','F#3','B3']},
+      {name:'Standard Tuning', notes:['B1','E2','A2','D3','F#3','B3']},
       {name:'A Standard', notes:['A1','D2','G2','C3','E3','A3']},
       {name:'Drop A', notes:['A1','E2','A2','D3','F#3','B3']},
       {name:'Drop G', notes:['G1','D2','G2','C3','F3','A3']},
       {name:'Open A (baritone)', notes:['E2','A2','E3','A3','C#4','E4']},
       {name:'Open G (baritone)', notes:['D2','G2','D3','G3','B3','D4']}
     ],
-
-    // ===================== GUITAR 12-STRING =====================
     guitar12: [
       {name:'12-String Standard (pairs)', notes:['E2/E3','A2/A3','D3/D4','G3/G4','B3/B3','E4/E4']},
       {name:'12-String Open D (pairs)', notes:['D2/D3','A2/A3','D3/D4','F#3/F#4','A3/A3','D4/D4']},
       {name:'12-String Open G (pairs)', notes:['D2/D3','G2/G3','D3/D4','G3/G4','B3/B3','D4/D4']},
       {name:'12-String DADGAD (pairs)', notes:['D2/D3','A2/A3','D3/D4','G3/G4','A3/A3','D4/D4']}
     ],
-
-    // ===================== 7 & 8 STRING =====================
     guitar7: [
       {name:'Standard (B–E–A–D–G–B–E)', notes:['B1','E2','A2','D3','G3','B3','E4']},
       {name:'Drop A', notes:['A1','E2','A2','D3','G3','B3','E4']},
@@ -176,30 +223,22 @@
       {name:'Drop D', notes:['D1','A1','D2','G2','C3','F3','A3','D4']},
       {name:'F Standard', notes:['F1','A#1','D2','G2','C3','F3','A3','D4']}
     ],
-
-    // ===================== TENOR GUITAR (4 SENAR) =====================
     tenor_guitar: [
       {name:'Standard CGDA (Tenor)', notes:['C3','G3','D4','A4']},
       {name:'GDAE (Octave Mandolin style)', notes:['G2','D3','A3','E4']},
       {name:'Chicago (DGBE)', notes:['D3','G3','B3','E4']},
       {name:'Open G (D G B D)', notes:['D3','G3','B3','D4']}
     ],
-
-    // ===================== LAP STEEL =====================
     lap_steel: [
       {name:'Open G (G B D G B D)', notes:['G2','B2','D3','G3','B3','D4']},
       {name:'Open D (D A D F# A D)', notes:['D2','A2','D3','F#3','A3','D4']},
       {name:'C6 (C E G A C E)', notes:['C3','E3','G3','A3','C4','E4']},
       {name:'E6 (E G# B C# E G#)', notes:['E2','G#2','B2','C#3','E3','G#3']}
     ],
-
-    // ===================== BANJITAR =====================
     banjitar6: [
       {name:'Standard (Gitar di Banjo)', notes:['E2','A2','D3','G3','B3','E4']},
       {name:'Open G (gDGBD gaya 5-string, adaptasi 6)', notes:['D2','G2','D3','G3','B3','D4']}
     ],
-
-    // ===================== BASS =====================
     bass4: [
       {name:'Standard (E A D G)', notes:['E1','A1','D2','G2']},
       {name:'BEAD (Low B)', notes:['B0','E1','A1','D2']},
@@ -226,8 +265,6 @@
       {name:'Low F# set', notes:['F#0','C#1','G#1','C#2','F#2','B2']},
       {name:'Extended High (E A D G B E)', notes:['E1','A1','D2','G2','B2','E3']}
     ],
-
-    // ===================== UKULELE & KERABAT =====================
     ukulele_reentrant: [
       {name:'GCEA (Reentrant High-G)', notes:['G4','C4','E4','A4']},
       {name:'Half Step Down', notes:['F#4','B3','D#4','G#4']},
@@ -255,7 +292,6 @@
       {name:'Old Portuguese (C G A D)', notes:['C4','G4','A4','D5']}
     ],
     charango: [
-      // reentrant khas charango (kursus ganda tidak ditulis ganda agar ringkas)
       {name:'Standard Andean', notes:['G4','C5','E5','A5','E5']},
       {name:'Alternative (Diablo)', notes:['A4','D5','F#5','B5','F#5']}
     ],
@@ -264,8 +300,6 @@
       {name:'Open G mini', notes:['D3','G3','D4','G4','B4','D5']},
       {name:'DADGAD mini', notes:['D3','A3','D4','G4','A4','D5']}
     ],
-
-    // ===================== MANDOLIN FAMILY =====================
     mandolin: [
       {name:'Standard (G D A E)', notes:['G3','D4','A4','E5']},
       {name:'Celtic (G D A D)', notes:['G3','D4','A4','D5']},
@@ -283,8 +317,6 @@
     mandocello: [
       {name:'Standard (C G D A)', notes:['C2','G2','D3','A3']}
     ],
-
-    // ===================== BANJO =====================
     banjo5: [
       {name:'Open G (g D G B D)', notes:['G4','D3','G3','B3','D4']},
       {name:'Double C (g C G C D)', notes:['G4','C3','G3','C4','D4']},
@@ -301,8 +333,6 @@
       {name:'Plectrum Standard (C G B D)', notes:['C3','G3','B3','D4']},
       {name:'Chicago (D G B E)', notes:['D3','G3','B3','E4']}
     ],
-
-    // ===================== LAIN-LAIN (FRETTED) =====================
     bouzouki: [
       {name:'Greek (C F A D)', notes:['C3','F3','A3','D4']},
       {name:'Irish (G D A D)', notes:['G2','D3','A3','D4']},
@@ -318,19 +348,13 @@
       {name:'Niagari (C G D)', notes:['C3','G3','D4']},
       {name:'Sansagari (C F A#)', notes:['C3','F3','A#3']}
     ],
-
-    // ===================== ORKESTRA DAWAI =====================
     violin: [
       {name:'Standard (G D A E)', notes:['G3','D4','A4','E5']},
       {name:'Cross (A E A E)', notes:['A3','E4','A4','E5']},
       {name:'Cajun (F C G D)', notes:['F3','C4','G4','D5']}
     ],
-    viola: [
-      {name:'Standard (C G D A)', notes:['C3','G3','D4','A4']}
-    ],
-    cello: [
-      {name:'Standard (C G D A)', notes:['C2','G2','D3','A3']}
-    ],
+    viola: [{name:'Standard (C G D A)', notes:['C3','G3','D4','A4']}],
+    cello: [{name:'Standard (C G D A)', notes:['C2','G2','D3','A3']}],
     double_bass_orch: [
       {name:'Orchestra (E A D G)', notes:['E1','A1','D2','G2']},
       {name:'Solo Tuning (F# B E A)', notes:['F#1','B1','E2','A2']},
@@ -375,11 +399,6 @@
   }
   window.applyTuning=applyTuning;
 
-  // tombol navigasi
-  document.getElementById('tuner').onclick=()=>window.open('index.html','_blank');
-  document.getElementById('chord').onclick=()=>window.open('h.html','_blank');
-
-  // Easter egg
   const kodekera="BRILLI0011";
   let ketik="";
   const ovr=document.getElementById("balls_paskah");
@@ -392,7 +411,6 @@
   });
   if(tombolKe){ tombolKe.onclick=()=>{ window.location.href="https://id.pinterest.com/"; }; }
 
-  // init
   document.getElementById('instrument').addEventListener('change', renderList);
   renderList();
 </script>
