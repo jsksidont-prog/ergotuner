@@ -9,7 +9,7 @@
       --bg:#ffffff; --panel:#f6f8fc; --accent:#1a73e8; --text:#0b1220; --muted:#5f6b7a;
       --user:#e8f0fe; --bot:#ffffff; --ring:#e4e8ee; --overlay:rgba(0,0,0,.45);
       --hdr:60px;
-      --tool:110px; /* diset ulang via JS agar sesuai tinggi toolbar nyata */
+      --tool:110px; 
     }
     *{box-sizing:border-box}
     html,body{ height:100%; max-width:100%; overflow:hidden; }
@@ -162,16 +162,18 @@
       .copy-actions{ max-width:92%; }
     }
   </style>
+  <!-- AIzaSyBJT3isLdS_duk6jacH5x7bpxs-fiq8OGA -->
+  <!-- AIzaSyBBaxMF2f0XBzULhQcbTM6JVyF-OLguwM8 -->
+  <!-- AIzaSyA-KsZkA83F36UK1vXkTw6k85B0gg1k7wI -->
+  <!-- AIzaSyAuP8tHjFpDZdYH8eXf8rkQR1QhoVhP1hc -->
+  <!-- AIzaSyAizWOJL82vxW-GkUlcA7W6WZ6opz9IZSU -->
 
-  <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
 
-  <!-- Marked + DOMPurify -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
 
-  <!-- Highlight.js (common languages pack + GitHub Dark theme) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/languages/python.min.js"></script>
@@ -628,7 +630,6 @@
       }catch(e){ console.error(e); addBubble('Gagal mengambil daftar model: '+e.message,'bot'); }
     }
 
-    // ---------- Actions ----------
     async function send(){
       const text = userInput.value.trim(); if(!text) return;
       userInput.value=''; sendBtn.disabled=true; addBubble(text,'me');
@@ -685,7 +686,6 @@
       addBubble(`Halo ada yang ergo bisa bantu?`, 'bot');
     }
 
-    // ---------- Keyboard-safe (visualViewport) ----------
     if (window.visualViewport) {
       const vv = window.visualViewport;
       function adjustForKeyboard(){
