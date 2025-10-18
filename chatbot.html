@@ -8,16 +8,13 @@
     :root{
       --bg:#ffffff; --panel:#f6f8fc; --accent:#1a73e8; --text:#0b1220; --muted:#5f6b7a;
       --user:#e8f0fe; --bot:#ffffff; --ring:#e4e8ee; --overlay:rgba(0,0,0,.45);
-      --hdr:60px;
-      --tool:110px; 
+      --hdr:60px; --tool:110px; 
     }
     *{box-sizing:border-box}
     html,body{ height:100%; max-width:100%; overflow:hidden; }
-    body{
-      margin:0; background:var(--bg); color:var(--text);
+    body{ margin:0; background:var(--bg); color:var(--text);
       font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
-      padding-top:var(--hdr);
-    }
+      padding-top:var(--hdr); }
 
     .hamburger-inline{
       position:fixed; top:12px; left:12px; z-index:1000;
@@ -60,33 +57,23 @@
     button.ghost{background:#fff}
     .muted{font-size:12px; color:var(--muted)}
 
-    /* ---------- Layout scroll ---------- */
     main{ position:relative; height:100dvh; padding-bottom:var(--tool); }
     .chat{
-      position:relative;
-      height:calc(100dvh - var(--hdr));
-      padding:16px;
-      padding-bottom:calc(var(--tool) + 16px);
-      overflow:auto; scroll-behavior:smooth;
-      display:flex; flex-direction:column; gap:14px;
-      max-width:900px; width:100%; margin:0 auto; min-width:0;
+      position:relative; height:calc(100dvh - var(--hdr)); padding:16px; padding-bottom:calc(var(--tool) + 16px);
+      overflow:auto; scroll-behavior:smooth; display:flex; flex-direction:column; gap:14px; max-width:900px; width:100%; margin:0 auto; min-width:0;
     }
     @supports (height: 100svh){
       main{ height:100svh; }
       .chat{ height:calc(100svh - var(--hdr)); }
     }
 
-    .bubble{
-      max-width:85%; padding:12px 14px; border-radius:16px;
+    .bubble{ max-width:85%; padding:12px 14px; border-radius:16px;
       box-shadow:0 2px 12px rgba(0,0,0,.06); border:1px solid var(--ring);
-      white-space:pre-wrap; position:relative; min-width:0;
-      overflow-wrap:anywhere; word-break:break-word; background:var(--bot);
-    }
+      white-space:pre-wrap; position:relative; min-width:0; overflow-wrap:anywhere; background:var(--bot); }
     .me{align-self:flex-end; background:var(--user); color:#0b1220}
     .bot{align-self:flex-start; background:var(--bot)}
     .meta{font-size:12px; color:var(--muted); margin:2px 4px}
 
-    /* Toolbar */
     .toolbar{
       position:fixed; bottom:0; left:0; right:0; z-index:950;
       display:grid; gap:10px; padding:10px 16px;
@@ -98,36 +85,22 @@
       border-radius:50%; animation:spin .9s linear infinite; display:inline-block; vertical-align:middle;}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* Markdown default */
     .bot p{margin:0 0 8px}
     .bot pre{ overflow:auto; }
 
-    /* --- textarea auto-grow --- */
-    #userInput{
-      max-height:35dvh; overflow:auto; resize:none; line-height:1.4;
-    }
+    #userInput{ max-height:35dvh; overflow:auto; resize:none; line-height:1.4; }
 
-    /* ====== CODE BLOCK UI ====== */
     .codebox{ position:relative; border:1px solid var(--ring); border-radius:12px; overflow:hidden; background:#0d1117; }
-    .codebox-header{
-      display:flex; align-items:center; justify-content:flex-start;
-      gap:10px; padding:8px 10px; font-size:12px; color:#c9d1d9;
-      background:#0b0f14; border-bottom:1px solid #1f2937;
-    }
+    .codebox-header{ display:flex; align-items:center; gap:10px; padding:8px 10px; font-size:12px; color:#c9d1d9;
+      background:#0b0f14; border-bottom:1px solid #1f2937; }
     .codebox-lang{ opacity:.8; }
     .codebox pre{ margin:0; padding:12px 14px; }
-    .codebox pre code{
-      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      color:#c9d1d9;
-    }
+    .codebox pre code{ font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color:#c9d1d9; }
 
-    /* Tombol salin (pojok kanan) */
     .code-copy{
-      position:absolute; top:8px; right:10px; z-index:2;
-      display:inline-flex; align-items:center; gap:6px;
+      position:absolute; top:8px; right:10px; z-index:2; display:inline-flex; gap:6px;
       border:1px solid #2f3b4a; background:rgba(255,255,255,.06);
-      color:#e5e7eb; padding:4px 8px; border-radius:8px; font-size:12px; cursor:pointer;
-      backdrop-filter: blur(2px);
+      color:#e5e7eb; padding:4px 8px; border-radius:8px; font-size:12px; cursor:pointer; backdrop-filter: blur(2px);
     }
     .code-copy:hover{ background:rgba(255,255,255,.12); }
     .code-copy svg{ width:14px; height:14px; }
@@ -138,42 +111,18 @@
       :root{ --tool:140px; }
     }
 
-    /* Tombol salin isi bubble (opsional) */
-    .copy-actions{
-      display:flex; gap:8px; align-items:center;
-      margin:6px 0 2px;
-      max-width:85%;
-    }
+    .copy-actions{ display:flex; gap:8px; align-items:center; margin:6px 0 2px; max-width:85%; }
     .bot + .copy-actions{ align-self:flex-start; }
     .me  + .copy-actions{ align-self:flex-end; }
-.copy-btn{
-  border:1px solid var(--ring);
-  background:#fff;
-  color: var(--text);   
-  padding:6px 10px;
-  border-radius:8px;
-  font-size:12px;
-  cursor:pointer;
-}
-;
-    
+    .copy-btn{ border:1px solid var(--ring); background:#fff; color: var(--text); padding:6px 10px; border-radius:8px; font-size:12px; cursor:pointer; }
     .copy-btn:active{ transform:scale(.98); }
-    @media (max-width:640px){
-      .copy-actions{ max-width:92%; }
-    }
+    @media (max-width:640px){ .copy-actions{ max-width:92%; } }
   </style>
-  <!-- AIzaSyBJT3isLdS_duk6jacH5x7bpxs-fiq8OGA -->
-  <!-- AIzaSyBBaxMF2f0XBzULhQcbTM6JVyF-OLguwM8 -->
-  <!-- AIzaSyA-KsZkA83F36UK1vXkTw6k85B0gg1k7wI -->
-  <!-- AIzaSyAuP8tHjFpDZdYH8eXf8rkQR1QhoVhP1hc -->
-  <!-- AIzaSyAizWOJL82vxW-GkUlcA7W6WZ6opz9IZSU -->
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/languages/python.min.js"></script>
@@ -211,18 +160,12 @@
         <button id="closeDrawerBtn" class="ghost" type="button" aria-label="Close menu">✕</button>
       </header>
       <div class="content">
-        <!-- === Tambahan: Navigasi / Home === -->
         <div class="section-title">Navigasi</div>
         <div class="row">
           <button id="goHomeBtn" class="ghost" type="button">Home</button>
         </div>
 
-        <div class="section-title">Kunci API</div>
-        <input id="apiKey" type="password" placeholder="Masukkan Google AI API Key (disimpan lokal)" />
-        <div class="row" style="margin-top:8px">
-          <button id="saveKeyBtn" class="primary" type="button">Simpan Kunci</button>
-          <button id="clearKey" class="ghost" type="button">Hapus</button>
-        </div>
+        <!-- (tidak ada input API key) -->
 
         <div class="section-title">Model</div>
         <select id="model">
@@ -259,6 +202,21 @@
   </main>
 
   <script>
+    const API_KEYS = [
+      'AIzaSyBJT3isLdS_duk6jacH5x7bpxs-fiq8OGA',
+      'AIzaSyAizWOJL82vxW-GkUlcA7W6WZ6opz9IZSU',
+      'AIzaSyAuP8tHjFpDZdYH8eXf8rkQR1QhoVhP1hc',
+      'AIzaSyA-KsZkA83F36UK1vXkTw6k85B0gg1k7wI',
+      'AIzaSyBBaxMF2f0XBzULhQcbTM6JVyF-OLguwM8',
+      'AIzaSyBa6Ei--12rN_MSgU7li80HGQ0wyd8ASVo',
+      'AIzaSyD6fPFX_BBNbMzvcrgq_9XO8Q6Sx5_Js-o',
+      'AIzaSyD2DeYkJY0goujHvSK93NgdSe9Y4J1zXfU',
+      'AIzaSyCuOxHcIRIKTKj07zCx1nag4jgVF9XAjd0',
+      'AIzaSyAJd0TpdhTHyfG4FvWMeKZB4jNoQp5gsXc'
+    ];
+    function pickKey(){ return API_KEYS[Math.floor(Math.random()*API_KEYS.length)]; }
+    const BASE_SYS = 'kamu adalah Ergo ai';
+
     // ---------- State ----------
     const chatEl = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
@@ -270,27 +228,19 @@
     const openDrawerBtn = document.getElementById('hamburgerBtn');
     const closeDrawerBtn = document.getElementById('closeDrawerBtn');
 
-    // Settings
-    const apiKeyInput = document.getElementById('apiKey');
-    const saveKeyBtn = document.getElementById('saveKeyBtn');
-    const clearKeyBtn = document.getElementById('clearKey');
+    // Settings (tanpa API key)
     const modelSelect = document.getElementById('model');
     const syncBtn = document.getElementById('syncModelsBtn');
     const systemPromptEl = document.getElementById('systemPrompt');
     const applySysBtn = document.getElementById('applySysBtn');
     const newChatBtn = document.getElementById('newChatBtn');
-
-    // Tambahan: tombol Home
     const goHomeBtn = document.getElementById('goHomeBtn');
 
-    const LS_KEY   = 'gemini_api_key';
+    // localStorage keys (model & system prompt)
     const LS_MODEL = 'gemini_model';
     const LS_SYS   = 'gemini_system_prompt';
 
     const contents = [];
-
-    // ---------- Base (hidden) System Prompt ----------
-    const BASE_SYS = 'kamu adalah Ergo ai';
 
     // ---------- Drawer controls ----------
     function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
@@ -301,270 +251,120 @@
 
     // ---------- Prefs ----------
     function loadPrefs(){
-      const k = localStorage.getItem(LS_KEY);
       const m = localStorage.getItem(LS_MODEL) || 'gemini-2.5-flash';
       const s = localStorage.getItem(LS_SYS) || '';
-      if(k){ apiKeyInput.value = k.replace(/./g,'•'); apiKeyInput.dataset.masked='1'; }
       modelSelect.value = m; systemPromptEl.value = s;
     }
     function savePrefs(){
-      const raw = apiKeyInput.dataset.masked==='1' ? localStorage.getItem(LS_KEY) : apiKeyInput.value.trim();
-      if(raw) localStorage.setItem(LS_KEY, raw);
       localStorage.setItem(LS_MODEL, modelSelect.value);
       localStorage.setItem(LS_SYS, systemPromptEl.value.trim());
-      apiKeyInput.value = raw ? raw.replace(/./g,'•') : '';
-      apiKeyInput.dataset.masked='1';
-      toast('Pengaturan disimpan di browser');
+      toast('Model & System Prompt disimpan.');
     }
-    function clearApiKey(){ localStorage.removeItem(LS_KEY); apiKeyInput.value=''; delete apiKeyInput.dataset.masked; toast('Kunci API dihapus'); }
-
-    // ---------- UI Helpers ----------
     function toast(msg){ console.log(msg); }
 
-    /* ============ Clipboard util dengan fallback ============ */
+    /* ============ Clipboard util ============ */
     async function copyToClipboard(text){
       try{
-        if (navigator.clipboard && window.isSecureContext){
-          await navigator.clipboard.writeText(text);
-          return true;
-        }
+        if (navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); return true; }
       }catch(e){}
-
       try{
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.top = '-9999px';
-        ta.setAttribute('readonly','');
-        document.body.appendChild(ta);
-        ta.select();
-        ta.setSelectionRange(0, ta.value.length);
-        const ok = document.execCommand('copy');
-        document.body.removeChild(ta);
-        if (ok) return true;
+        const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.top='-9999px';
+        ta.setAttribute('readonly',''); document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0,ta.value.length);
+        const ok=document.execCommand('copy'); document.body.removeChild(ta); if(ok) return true;
       }catch(e){}
-
       try{
-        const sel = window.getSelection();
-        const range = document.createRange();
-        const div = document.createElement('div');
-        div.textContent = text;
-        div.style.position='fixed';
-        div.style.top='-9999px';
-        document.body.appendChild(div);
-        range.selectNodeContents(div);
-        sel.removeAllRanges(); sel.addRange(range);
-        const ok = document.execCommand('copy');
-        sel.removeAllRanges();
-        document.body.removeChild(div);
-        return !!ok;
-      }catch(e){
-        return false;
-      }
+        const sel=window.getSelection(); const range=document.createRange(); const div=document.createElement('div');
+        div.textContent=text; div.style.position='fixed'; div.style.top='-9999px'; document.body.appendChild(div);
+        range.selectNodeContents(div); sel.removeAllRanges(); sel.addRange(range);
+        const ok=document.execCommand('copy'); sel.removeAllRanges(); document.body.removeChild(div); return !!ok;
+      }catch(e){ return false; }
     }
 
     // ===== Markdown + Math + Code =====
     function renderRich(raw){
       if(!raw) return '';
-
-      // Tahan code fence agar parser LaTeX aman
-      const codeHolders = [];
-      raw = raw.replace(/```(\w+)?\n([\s\S]*?)```/g, (m, lang, code) => {
-        const i = codeHolders.push({lang: (lang||'').trim(), code}) - 1;
-        return `@@CODE${i}@@`;
-      });
-
-      // Tahan LaTeX
+      const codeHolders=[];
+      raw = raw.replace(/```(\w+)?\n([\s\S]*?)```/g,(m,lang,code)=>{const i=codeHolders.push({lang:(lang||'').trim(),code})-1; return `@@CODE${i}@@`;});
       const mathDisplay=[], mathInline=[];
       raw = raw.replace(/\$\$([\s\S]+?)\$\$/g,(m,p1)=>{const i=mathDisplay.push(p1.trim())-1; return `@@MDIS${i}@@`;});
       raw = raw.replace(/\$(?!\$)([^\n]+?)\$(?!\$)/g,(m,p1)=>{const i=mathInline.push(p1.trim())-1; return `@@MINL${i}@@`;});
-
-      // Kembalikan code fence
-      raw = raw.replace(/@@CODE(\d+)@@/g,(m,i)=>{
-        const {lang, code} = codeHolders[+i];
-        return `\n\n\`\`\`${lang}\n${code}\n\`\`\`\n\n`;
-      });
-
-      // Highlight via marked
-      marked.setOptions({
-        breaks:true,
-        gfm:true,
-        highlight: function (code, lang){
-          if(lang && hljs.getLanguage(lang)){
-            return hljs.highlight(code, {language:lang}).value;
-          }
-          return hljs.highlightAuto(code).value;
-        }
-      });
-
-      // Parse markdown
+      raw = raw.replace(/@@CODE(\d+)@@/g,(m,i)=>`\n\n\`\`\`${codeHolders[+i].lang}\n${codeHolders[+i].code}\n\`\`\`\n\n`);
+      marked.setOptions({breaks:true,gfm:true,highlight:(code,lang)=>{try{if(lang&&hljs.getLanguage(lang)) return hljs.highlight(code,{language:lang}).value;}catch{} return hljs.highlightAuto(code).value;}});
       let htmlMd = marked.parse(raw);
-
-      // Tempel placeholder math sebagai span
       htmlMd = htmlMd
         .replace(/@@MDIS(\d+)@@/g,(m,i)=>`<span class="math-display" data-idx="${i}"></span>`)
         .replace(/@@MINL(\d+)@@/g,(m,i)=>`<span class="math-inline" data-idx="${i}"></span>`);
-
-      // Sanitasi
       const clean = DOMPurify.sanitize(htmlMd,{ADD_ATTR:['data-idx']});
       const tpl = document.createElement('template'); tpl.innerHTML = clean;
-
-      // Render KaTeX di fragment
-      tpl.content.querySelectorAll('.math-display').forEach(el=>{
-        try{ katex.render(mathDisplay[+el.dataset.idx]||'', el, {displayMode:true, throwOnError:false}); }catch{}
-      });
-      tpl.content.querySelectorAll('.math-inline').forEach(el=>{
-        try{ katex.render(mathInline[+el.dataset.idx]||'', el, {displayMode:false, throwOnError:false}); }catch{}
-      });
-
-      return tpl.innerHTML; // kembalikan string HTML siap tempel
+      tpl.content.querySelectorAll('.math-display').forEach(el=>{ try{ katex.render(mathDisplay[+el.dataset.idx]||'', el, {displayMode:true, throwOnError:false}); }catch{} });
+      tpl.content.querySelectorAll('.math-inline').forEach(el=>{ try{ katex.render(mathInline[+el.dataset.idx]||'', el, {displayMode:false, throwOnError:false}); }catch{} });
+      return tpl.innerHTML;
     }
 
-    // === Hiasan blok kode + tombol Salin dengan fallback ===
     function enhanceCodeBlocks(root){
       const blocks = [...root.querySelectorAll('pre > code')];
-
       for (const codeEl of blocks){
         const pre = codeEl.parentElement;
-
-        // lewati jika sudah di dalam .codebox
         if (pre.parentElement && pre.parentElement.classList.contains('codebox')) continue;
-
-        // highlight.js (opsional, aman dipanggil ulang)
         try { hljs.highlightElement(codeEl); } catch{}
-
-        const lang = ([...codeEl.classList].find(c => c.startsWith('language-')) || 'language-code')
-                      .replace('language-','')
-                      .toUpperCase();
-
+        const lang = ([...codeEl.classList].find(c => c.startsWith('language-')) || 'language-code').replace('language-','').toUpperCase();
         const wrap = document.createElement('div'); wrap.className='codebox';
-        const header = document.createElement('div'); header.className='codebox-header';
-        const langEl = document.createElement('div'); langEl.className='codebox-lang'; langEl.textContent = lang;
-
-        header.appendChild(langEl);
-
-        pre.replaceWith(wrap);
-        wrap.appendChild(header);
-        wrap.appendChild(pre);
-
-        // Tombol salin di pojok kanan atas
-        const copyBtn = document.createElement('button');
-        copyBtn.type = 'button';
-        copyBtn.className = 'code-copy';
-        copyBtn.setAttribute('aria-label','Salin kode');
-        copyBtn.innerHTML = `
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-            <path d="M5 15V5a2 2 0 0 1 2-2h10"></path>
-          </svg>
-          <span>Salin kode</span>
-        `;
-        const label = copyBtn.querySelector('span');
-
-        copyBtn.addEventListener('click', async (e) => {
-          e.stopPropagation();
-          const text = codeEl.innerText;
-          const ok = await copyToClipboard(text);
-          const old = label.textContent;
-          if(ok){
-            label.textContent = 'Tersalin ✓';
-            copyBtn.disabled = true;
-            setTimeout(()=>{ label.textContent = old; copyBtn.disabled = false; }, 1300);
-          }else{
-            label.textContent = 'Gagal menyalin';
-            setTimeout(()=>{ label.textContent = old; }, 1300);
-          }
-        });
-
+        const header = document.createElement('div'); header.className='codebox-header'; header.textContent = lang;
+        pre.replaceWith(wrap); wrap.appendChild(header); wrap.appendChild(pre);
+        const copyBtn = document.createElement('button'); copyBtn.className='code-copy'; copyBtn.textContent='Salin kode';
+        copyBtn.onclick = async ()=>{ try{ await navigator.clipboard.writeText(codeEl.innerText); copyBtn.textContent='Tersalin ✓'; setTimeout(()=>copyBtn.textContent='Salin kode',1100);}catch{copyBtn.textContent='Gagal'; setTimeout(()=>copyBtn.textContent='Salin kode',1100);} };
         wrap.appendChild(copyBtn);
       }
     }
 
     // ========== Chat bubble helpers ==========
     function attachCopyButton(bubbleEl){
-      const row = document.createElement('div');
-      row.className = 'copy-actions';
-
-      const btn = document.createElement('button');
-      btn.className = 'copy-btn';
-      btn.type = 'button';
-      btn.textContent = 'Salin';
-
-      row.appendChild(btn);
-      bubbleEl.insertAdjacentElement('afterend', row);
-
-      btn.addEventListener('click', async (e)=>{
-        e.stopPropagation();
-        const ok = await copyToClipboard(bubbleEl.textContent.trim());
-        const old = btn.textContent;
-        btn.textContent = ok ? 'Tersalin ✓' : 'Gagal';
-        setTimeout(()=> btn.textContent = old, 1200);
-      });
-
+      const row = document.createElement('div'); row.className = 'copy-actions';
+      const btn = document.createElement('button'); btn.className = 'copy-btn'; btn.type = 'button'; btn.textContent = 'Salin';
+      row.appendChild(btn); bubbleEl.insertAdjacentElement('afterend', row);
+      btn.addEventListener('click', async (e)=>{ e.stopPropagation(); const ok = await copyToClipboard(bubbleEl.textContent.trim());
+        const old = btn.textContent; btn.textContent = ok ? 'Tersalin ✓' : 'Gagal'; setTimeout(()=> btn.textContent = old, 1200); });
       row.scrollIntoView({ behavior:'smooth', block:'end' });
     }
-
     function addBubble(text, who){
-      const meta = document.createElement('div');
-      meta.className = 'meta';
-      meta.textContent = who==='me' ? '' : 'ERGO AI';
-
-      const b = document.createElement('div');
-      b.className = 'bubble ' + (who==='me' ? 'me' : 'bot');
-
-      if(who==='me'){
-        b.textContent = text;
-      } else {
-        b.innerHTML = renderRich(text);   // 1) masukkan HTML
-        enhanceCodeBlocks(b);             // 2) pasang tombol + listener SETELAH dipasang
-      }
-
-      chatEl.appendChild(meta);
-      chatEl.appendChild(b);
-
-      if(who!=='me'){ attachCopyButton(b); }
-      b.scrollIntoView({ behavior:'smooth', block:'end' });
+      const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = who==='me' ? '' : 'ERGO AI';
+      const b = document.createElement('div'); b.className = 'bubble ' + (who==='me' ? 'me' : 'bot');
+      if(who==='me'){ b.textContent = text; } else { b.innerHTML = renderRich(text); enhanceCodeBlocks(b); }
+      chatEl.appendChild(meta); chatEl.appendChild(b);
+      if(who!=='me'){ attachCopyButton(b); } b.scrollIntoView({ behavior:'smooth', block:'end' });
     }
-
     function addTyping(){
       const meta = document.createElement('div'); meta.className='meta'; meta.textContent='Ergo Ai sedang mengetik…';
       const b = document.createElement('div'); b.className='bubble bot'; b.id='typing'; b.innerHTML='<span class="spinner"></span> ';
-      chatEl.appendChild(meta); chatEl.appendChild(b);
-      b.scrollIntoView({ behavior:'smooth', block:'end' });
+      chatEl.appendChild(meta); chatEl.appendChild(b); b.scrollIntoView({ behavior:'smooth', block:'end' });
     }
     function removeTyping(){ const el=document.getElementById('typing'); if(el){ el.previousSibling?.remove(); el.remove(); } }
 
-    // ---------- API Helpers (fallback v1 → v1beta) ----------
-    async function apiGet(path,key){
+    // ---------- API Helpers (v1 → v1beta) ----------
+    async function apiGet(path){
+      // gunakan key acak juga untuk operasi "sync models"
+      const KEY = pickKey();
       const versions=['v1','v1beta']; let lastErr;
       for(const v of versions){
         try{
-          const url=`https://generativelanguage.googleapis.com/${v}/${path}${path.includes('?')?'&':'?'}key=${encodeURIComponent(key)}`;
+          const url=`https://generativelanguage.googleapis.com/${v}/${path}${path.includes('?')?'&':'?'}key=${encodeURIComponent(KEY)}`;
           const res=await fetch(url); if(!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
           return await res.json();
         }catch(e){ lastErr=e; }
       } throw lastErr;
     }
-
-    async function apiPostGenerateContent(modelName, key, baseContents, sysText){
-      const versions = ['v1','v1beta'];
-      let lastErr;
-      const sysParts = [{ text: BASE_SYS }];
-      if (sysText && sysText.trim()) sysParts.push({ text: sysText.trim() });
-
+    async function apiPostGenerateContent(modelName, baseContents, sysText){
+      // pilih 1 key RANDOM tiap kali kirim chat
+      const KEY = pickKey();
+      const versions = ['v1','v1beta']; let lastErr;
+      const sysParts = [{ text: BASE_SYS }]; if (sysText && sysText.trim()) sysParts.push({ text: sysText.trim() });
       for(const v of versions){
         try{
-          const url = `https://generativelanguage.googleapis.com/${v}/models/${encodeURIComponent(modelName)}:generateContent?key=${encodeURIComponent(key)}`;
+          const url = `https://generativelanguage.googleapis.com/${v}/models/${encodeURIComponent(modelName)}:generateContent?key=${encodeURIComponent(KEY)}`;
           const body = { contents: baseContents.map(x=>x) };
           const sysObj = { parts: sysParts };
-          if(v === 'v1'){ body.systemInstruction  = sysObj; }
-          else          { body.system_instruction = sysObj; }
-
-          const res = await fetch(url, {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify(body)
-          });
+          if(v === 'v1'){ body.systemInstruction  = sysObj; } else { body.system_instruction = sysObj; }
+          const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
           if(!res.ok){ throw new Error(`HTTP ${res.status}: ${await res.text()}`); }
           return await res.json();
         }catch(e){ lastErr = e; }
@@ -575,12 +375,10 @@
     // ---------- Toolbar & Textarea sizing ----------
     const root = document.documentElement;
     const toolbar = document.querySelector('.toolbar');
-
     function syncToolHeight(){
       const h = toolbar.getBoundingClientRect().height;
       root.style.setProperty('--tool', h + 'px');
     }
-
     function autoGrow(){
       userInput.style.height = 'auto';
       const maxPx = Math.round(window.innerHeight * 0.35);
@@ -590,24 +388,18 @@
     userInput.addEventListener('input', autoGrow);
 
     // ---------- Gemini call ----------
-    function getModelName(){
-      return (localStorage.getItem(LS_MODEL) || modelSelect.value).trim();
-    }
+    function getModelName(){ return (localStorage.getItem(LS_MODEL) || modelSelect.value).trim(); }
     async function callGemini(prompt){
-      const key = localStorage.getItem(LS_KEY);
-      if(!key){ addBubble('Masukkan & simpan API key dulu (menu kiri atas).','bot'); return null; }
       const model = getModelName();
       const sysText = (localStorage.getItem(LS_SYS) || '').trim();
       const base = contents.concat([{ role:'user', parts:[{text: prompt}] }]);
-      return apiPostGenerateContent(model, key, base, sysText);
+      return apiPostGenerateContent(model, base, sysText);
     }
 
     // ---------- Sync models ----------
     async function syncModels(){
-      const key = localStorage.getItem(LS_KEY);
-      if(!key){ addBubble('Masukkan & simpan API key dulu.','bot'); return; }
       try{
-        const data = await apiGet('models', key);
+        const data = await apiGet('models');
         const list = (data.models||[]).filter(m=> (m?.supportedGenerationMethods||[]).includes('generateContent'));
         if(list.length){
           modelSelect.innerHTML='';
@@ -632,8 +424,7 @@
 
     async function send(){
       const text = userInput.value.trim(); if(!text) return;
-      userInput.value=''; sendBtn.disabled=true; addBubble(text,'me');
-      addTyping();
+      userInput.value=''; sendBtn.disabled=true; addBubble(text,'me'); addTyping();
       try{
         const json = await callGemini(text); removeTyping();
         const reply =
@@ -664,27 +455,12 @@
     // ---------- Events ----------
     userInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }});
     sendBtn.addEventListener('click', send);
-    saveKeyBtn.addEventListener('click', savePrefs);
-    clearKeyBtn.addEventListener('click', clearApiKey);
     syncBtn.addEventListener('click', syncModels);
     applySysBtn.addEventListener('click', applySystemPrompt);
     newChatBtn.addEventListener('click', ()=>{ newChat(); closeDrawer(); });
+    goHomeBtn.addEventListener('click', () => { closeDrawer(); window.location.href = 'index.html'; });
 
-    // Event tombol Home (baru)
-    goHomeBtn.addEventListener('click', () => {
-      closeDrawer();
-      window.location.href = 'index.html';
-    });
-
-    apiKeyInput.addEventListener('focus', ()=>{
-      if(apiKeyInput.dataset.masked==='1'){
-        apiKeyInput.type='text'; apiKeyInput.value=''; delete apiKeyInput.dataset.masked;
-      }
-    });
-
-    function greeting(){
-      addBubble(`Halo ada yang ergo bisa bantu?`, 'bot');
-    }
+    function greeting(){ addBubble(`Halo ada yang ergo bisa bantu?`, 'bot'); }
 
     if (window.visualViewport) {
       const vv = window.visualViewport;
@@ -701,7 +477,6 @@
       loadPrefs(); greeting();
       syncToolHeight(); autoGrow();
       window.addEventListener('resize', syncToolHeight);
-
       enhanceCodeBlocks(document);
     }
     init();
