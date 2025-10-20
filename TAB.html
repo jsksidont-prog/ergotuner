@@ -17,6 +17,9 @@
     --header-h: 120px;              /* fallback; diset dinamis via JS */
     --main-gap: 16px;               /* jarak antara header dan konten */
     --maxw: 1000px;
+
+    /* Tambahan: font UI ala kode kedua */
+    --ui-font: Arial, "Helvetica Neue", Helvetica, sans-serif;
   }
 
   *{box-sizing:border-box;}
@@ -42,10 +45,6 @@
     padding:22px 0 12px;
     text-align:center;
     z-index:80;
-    
-    /* no border */
-    /* no box-shadow kalau mau super flat; kalau mau bayangan, uncomment: */
-    /* box-shadow: var(--shadow); */
   }
   .title-wrapper{
     display:inline-flex; align-items:center; justify-content:center; gap:12px;
@@ -92,7 +91,7 @@
   }
   .note:hover{ background:rgba(0,0,0,0.08); }
 
-  /* ===== Hamburger & Menu: persis seperti kode kedua ===== */
+  /* ===== Hamburger & Menu ===== */
   .hamburger-wrap{
     position: fixed;
     top: 14px;
@@ -154,6 +153,15 @@
     font-size:16px;
   }
   .menu-item:hover{ background:#f76c6c; color:#fff; }
+
+  /* ===== OVERRIDE FONT untuk area hamburger/menu agar sama seperti kode kedua ===== */
+  .hamburger-wrap,
+  .hamburger,
+  .hamburger .bar,
+  .menu-panel,
+  .menu-item {
+    font-family: var(--ui-font);
+  }
 
   /* Responsif kecil: kasih ruang header sedikit lebih tinggi */
   @media (max-width: 420px){
