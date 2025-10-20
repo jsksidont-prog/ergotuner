@@ -5,35 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ERGONOM</title>
 <style>
-  :root {
-    --bg:#ffffff; --fg:#0b0b0c; --muted:#6b7280;
-    --brand:#10b981; --brand-2:#059669;
+  :root{
+    --fg:#0b0b0c; --brand:#10b981; --brand-2:#059669;
     --panel:#f3f4f6; --border:#e5e7eb; --shadow:0 8px 24px rgba(0,0,0,.12);
   }
   *{box-sizing:border-box;}
-
-  /* Background PNG + overlay agar teks tetap terbaca */
   body{
-    margin:0;
-    font-family:Inter, Arial, sans-serif;
-    color:var(--fg);
-    display:flex; flex-direction:column; align-items:center;
-    min-height:100vh;
+    margin:0; font-family:Inter, Arial, sans-serif; color:var(--fg);
+    display:flex; flex-direction:column; align-items:center; min-height:100vh;
     background:
       linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
       url("ANDIDONT.png") center center / cover no-repeat fixed;
   }
 
+  /* Header absolute & transparan */
   header{
-    width:100%; text-align:center; padding:25px 0 15px;
-   border-bottom:1px solid var(--border);
-    position:sticky; top:0; z-index:10; backdrop-filter: blur(8px);
+    position:absolute; top:0; left:0; right:0; z-index:10;
+    text-align:center; padding:22px 0 10px;
+    background:none; border:none; backdrop-filter:none;
   }
-  .title{display:inline-flex; align-items:center; justify-content:center; gap:12px}
+  .title{display:inline-flex; align-items:center; justify-content:center; gap:12px; margin-bottom:10px;}
   .title img{width:60px; height:60px; object-fit:contain}
-  .title h1{margin:0; font-size:2.4rem; font-weight:900; color:var(--brand-2); letter-spacing:.5px}
+  .title h1{margin:0; font-size:2.4rem; font-weight:900; color:#0b0b0c; letter-spacing:.5px}
 
-  .toolbar{margin-top:14px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap}
+  .toolbar{margin-top:8px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap}
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:8px;
     padding:10px 16px; border:none; border-radius:10px; font-weight:700; cursor:pointer;
@@ -43,7 +38,13 @@
   .btn.secondary{ background:#f1f5f9; color:#111; border:1px solid var(--border) }
   .btn:hover{ transform:translateY(-2px) }
 
-  main{ width:100%; max-width:700px; padding:24px 16px 50px; display:flex; flex-direction:column; align-items:center; }
+  /* ===== Spasi aman di atas konten =====
+     clamp(min, preferred, max) agar rapi di berbagai layar */
+  main{
+    width:100%; max-width:700px;
+    padding: clamp(170px, 22vh, 260px) 16px 60px; /* ⟵ tambahkan jarak dari header */
+    display:flex; flex-direction:column; align-items:center;
+  }
 
   .card{
     width:100%;
@@ -66,14 +67,60 @@
 
   .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px }
   select{ width:100%; padding:10px 12px; font-size:16px; border-radius:10px; border:1px solid var(--border); background:#fff }
+
+  /* ====== Hamburger menu (identik sebelumnya) ====== */
+  .hamburger-wrap{ position: fixed; top: 14px; left: 14px; z-index: 60; }
+  .hamburger{
+    width:40px; height:32px; background:#fff; border:1px solid #ccc; border-radius:6px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .hamburger .bar{ width:20px; height:2px; background:#000; position:relative; }
+  .hamburger .bar::before, .hamburger .bar::after{
+    content:""; position:absolute; left:0; width:20px; height:2px; background:#000;
+  }
+  .hamburger .bar::before{ top:-6px; } .hamburger .bar::after{ top:6px; }
+
+  .overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.4); opacity:0; pointer-events:none; transition:0.2s; z-index:50; }
+  .overlay.show{ opacity:1; pointer-events:auto; }
+
+  .menu-panel{
+    position: fixed; top:0; left:0; width:220px; height:100%;
+    background:#fff; box-shadow:2px 0 10px rgba(0,0,0,0.3);
+    transform:translateX(-100%); transition:0.3s; z-index:55; padding-top:60px; text-align:left;
+  }
+  .menu-panel.show{ transform:translateX(0); }
+  .menu-item{ display:block; padding:12px 18px; text-decoration:none; color:#000; border-radius:6px; transition:0.3s; font-size:16px; }
+  .menu-item:hover{ background:#f76c6c; color:#fff; }
+
+  /* Sedikit ekstra spasi pada layar kecil */
+  @media (max-width: 480px){
+    main{ padding-top: clamp(200px, 28vh, 300px); }
+  }
 </style>
 </head>
 <body>
 
+<!-- Hamburger -->
+<div class="hamburger-wrap">
+  <div class="hamburger" id="hambtn"><span class="bar"></span></div>
+</div>
+<div class="overlay" id="overlay"></div>
+<nav id="menuPanel" class="menu-panel">
+  <a class="menu-item" href="index.html">Home</a>
+  <a class="menu-item" href="h.html">Chord</a>
+  <a class="menu-item" href="1312.html">Preset</a>
+  <a class="menu-item" href="metro.html">Metronom</a>
+  <a class="menu-item" href="TAB.html">Tab Maker</a>
+  <a class="menu-item" href="EQWEQWQWE1.html">Scale Guitar</a>
+  <a class="menu-item" href="coba.html">Progresi Chord</a>
+  <a class="menu-item" href="chatbot.html">ChatBot</a>
+  <a class="menu-item" href="https://craftpix.net/?s=FARM">Download my App</a>
+</nav>
+
 <header>
   <div class="title">
     <img src="ERGOPANTEK.png" alt="Logo ERGONOM">
-    <h1 style="color: #0b0b0c;">ERGONOM</h1>
+    <h1>ERGONOM</h1>
   </div>
   <div class="toolbar">
     <button class="btn primary" id="startStop">Mulai</button>
@@ -85,12 +132,9 @@
 <main>
   <div class="card">
     <div class="label">Tempo (BPM)</div>
-    <!-- Tanpa max: bebas hingga 10000 (dibatasi lunak di JS) -->
     <input type="number" id="tempo" min="1" step="1" value="100" />
     <div class="display" id="tempoDisplay">100 BPM</div>
-
     <div class="beats" id="beats"></div>
-
     <div class="grid2">
       <select id="meter">
         <option value="2">2/4</option>
@@ -110,15 +154,19 @@
 </main>
 
 <script>
-/* ====== State ====== */
+/* Menu */
+const hambtn = document.getElementById('hambtn');
+const menu = document.getElementById('menuPanel');
+const overlay = document.getElementById('overlay');
+hambtn.onclick = ()=>{ menu.classList.add('show'); overlay.classList.add('show'); };
+overlay.onclick = ()=>{ menu.classList.remove('show'); overlay.classList.remove('show'); };
+document.addEventListener('keydown',(e)=>{ if(e.key==="Escape"){ menu.classList.remove('show'); overlay.classList.remove('show'); }});
+
+/* Metronom */
 let isRunning=false, tempo=100, audioCtx, meter=4, voice='square';
-
-/* Scheduler vars (presisi tinggi) */
 let nextNoteTime=0, currentBeatIndex=0, schedulerTimer=null;
-const lookahead=25;              // ms
-const scheduleAheadTime=0.1;     // detik
+const lookahead=25, scheduleAheadTime=0.1;
 
-/* ====== Elements ====== */
 const tempoInput=document.getElementById('tempo');
 const tempoDisplay=document.getElementById('tempoDisplay');
 const startStopBtn=document.getElementById('startStop');
@@ -128,7 +176,6 @@ const beatsWrap=document.getElementById('beats');
 const meterSel=document.getElementById('meter');
 const voiceSel=document.getElementById('voice');
 
-/* ====== UI ====== */
 function buildBeats(){
   beatsWrap.innerHTML='';
   for(let i=0;i<meter;i++){
@@ -138,63 +185,41 @@ function buildBeats(){
   }
 }
 function setTempo(v){
-  // IZINKAN INPUT KOSONG saat mengedit
-  if (v === "" || v === null) {
-    tempoDisplay.textContent = "- BPM";
-    return;
-  }
-  let n = parseInt(v,10);
-  if (isNaN(n) || n < 1) n = 1;
-  if (n > 10000) n = 10000;
-
-  tempo = n;
-  tempoInput.value = n;
-  tempoDisplay.textContent = n + " BPM";
+  if (v === "" || v === null) { tempoDisplay.textContent = "- BPM"; return; }
+  let n = parseInt(v,10); if (isNaN(n) || n < 1) n = 1; if (n > 10000) n = 10000;
+  tempo = n; tempoInput.value = n; tempoDisplay.textContent = n + " BPM";
   if (isRunning) restartScheduler();
 }
 tempoInput.addEventListener('input', e => setTempo(e.target.value));
-
-// Saat blur, kosong -> kembali ke nilai terakhir yang valid
 tempoInput.addEventListener('blur', e=>{
   if(e.target.value === "" || isNaN(parseInt(e.target.value,10))){
-    tempoInput.value = tempo;
-    tempoDisplay.textContent = tempo + " BPM";
+    tempoInput.value = tempo; tempoDisplay.textContent = tempo + " BPM";
   }
 });
-
 meterSel.addEventListener('change', ()=>{ meter=parseInt(meterSel.value,10)||4; currentBeatIndex=0; buildBeats(); });
 voiceSel.addEventListener('change', ()=>{ voice=voiceSel.value; });
 
-/* ====== Start/Stop ====== */
 startStopBtn.addEventListener('click', ()=> isRunning ? stop() : start());
 resetBtn.addEventListener('click', ()=> setTempo(100));
 
-/* Tap tempo */
 let tapTimes=[];
 tapBtn.addEventListener('click', ()=>{
-  const now=performance.now();
-  tapTimes.push(now);
-  if(tapTimes.length>6) tapTimes.shift();
+  const now=performance.now(); tapTimes.push(now); if(tapTimes.length>6) tapTimes.shift();
   if(tapTimes.length>=2){
     const diffs=[]; for(let i=1;i<tapTimes.length;i++) diffs.push(tapTimes[i]-tapTimes[i-1]);
-    const avg=diffs.reduce((a,b)=>a+b,0)/diffs.length;
-    setTempo(Math.round(60000/avg));
+    const avg=diffs.reduce((a,b)=>a+b,0)/diffs.length; setTempo(Math.round(60000/avg));
   }
 });
 
-/* ====== Scheduler ====== */
 function nextNote(){ const s=60.0/tempo; nextNoteTime+=s; currentBeatIndex=(currentBeatIndex+1)%meter; }
 function scheduleNote(beatIndex, time){
   if(!audioCtx) return;
   const osc=audioCtx.createOscillator(); const gain=audioCtx.createGain();
   const isAccent=beatIndex===0; osc.type=voice;
   osc.frequency.setValueAtTime(isAccent?2000:1200, time);
-  gain.gain.setValueAtTime(1, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
-  osc.connect(gain); gain.connect(audioCtx.destination);
-  osc.start(time); osc.stop(time + 0.1);
+  gain.gain.setValueAtTime(1, time); gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+  osc.connect(gain); gain.connect(audioCtx.destination); osc.start(time); osc.stop(time + 0.1);
 
-  // visual sinkron
   const dots=[...document.querySelectorAll('.dot')];
   const delayMs=Math.max(0,(time-(audioCtx.currentTime))*1000);
   setTimeout(()=>{ dots.forEach(d=>d.classList.remove('active')); if(dots[beatIndex]) dots[beatIndex].classList.add('active'); }, delayMs);
@@ -203,19 +228,12 @@ function scheduler(){ while(nextNoteTime < audioCtx.currentTime + scheduleAheadT
 function start(){
   if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
   isRunning=true; startStopBtn.textContent='Berhenti';
-  currentBeatIndex=0; nextNoteTime=audioCtx.currentTime + 0.02;
-  schedulerTimer=setInterval(scheduler, lookahead);
+  currentBeatIndex=0; nextNoteTime=audioCtx.currentTime + 0.02; schedulerTimer=setInterval(scheduler, lookahead);
 }
 function restartScheduler(){ if(isRunning){ stop(false); start(); } }
-function stop(updateBtn=true){
-  isRunning=false;
-  if(schedulerTimer) clearInterval(schedulerTimer);
-  if(updateBtn) startStopBtn.textContent='Mulai';
-}
+function stop(updateBtn=true){ isRunning=false; if(schedulerTimer) clearInterval(schedulerTimer); if(updateBtn) startStopBtn.textContent='Mulai'; }
 
-/* ====== Init ====== */
-buildBeats();
-setTempo(tempo);
+buildBeats(); setTempo(tempo);
 </script>
 </body>
 </html>
