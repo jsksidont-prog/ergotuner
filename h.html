@@ -1,28 +1,26 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="id">
 <head>
- <meta charset="utf-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>LIST CHORD</title>
- <style>
-body {
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  margin: 0;
-  padding: 30px 20px;
-  text-align: center;
-  color: #222;
-  background: 
-    linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.85)),
-    url("aurafarm.png") no-repeat center center;
-  background-size: cover;
-  background-attachment: fixed;
-  max-width: 650px;
-  margin: auto;
-}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIST CHORD</title>
+  <style>
+    body{
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      margin: 0;
+      padding: 30px 20px;
+      text-align: center;
+      color: #222;
+      background:
+        linear-gradient(rgba(255,255,255,0.75), rgba(255,255,255,0.85)),
+        url("aurafarm.png") no-repeat center center;
+      background-size: cover;
+      background-attachment: fixed;
+      max-width: 650px;
+      margin: auto;
+    }
 
-
-
-    h1 {
+    h1{
       text-align: center;
       font-size: 35px;
       margin-bottom: 25px;
@@ -31,10 +29,9 @@ body {
       margin-top: 50px;
       display: inline-block;
       font-family: Arial, Helvetica, sans-serif;
-      
     }
 
-    h2 {
+    h2{
       font-size: 35px;
       font-weight: bold;
       margin-bottom: 30px;
@@ -42,389 +39,320 @@ body {
       border: 4px solid #ccc;
       display: block;
       border-radius: 15px;
-
     }
-     
-    
+
     h3{
       font-size: 20px;
       margin-top: 30px;
       margin-bottom: 10px;
-      font-size: 20px;
     }
-     
 
+    .galeri{
+      display: flex;
+      justify-content: left;
+      gap: 35px;
+      flex-wrap: wrap;
+    }
+    .item{ width: 124px; text-align: center; }
+    .item img{
+      width: 100%;
+      height: auto;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .item img:hover{ transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-   
-   .galeri {
-     display: flex;
-     justify-content: left;
-     gap: 35px;
-     flex-wrap: wrap;
-   }
+    footer{
+      margin-top: 50px;
+      font-size: 15px;
+      color: #444;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
 
-   .item {
-     width: 124px;
-     text-align: center;
-    
-   }
+    .carichord{
+      left: 500px;
+      margin-top: 20px;
+      max-width: 650px;
+      margin: auto;
+    }
 
-   .item img {
-     width: 100%;
-     height: auto;
-     border: 2px solid #ccc;
-     border-radius: 6px;
-     transition: transform 0.2s, box-shadow 0.2s;
-   }
-   .item img:hover {
-     transform: scale(1.05);
-     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-   }
+    /* anim klik nada */
+    .laguklik{
+      position: fixed;
+      font-size: 40px;
+      animation: pop 1.2s ease-out forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    @keyframes pop{
+      0%{ transform: scale(0.5); opacity: 0; }
+      30%{ transform: scale(1.2); opacity: 1; }
+      100%{ transform: scale(1); opacity: 0; }
+    }
 
+    /* === HAMBURGER MENU === */
+    .hamburger-wrap{
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 1000; /* di atas konten lain */
+    }
+    .hamburger{
+      width:40px; height:32px;
+      background:#fff;
+      border:1px solid #ccc;
+      border-radius:6px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .hamburger .bar{
+      width:20px; height:2px; background:#000;
+      position:relative;
+    }
+    .hamburger .bar::before,
+    .hamburger .bar::after{
+      content:"";
+      position:absolute;
+      left:0; width:20px; height:2px; background:#000;
+    }
+    .hamburger .bar::before{ top:-6px; }
+    .hamburger .bar::after{ top:6px; }
 
-  
-   footer {
-     margin-top: 50px;
-     font-size: 15px;
-     color: #444;
-     text-align: center;
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     gap: 6px;
-     flex-wrap: wrap;
-   }
+    .overlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.4);
+      opacity:0; pointer-events:none;
+      transition:0.2s;
+      z-index: 900;
+    }
+    .overlay.show{ opacity:1; pointer-events:auto; }
 
-   .carichord{
-    
-    left: 500px;
-    margin-top: 20px;
-    max-width: 650px;
-    margin: auto;
-                         
-  .laguklik {
-    position: fixed;
-    font-size: 40px;
-    animation: pop 1.2s ease-out forwards;
-    pointer-events: none;
-    z-index: 9999;
-  }
+    .menu-panel{
+      position: fixed;
+      top: 0; left: 0;
+      width: 240px;
+      height: 100%;
+      background: #fff;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+      transform: translateX(-100%);
+      transition: 0.3s;
+      z-index: 950;
+      padding-top: 60px;
+      text-align: left;
+    }
+    .menu-panel.show{ transform: translateX(0); }
+    .menu-item{
+      display: block;
+      padding: 12px 18px;
+      text-decoration: none;
+      color: #000;
+      border-radius: 6px;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+    .menu-item:hover{ background:#f76c6c; color:#fff; }
 
-  @keyframes pop {
-    0% { transform: scale(0.5); opacity: 0; }
-    30% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 0; }
-  }
-
-   }
-
-
-
- </style>
+    /* tombol yang sudah ada */
+    #CHORD, #guide{
+      position:absolute; top:20px;
+      padding:10px 30px; border-radius:8px; border:0; cursor:pointer;
+      background-color:#4CAF50; color:#eee;
+    }
+    #CHORD{ left:60px; } /* geser dikit biar tak nabrak hamburger */
+    #guide{ right:10px; }
+  </style>
 </head>
 <body>
 
+  <!-- === HAMBURGER MENU (baru) === -->
+  <div class="hamburger-wrap">
+    <div class="hamburger" id="hambtn">
+      <span class="bar"></span>
+    </div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <nav id="menuPanel" class="menu-panel">
+    <a class="menu-item" href="index.html">Home</a>
+    <a class="menu-item" href="h.html">Chord</a>
+    <a class="menu-item" href="1312.html">Preset</a>
+    <a class="menu-item" href="metro.html">Metronom</a>
+    <a class="menu-item" href="TAB.html">Tab Maker</a>
+    <a class="menu-item" href="EQWEQWQWE1.html">Scale Guitar</a>
+    <a class="menu-item" href="coba.html">Progresi Chord</a>
+    <a class="menu-item" href="chatbot.html">ChatBot</a>
+    <a class="menu-item" href="https://craftpix.net/?s=FARM">Download my App</a>
+  </nav>
+  <!-- === /HAMBURGER MENU === -->
+
   <h1>LIST CHORD</h1>
-  
-</div>
-  <button id="CHORD" 
-  style="position:absolute;cursor: pointer; top:20px; left:10px;background-color:#4CAF50; color:#eee; border:0; padding:10px 30px; border-radius:8px;">
-  Tuner
-</button>
-
-<button id="guide" style="top: 20px;right: 10px; padding : 10px 30px ;border-radius: 8px;border:0 ;position: absolute;cursor: pointer; background-color: #4CAF50; color: #eee;"> guide</button>
 
   
-<div class="carichord" >
-
-  <input type="text" id="kawemose" placeholder="kawee chord ngoeng dau..." style="padding: 10px 25px; background-color: #ffffff;border-radius: 8px ;">
-  
-</div>
-
-<div style="margin-top: 100px;">
-  <H2>A</H2>
-  <h3 style="text-align: left; ">A MAJOR</h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="A.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="AM2.png" alt="Chord ">
-    </div>
-  </div>
-    
-  <h3 style="text-align: left; ">A MINOR</h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="AM.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="AM3.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="AM5.png" alt="Chord">
-    </div>
+  <div class="carichord">
+    <input type="text" id="kawemose" placeholder="kawee chord ngoeng dau..." style="padding: 10px 25px; background-color: #ffffff;border-radius: 8px ;">
   </div>
 
-      <div class="item">
-  </div>
-   <h3 style="text-align: left; ">A5</h3>
-  <div class="galeri">
-    <div class="item">
-      <img src="A5.png" alt="Chord ">
+  <div style="margin-top: 100px;">
+    <H2>A</H2>
+    <h3 style="text-align: left; ">A MAJOR</h3>
+    <div class="galeri">
+      <div class="item"><img src="A.png" alt="Chord "></div>
+      <div class="item"><img src="AM2.png" alt="Chord "></div>
     </div>
-    <div class="item">
-      <img src="A52.png" alt="Chord ">
+
+    <h3 style="text-align: left; ">A MINOR</h3>
+    <div class="galeri">
+      <div class="item"><img src="AM.png" alt="Chord "></div>
+      <div class="item"><img src="AM3.png" alt="Chord "></div>
+      <div class="item"><img src="AM5.png" alt="Chord"></div>
     </div>
-    <div class="item">
-      <img src="A53.png" alt="Chord">
+
+    <h3 style="text-align: left; ">A5</h3>
+    <div class="galeri">
+      <div class="item"><img src="A5.png" alt="Chord "></div>
+      <div class="item"><img src="A52.png" alt="Chord "></div>
+      <div class="item"><img src="A53.png" alt="Chord"></div>
     </div>
-  </div>
 
     <h3 style="text-align: left; ">A7</h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="A7.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="A72.png" alt="Chord ">
-    </div>
+    <div class="galeri">
+      <div class="item"><img src="A7.png" alt="Chord "></div>
+      <div class="item"><img src="A72.png" alt="Chord "></div>
     </div>
 
     <h3 style="text-align: left; ">A MAJOR 7 (Amaj7) / AM7</h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="AMAJ7.png" alt="Chord ">
+    <div class="galeri">
+      <div class="item"><img src="AMAJ7.png" alt="Chord "></div>
+      <div class="item"><img src="AMAJ72.png" alt="Chord "></div>
     </div>
-    <div class="item">
-      <img src="AMAJ72.png" alt="Chord ">
-    </div>
-    </div>
-    
+
     <h3 style="text-align: left; ">A MINOR 7 (Am7) </h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="AM7.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="AM71.png" alt="Chord ">
-    </div>
+    <div class="galeri">
+      <div class="item"><img src="AM7.png" alt="Chord "></div>
+      <div class="item"><img src="AM71.png" alt="Chord "></div>
     </div>
 
     <H2>A# / Bb</H2>
     <h3 style="text-align: left; "> A# & Bb </h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="Ax.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Axx.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Bb.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="Bb2.png" alt="Chord">
-    </div>
-
+    <div class="galeri">
+      <div class="item"><img src="Ax.png" alt="Chord "></div>
+      <div class="item"><img src="Axx.png" alt="Chord "></div>
+      <div class="item"><img src="Bb.png" alt="Chord"></div>
+      <div class="item"><img src="Bb2.png" alt="Chord"></div>
     </div>
 
     <h3 style="text-align: left; "> A#MINOR & BbMINOR </h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="AsharpM.png" alt="Chord ">
+    <div class="galeri">
+      <div class="item"><img src="AsharpM.png" alt="Chord "></div>
+      <div class="item"><img src="AsharpM2.png" alt="Chord "></div>
+      <div class="item"><img src="AsharpM3.png" alt="Chord"></div>
+      <div class="item"><img src="BbM1.png" alt="Chord"></div>
+      <div class="item"><img src="BBM2.png" alt="Chord"></div>
+      <div class="item"><img src="BbM3.png" alt="Chord"></div>
     </div>
-    <div class="item">
-      <img src="AsharpM2.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="AsharpM3.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="BbM1.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="BBM2.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="BbM3.png" alt="Chord">
-    </div>
-    </div>
-    
+
     <h3 style="text-align: left; "> A#5 & Bb5 </h3>
-  <div class="galeri">
-    <div class="item">
-      <img src="Asharp51.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Asharp52.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Asharp53.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="Bb51.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="Bb52.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="Bb53.png" alt="Chord">
-    </div>
+    <div class="galeri">
+      <div class="item"><img src="Asharp51.png" alt="Chord "></div>
+      <div class="item"><img src="Asharp52.png" alt="Chord "></div>
+      <div class="item"><img src="Asharp53.png" alt="Chord"></div>
+      <div class="item"><img src="Bb51.png" alt="Chord"></div>
+      <div class="item"><img src="Bb52.png" alt="Chord"></div>
+      <div class="item"><img src="Bb53.png" alt="Chord"></div>
     </div>
 
     <h3 style="text-align: left; "> A#7 & Bb7 </h3>
-  <div class="galeri">
-    <div class="item">
-      <img src="Asharp7.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Asharp72.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Bb7.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="Bb72.png" alt="Chord">
-    </div>
+    <div class="galeri">
+      <div class="item"><img src="Asharp7.png" alt="Chord "></div>
+      <div class="item"><img src="Asharp72.png" alt="Chord "></div>
+      <div class="item"><img src="Bb7.png" alt="Chord"></div>
+      <div class="item"><img src="Bb72.png" alt="Chord"></div>
     </div>
 
-  <h3 style="text-align: left; "> A#Maj7 & BbMaj7 </h3>
-  <div class="galeri">
-    <div class="item">
-      <img src="Asharpmaj7.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Asharpmaj71.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Asharpmaj72.png" alt="Chord">
-    </div>
-    <div class="item">
-      <img src="Bbmaj7.png" alt="Chord">
-    </div>
-        <div class="item">
-      <img src="Bbmaj72.png" alt="Chord">
-    </div>
-        <div class="item">
-      <img src="Bbmaj73.png" alt="Chord">
-    </div>
+    <h3 style="text-align: left; "> A#Maj7 & BbMaj7 </h3>
+    <div class="galeri">
+      <div class="item"><img src="Asharpmaj7.png" alt="Chord "></div>
+      <div class="item"><img src="Asharpmaj71.png" alt="Chord "></div>
+      <div class="item"><img src="Asharpmaj72.png" alt="Chord"></div>
+      <div class="item"><img src="Bbmaj7.png" alt="Chord"></div>
+      <div class="item"><img src="Bbmaj72.png" alt="Chord"></div>
+      <div class="item"><img src="Bbmaj73.png" alt="Chord"></div>
     </div>
 
-  <h3 style="text-align: left; "> A#m7 & Bbm7 </h3>
-  <div class="galeri">
-    <div class="item">
-      <img src="Asharpm7.png" alt="Chord ">
+    <h3 style="text-align: left; "> A#m7 & Bbm7 </h3>
+    <div class="galeri">
+      <div class="item"><img src="Asharpm7.png" alt="Chord "></div>
+      <div class="item"><img src="Asharpm72.png" alt="Chord "></div>
+      <div class="item"><img src="Bbm7.png" alt="Chord"></div>
+      <div class="item"><img src="Bbm72.png" alt="Chord"></div>
     </div>
-    <div class="item">
-      <img src="Asharpm72.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="Bbm7.png" alt="Chord">
-    </div>
-        <div class="item">
-      <img src="Bbm72.png" alt="Chord">
-    </div>
-    </div>
-  
+
     <H2>B</H2>
-  <h3 style="text-align: left; ">B MAJOR</h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="B.png" alt="Chord ">
-    </div>
-    <div class="item">
-      <img src="B2.png" alt="Chord ">
-    </div>
+    <h3 style="text-align: left; ">B MAJOR</h3>
+    <div class="galeri">
+      <div class="item"><img src="B.png" alt="Chord "></div>
+      <div class="item"><img src="B2.png" alt="Chord "></div>
     </div>
 
-      <h3 style="text-align: left; ">B MINOR</h3>
-  <div class="galeri" >
-    <div class="item">
-      <img src="BM.png" alt="Chord ">
+    <h3 style="text-align: left; ">B MINOR</h3>
+    <div class="galeri">
+      <div class="item"><img src="BM.png" alt="Chord "></div>
+      <div class="item"><img src="Bm2.png" alt="Chord "></div>
     </div>
-    <div class="item">
-      <img src="Bm2.png" alt="Chord ">
-    </div>
-    </div>
+  </div>
 
-    </div>
-    </div>
- 
   <footer>
-
-    
     <div style="width: 100%; display: flex; justify-content: center ;align-items:center;text-align: center;">
       <img  src="ERGOPANTEK.png" width="60" alt="Logo Ergo">
       <span style="font-weight:bold">© ERGOISME 2025</span>
     </div>
-
- 
-
-    <script async="async" data-cfasync="false" src="//pl27585344.revenuecpmgate.com/e874be7df9381615f960d86381dd7203/invoke.js"></script> <div id="container-e874be7df9381615f960d86381dd7203"></div>
-
-
+    <script async="async" data-cfasync="false" src="//pl27585344.revenuecpmgate.com/e874be7df9381615f960d86381dd7203/invoke.js"></script>
+    <div id="container-e874be7df9381615f960d86381dd7203"></div>
   </footer>
 
   <script>
-document.getElementById ("CHORD").onclick=function(){window.open("index.html","_blank")}
-document.getElementById ("guide").onclick=function(){window.open("1312.html","_blank")}
+   
+    var emo=["🎵","🎶","🎼"];
+    var lagu=[328,277,217,277,328,436, 551,489,436,277,313,335, 328,328,551,489,436,413, 366,413,436,436,331, 279,219];
+    var idx=0;
+    var ctx=new (window.AudioContext||window.webkitAudioContext)();
+    document.body.addEventListener("click",function(e){
+      if(e.target.tagName==="BUTTON") return;
+      var s=document.createElement("span");
+      s.className="laguklik";
+      s.innerText=emo[Math.floor(Math.random()*emo.length)];
+      s.style.left=e.clientX+"px";
+      s.style.top=e.clientY+"px";
+      document.body.appendChild(s);
+      setTimeout(function(){ s.remove(); },1200);
+      var f=lagu[idx]; playTone(f,0.6); idx++; if(idx>=lagu.length) idx=0;
+    });
+    function playTone(freq,dur){
+      var o=ctx.createOscillator();
+      var g=ctx.createGain();
+      o.type="square"; o.frequency.value=freq;
+      var now=ctx.currentTime;
+      g.gain.setValueAtTime(0.2,now);
+      g.gain.exponentialRampToValueAtTime(0.001,now+dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(now); o.stop(now+dur);
+    }
 
-var emo = ["🎵","🎶","🎼"];
-var lagu = [
-328,277,217,277,328,436, 
-551,489,436,277,313,335, 
-328,328,551,489,436,413, 
-366,413,436,436,331,
-279,219
-];
-
-var idx = 0;
-var ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-document.body.addEventListener("click", function(e){
-  if(e.target.tagName==="BUTTON") return;
-
-  var s = document.createElement("span");
-  s.className="note";
-  s.innerText = emo[Math.floor(Math.random()*emo.length)];
-  s.style.position="fixed";
-  s.style.left=e.clientX+"px";
-  s.style.top=e.clientY+"px";
-  s.style.fontSize=(20+Math.random()*40)+"px";
-  s.style.pointerEvents="none";
-  s.style.zIndex="9999";
-  s.style.animation="pop 1.2s ease-out forwards";
-
-  document.body.appendChild(s);
-  setTimeout(function(){ s.remove(); },1200);
-
-  var f = lagu[idx];
-  playTone(f,0.6);
-
-  idx++;
-  if(idx>=lagu.length) idx=0;
-});
-
-function playTone(freq,dur){
-  var o = ctx.createOscillator();
-  var g = ctx.createGain();
-  o.type="square";
-  o.frequency.value=freq;
-
-  var now = ctx.currentTime;
-  g.gain.setValueAtTime(0.2,now);
-  g.gain.exponentialRampToValueAtTime(0.001,now+dur);
-
-  o.connect(g);
-  g.connect(ctx.destination);
-
-  o.start(now);
-  o.stop(now+dur);
-}
+    /* === LOGIKA MENU HAMBURGER === */
+    const hambtn=document.getElementById('hambtn');
+    const menu=document.getElementById('menuPanel');
+    const overlay=document.getElementById('overlay');
+    if(hambtn && menu && overlay){
+      hambtn.onclick=()=>{ menu.classList.add('show'); overlay.classList.add('show'); };
+      overlay.onclick=()=>{ menu.classList.remove('show'); overlay.classList.remove('show'); };
+      document.addEventListener('keydown',(e)=>{ if(e.key==="Escape"){ menu.classList.remove('show'); overlay.classList.remove('show'); }});
+    }
   </script>
-
-
-
 </body>
 </html>
