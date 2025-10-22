@@ -16,50 +16,55 @@
   *{box-sizing:border-box}
   html,body{height:100%}
 
-.site-header {
-  padding: 14px 18px;
-  background: linear-gradient(180deg,#fff,rgba(255,255,255,.9));
-  border-bottom: 1px solid #e6e9f2;
-}
+  /* ==== HEADER & BRAND ==== */
+  .site-header {
+    padding: 14px 18px;
+    background: linear-gradient(180deg,#fff,rgba(255,255,255,.9));
+    border-bottom: 1px solid #e6e9f2;
+  }
 
-.brand{
-  display: flex;
-  align-items: center;
-  gap: 10px;                 
-  text-decoration: none;
-  color: inherit;
-}
+  .brand{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    margin: 0 auto;
+    max-width: 100%;
+  }
 
-.brand img{
-  height: clamp(28px, 4vw, 40px); 
-  width: auto;
-  object-fit: contain;
-  display: block;
-}
+  .brand img{
+    height: clamp(28px, 4vw, 40px);
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
 
-.site-header h1{
-  margin: 0;
-  font-size: clamp(18px, 2.4vw, 28px);
-  font-weight: 800;
-  letter-spacing: .4px;
-}
+  .site-header h1, header h1{
+    margin: 0;
+    font-size: clamp(18px, 2.4vw, 28px);
+    font-weight: 800;
+    letter-spacing: .4px;
+    text-align: center;
+  }
 
+  body {
+    margin: 0;
+    background: linear-gradient(rgba(255, 255, 255, 0.6)),
+                url("BGSC.jpg") no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: scroll;
+    color: #000000;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  }
 
-body {
-  margin: 0;
-  background: linear-gradient(rgba(255, 255, 255, 0.6)), 
-              url("BGSC.jpg") no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: scroll;
-  color: #000000;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-}
-
-  /* Header absolute */
+  /* Header absolute (centered) */
   header{
     position:absolute; inset:0 auto auto 0; width:100%; height:var(--headerH);
     padding:14px 18px;
     border-bottom:1px solid #e6e9f2; z-index:5;
+    display:flex; align-items:center; justify-content:center;
   }
   h1{margin:0 0 6px; font-size:clamp(18px,2.4vw,24px)}
   .sub{color:var(--sub); font-size:12.5px}
@@ -92,20 +97,102 @@ body {
   footer{padding:16px; color:var(--sub); font-size:12px}
 
   @media (max-width:900px){ .controls{grid-template-columns:1fr 1fr} :root{--headerH:86px} }
+
+  /* ===== HAMBURGER MENU (copy persis) ===== */
+  .hamburger-wrap{
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 60;
+  }
+  .hamburger{
+    width:40px; height:32px;
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .hamburger .bar{
+    width:20px; height:2px; background:#000;
+    position:relative;
+  }
+  .hamburger .bar::before,
+  .hamburger .bar::after{
+    content:"";
+    position:absolute;
+    left:0; width:20px; height:2px; background:#000;
+  }
+  .hamburger .bar::before{ top:-6px; }
+  .hamburger .bar::after{ top:6px; }
+
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.4);
+    opacity:0; pointer-events:none;
+    transition:0.2s;
+    z-index:50;
+  }
+  .overlay.show{ opacity:1; pointer-events:auto; }
+
+  .menu-panel{
+    position: fixed;
+    top: 0; left: 0;
+    width:220px;
+    height:100%;
+    background:#fff;
+    box-shadow:2px 0 10px rgba(0,0,0,0.3);
+    transform:translateX(-100%);
+    transition:0.3s;
+    z-index:55;
+    padding-top:60px;
+    text-align:left;
+  }
+  .menu-panel.show{ transform:translateX(0); }
+  .menu-item{
+    display:block;
+    padding:12px 18px;
+    text-decoration:none;
+    color:#000;
+    border-radius:6px;
+    transition:0.3s;
+    font-size:16px;
+  }
+  .menu-item:hover{ background:#f76c6c; color:#fff; }
 </style>
 </head>
 <body>
+
+<!-- ====== HAMBURGER UI (copy persis) ====== -->
+<div class="hamburger-wrap">
+  <div class="hamburger" id="hambtn">
+    <span class="bar"></span>
+  </div>
+</div>
+<div class="overlay" id="overlay"></div>
+<nav id="menuPanel" class="menu-panel">
+  <a class="menu-item" href="index.html">Home</a>
+  <a class="menu-item" href="h.html">Chord</a>
+  <a class="menu-item" href="1312.html">Preset</a>
+  <a class="menu-item" href="metro.html">Metronom</a>
+  <a class="menu-item" href="TAB.html">Tab Maker</a>
+  <a class="menu-item" href="EQWEQWQWE1.html">Scale Guitar</a>
+  <a class="menu-item" href="coba.html">Progresi Chord</a>
+  <a class="menu-item" href="chatbot.html">ChatBot</a>
+  <a class="menu-item" href="https://craftpix.net/?s=FARM">Download my App</a>
+</nav>
+<!-- ====== /HAMBURGER UI ====== -->
+
 <header>
-   <div class="brand">
+   <a class="brand" href="#" aria-label="ERGOSCALE Home">
     <img
-      src="ERGOPANTEK.png"          
+      src="ERGOPANTEK.png"
       alt="ERGOSCALE logo"
       width="40" height="40"
       loading="eager" fetchpriority="high"
     />
     <h1>ERGOSCALE</h1>
-  </div>
-
+  </a>
 </header>
 <div class="header-spacer"></div>
 
@@ -149,21 +236,6 @@ body {
         <input id="custom" type="text" placeholder="E2,A2,D3,G3,B3,E4" />
       </div>
 
-      <!-- Jendela manual -->
-      <div class="field">
-        <label for="startFret">Mulai fret</label>
-        <input id="startFret" type="number" min="0" max="24" step="1" value="0"/>
-      </div>
-      <div class="field">
-        <label for="span">Lebar (frets)</label>
-        <select id="span">
-          <option value="4" selected>4</option>
-          <option value="5">5</option>
-          <option value="7">7</option>
-          <option value="12">12</option>
-        </select>
-      </div>
-
       <!-- CAGED -->
       <div class="field">
         <label for="cagedMode">Mode CAGED</label>
@@ -176,25 +248,16 @@ body {
           <option value="D">D shape</option>
         </select>
       </div>
-      <div class="field">
-        <label for="cagedFollow">Penjajaran</label>
-        <select id="cagedFollow" title="Bagaimana box disejajarkan">
-          <option value="nearest" selected>Ke root terdekat</option>
-          <option value="lowest">Ke root terendah</option>
-        </select>
-      </div>
 
-      <!-- Toggles yang dipakai -->
+      <!-- Toggles -->
       <div class="toggles" style="grid-column:1/-1">
         <label class="toggle"><input id="showNotes" type="checkbox" checked/> Tampilkan nama nada</label>
         <label class="toggle"><input id="octaveDots" type="checkbox" checked/> Dots posisi 3/5/7/9/12…</label>
-        <label class="toggle"><input id="windowOnly" type="checkbox"/> Fokus area saja</label>
         <label class="toggle"><input id="audio" type="checkbox" checked/> Bunyi saat klik</label>
       </div>
 
       <div class="actions" style="grid-column:1/-1">
         <button id="downloadPNG">Unduh PNG</button>
-        <!-- Reset jadi ikon stopwatch -->
         <button id="reset" class="btn-icon" title="Reset">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M7 2h10v2H7zM12 6a8 8 0 1 1-8 8h2a6 6 0 1 0 6-6v2l-4-3 4-3v2z" fill="currentColor"/>
@@ -210,14 +273,19 @@ body {
     <div class="legend">
       <span class="chip"><span class="dot dot-root"></span> Root</span>
       <span class="chip"><span class="dot dot-scale"></span> Nada scale</span>
-      <span class="chip muted">Klik nada = bunyi (jika aktif)</span>
     </div>
   </section>
 </div>
 
-
-
 <script>
+/* ===== HAMBURGER LOGIC (copy persis) ===== */
+const hambtn = document.getElementById('hambtn');
+const menu = document.getElementById('menuPanel');
+const overlay = document.getElementById('overlay');
+hambtn.onclick = ()=>{ menu.classList.add('show'); overlay.classList.add('show'); };
+overlay.onclick = ()=>{ menu.classList.remove('show'); overlay.classList.remove('show'); };
+document.addEventListener('keydown',(e)=>{ if(e.key==="Escape"){ menu.classList.remove('show'); overlay.classList.remove('show'); }});
+
 /* ===== Teori ===== */
 const NOTE_NAMES_SHARP=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const NOTE_NAMES_FLAT =["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
@@ -262,11 +330,7 @@ const els={
   custom:document.getElementById('custom'),
   showNotes:document.getElementById('showNotes'),
   dots:document.getElementById('octaveDots'),
-  windowOnly:document.getElementById('windowOnly'),
-  startFret:document.getElementById('startFret'),
-  span:document.getElementById('span'),
   cagedMode:document.getElementById('cagedMode'),
-  cagedFollow:document.getElementById('cagedFollow'),
   board:document.getElementById('fretboard'),
   download:document.getElementById('downloadPNG'),
   reset:document.getElementById('reset'),
@@ -309,11 +373,8 @@ els.frets.addEventListener('input',()=>{els.fretCount.textContent=els.frets.valu
 ["acc","scale","root"].forEach(k=>els[k].addEventListener('change',render));
 els.tuning.addEventListener('change',()=>{els.customBox.style.display=els.tuning.value==="CUSTOM"?"":"none"; render();});
 els.custom.addEventListener('change',render);
-["showNotes","dots","windowOnly","audio"].forEach(id=>els[id].addEventListener('change',render));
-els.startFret.addEventListener('input',render);
-els.span.addEventListener('change',render);
+["showNotes","dots","audio"].forEach(id=>els[id].addEventListener('change',render));
 els.cagedMode.addEventListener('change',render);
-els.cagedFollow.addEventListener('change',render);
 els.download.addEventListener('click',downloadPNG);
 els.reset.addEventListener('click', resetAll);
 
@@ -322,8 +383,8 @@ function resetAll(){
   els.root.value="C"; els.acc.value="sharp"; els.scale.value="Major (Ionian)";
   els.frets.value=24; els.fretCount.textContent="24";
   els.tuning.value="E2,A2,D3,G3,B3,E4"; els.customBox.style.display="none"; els.custom.value="";
-  els.showNotes.checked=true; els.dots.checked=true; els.windowOnly.checked=false; els.audio.checked=true;
-  els.startFret.value=0; els.span.value=4; els.cagedMode.value="off"; els.cagedFollow.value="nearest";
+  els.showNotes.checked=true; els.dots.checked=true; els.audio.checked=true;
+  els.cagedMode.value="off";
   els.board.scrollLeft = 0; els.board.replaceChildren();
   render(true);
 }
@@ -337,7 +398,6 @@ const CAGED_INFO = {
 };
 
 function findRootFretsOnString(stringNo, tuningMIDIs, rootIdx, maxFret){
-
   const sIdx = stringNo-1;
   const open = tuningMIDIs.slice().reverse()[sIdx];
   const list=[];
@@ -349,30 +409,23 @@ function findRootFretsOnString(stringNo, tuningMIDIs, rootIdx, maxFret){
 }
 
 function render(forceTop=false){
-  const useSharps=els.acc.value==="sharp";
-  const names=useSharps?NOTE_NAMES_SHARP:NOTE_NAMES_FLAT;
   const rootIdx=parseNoteName(els.root.value);
-  const pattern=SCALES[els.scale.value];
   const fretCount=+els.frets.value;
 
-  let start=Math.max(0, Math.min(24, +els.startFret.value||0));
-  let span =+els.span.value;
+  let start = 0;
+  let span  = fretCount;
 
+  // Jika CAGED ON: highlight box pakai root terendah dari string acuan
   const caged = els.cagedMode.value;
   let cagedCenterFret = null;
   if(caged !== "off"){
     const info = CAGED_INFO[caged];
     const rootFrets = findRootFretsOnString(info.rootString, currentTuning(), rootIdx, fretCount);
     if(rootFrets.length){
-      const method = els.cagedFollow.value;
-      if(method==="lowest") cagedCenterFret = rootFrets[0];
-      else {
- 
-        const target = start;
-        cagedCenterFret = rootFrets.reduce((a,b)=> Math.abs(b-target)<Math.abs(a-target)? b:a, rootFrets[0]);
-      }
+      const lowest = rootFrets[0];          // root terendah
       span = info.span;
-      start = Math.max(0, Math.min(fretCount, Math.round(cagedCenterFret - Math.floor(span/2))));
+      cagedCenterFret = lowest;
+      start = Math.max(0, Math.min(fretCount, Math.round(lowest - Math.floor(span/2))));
     }
   }
   const end  = Math.min(fretCount, start+span);
@@ -392,31 +445,36 @@ function render(forceTop=false){
 
   svg.appendChild(rect(0,0,width,height,14,14,"#ffffff"));
 
+  // strings
   for(let s=0;s<strings;s++){
     const y=padY+gapY*s;
     svg.appendChild(lineEl(padX,y,width-padX+8,y,'var(--string)',2+(s)*0.25));
   }
+  // nut
   svg.appendChild(rect(padX - cellW/2, padY - 16, 8, height - (padY*2) + 32, 4,4,"#cfd6e5",0.6));
+  // frets
   for(let f=1; f<=fretCount; f++){
     const x=padX+cellW*f - cellW/2;
     svg.appendChild(lineEl(x,padY-12,x,height-padY+12,'var(--fret)',2));
   }
 
+  // number labels
   for(let f=0; f<=fretCount; f++){
     const x=padX+cellW*f; textEl(String(f),x,height-4,10,'middle','var(--sub)');
   }
-  // label 1–6 kiri
   for(let s=0;s<strings;s++){
     const y=padY+gapY*s; textEl(String(s+1), padX - cellW*0.65, y+1, 13, 'middle', '#0f1220', true);
   }
 
-  // highlight window (manual atau CAGED)
-  const xStart=padX+cellW*start - cellW/2;
-  const w=cellW*(end-start+1);
-  svg.appendChild(rect(xStart, padY-gapY*0.95, w, gapY*(strings-1)+gapY*1.9, 10,10, caged!=="off" ? "#4caf5025" : "#ffc10722", 1));
-  const edgeColor = caged!=="off" ? "#2e7d32" : "#ffb300";
-  svg.appendChild(lineEl(xStart,   padY-14, xStart,   height-padY+14, edgeColor, 2));
-  svg.appendChild(lineEl(xStart+w, padY-14, xStart+w, height-padY+14, edgeColor, 2));
+  // highlight window (hanya tampil bila CAGED aktif; kalau off biarkan penuh)
+  if(caged!=="off" && cagedCenterFret!=null){
+    const xStart=padX+cellW*start - cellW/2;
+    const w=cellW*(end-start+1);
+    svg.appendChild(rect(xStart, padY-gapY*0.95, w, gapY*(strings-1)+gapY*1.9, 10,10, "#4caf5025", 1));
+    const edgeColor = "#2e7d32";
+    svg.appendChild(lineEl(xStart,   padY-14, xStart,   height-padY+14, edgeColor, 2));
+    svg.appendChild(lineEl(xStart+w, padY-14, xStart+w, height-padY+14, edgeColor, 2));
+  }
 
   // dots (inlay)
   const markers=els.dots.checked?[3,5,7,9,12,15,17,19,21,24]:[];
@@ -424,13 +482,10 @@ function render(forceTop=false){
     dot(x,y,r,'var(--dot)',.25); if(f%12===0){ dot(x,y-gapY*0.9,4,'var(--dot)',.25); dot(x,y+gapY*0.9,4,'var(--dot)',.25); }
   });
 
-  // scale notes
+  // scale notes (selalu tampil di seluruh fretboard)
   const scaleSet=new Set(SCALES[els.scale.value].map(x=>mod(rootIdx+x,12)));
-  const onlyWindow=els.windowOnly.checked;
   matrix.forEach((row,sIndex)=>{
     row.forEach(cell=>{
-      const inRange = cell.fret>=start && cell.fret<=end;
-      if(onlyWindow && !inRange) return;
       if(!scaleSet.has(cell.pitch)) return;
       const x=padX+cellW*cell.fret; const y=padY+gapY*sIndex;
       const isRoot=(cell.pitch===rootIdx);
@@ -448,23 +503,30 @@ function render(forceTop=false){
     });
   });
 
-  // bila CAGED aktif: beri label di atas box + mark root yg dipakai
+  // Label CAGED + titik root acuan
   if(caged!=="off" && cagedCenterFret!=null){
+    const info = CAGED_INFO[caged];
+    const xStart=padX+cellW*start - cellW/2;
+    const w=cellW*(end-start+1);
     const labelX = xStart + w/2;
     textEl(`CAGED: ${caged} shape`, labelX, padY-26, 12, 'middle', '#2e7d32', true);
-    // titik root kecil di string yang relevan (visual)
-    const rs = CAGED_INFO[caged].rootString; // 1..6
-    const y = padY + (rs-1) * (narrow?44:58);
+    const rs = info.rootString;
+    const narrowGap = (window.matchMedia("(max-width:520px)").matches?44:58);
+    const y = padY + (rs-1) * narrowGap;
     const rx = padX + cellW * cagedCenterFret;
     dot(rx, y, 6, '#2e7d32', 1, true);
   }
 
   els.board.replaceChildren(svg);
 
-  // autoscroll
-  requestAnimationFrame(()=>{
-    els.board.scrollLeft = forceTop ? 0 : Math.max(0, xStart - els.board.clientWidth/2 + w/2);
-  });
+  // autoscroll: kalau CAGED aktif, scroll ke box; jika tidak, tetap di kiri
+  if(caged!=="off"){
+    const xStart=padX+cellW*start - cellW/2;
+    const w=cellW*(end-start+1);
+    requestAnimationFrame(()=>{ els.board.scrollLeft = Math.max(0, xStart - els.board.clientWidth/2 + w/2); });
+  } else if(forceTop){
+    requestAnimationFrame(()=>{ els.board.scrollLeft = 0; });
+  }
 
   /* Helpers */
   function rect(x,y,w,h,rx=0,ry=0,fill='#fff',opacity=1){
@@ -495,18 +557,57 @@ function render(forceTop=false){
   }
 }
 
-/* Unduh PNG dari SVG */
+/* Unduh PNG dari SVG — resolve var(--color) jadi nilai actual agar warna ikut tersimpan */
 function downloadPNG(){
-  const svg=document.querySelector('#fretboard svg'); if(!svg) return;
-  const xml=new XMLSerializer().serializeToString(svg);
-  const blob=new Blob([xml],{type:'image/svg+xml;charset=utf-8'}); const url=URL.createObjectURL(blob);
+  const svg=document.querySelector('#fretboard svg');
+  if(!svg) return;
+
+  const cloned = svg.cloneNode(true);
+
+  // Helper ambil nilai CSS var dari :root
+  const cssVal = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#000';
+
+  // Resolve var() jika atribut fill/stroke bernilai var(--xxx)
+  const resolveVarsInAttr = (el, attr) => {
+    const val = el.getAttribute(attr);
+    if(!val) return;
+    const m = val.match(/^var\((--[a-zA-Z0-9_-]+)\)\s*$/);
+    if(m){
+      const color = cssVal(m[1]);
+      el.setAttribute(attr, color);
+    }
+  };
+
+  cloned.querySelectorAll('*').forEach(el=>{
+    resolveVarsInAttr(el,'fill');
+    resolveVarsInAttr(el,'stroke');
+  });
+
+  const marker = cssVal('--marker') || '#ffffff';
+
+  const xml=new XMLSerializer().serializeToString(cloned);
+  const blob=new Blob([xml],{type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+
   const img=new Image();
   img.onload=function(){
-    const canvas=document.createElement('canvas'); const box=svg.viewBox.baseVal;
-    canvas.width=box.width; canvas.height=box.height; const ctx=canvas.getContext('2d');
-    ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--marker')||'#fff';
-    ctx.fillRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0);
-    canvas.toBlob(b=>{const a=document.createElement('a'); a.download=`fretboard_${Date.now()}.png`; a.href=URL.createObjectURL(b); a.click(); URL.revokeObjectURL(a.href);});
+    const box = cloned.viewBox.baseVal;
+    const canvas=document.createElement('canvas');
+    canvas.width=box.width;
+    canvas.height=box.height;
+    const ctx=canvas.getContext('2d');
+
+    ctx.fillStyle=marker;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img,0,0);
+
+    canvas.toBlob(b=>{
+      const a=document.createElement('a');
+      a.download=`fretboard_${Date.now()}.png`;
+      a.href=URL.createObjectURL(b);
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
     URL.revokeObjectURL(url);
   };
   img.src=url;
