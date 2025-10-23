@@ -93,7 +93,6 @@
     .codebox{ position:relative; border:1px solid var(--ring); border-radius:12px; overflow:hidden; background:#0d1117; }
     .codebox-header{ display:flex; align-items:center; gap:10px; padding:8px 10px; font-size:12px; color:#c9d1d9;
       background:#0b0f14; border-bottom:1px solid #1f2937; }
-    .codebox-lang{ opacity:.8; }
     .codebox pre{ margin:0; padding:12px 14px; }
     .codebox pre code{ font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color:#c9d1d9; }
 
@@ -117,6 +116,9 @@
     .copy-btn{ border:1px solid var(--ring); background:#fff; color: var(--text); padding:6px 10px; border-radius:8px; font-size:12px; cursor:pointer; }
     .copy-btn:active{ transform:scale(.98); }
     @media (max-width:640px){ .copy-actions{ max-width:92%; } }
+
+    /* === Tambahan: gaya gambar di bubble === */
+    .bubble img{ max-width:100%; height:auto; border-radius:12px; display:block; }
   </style>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
@@ -164,8 +166,6 @@
         <div class="row">
           <button id="goHomeBtn" class="ghost" type="button">Home</button>
         </div>
-
-        <!-- (tidak ada input API key) -->
 
         <div class="section-title">Model</div>
         <select id="model">
@@ -215,12 +215,26 @@
       'AIzaSyAJd0TpdhTHyfG4FvWMeKZB4jNoQp5gsXc'
     ];
     function pickKey(){ return API_KEYS[Math.floor(Math.random()*API_KEYS.length)]; }
-    const BASE_SYS = 'kamu adalah Ergo ai';
+
+    /* 🔧 SYSTEM PROMPT DEFAULT */
+    const BASE_SYS = 'kamu adalah Ergo ai. kamu dibuat oleh ergo company';
 
     // ---------- State ----------
     const chatEl = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
+
+    // ====== Easter egg config & helper ======
+    // Hanya cocok jika input tepat "mbulks" (boleh ada spasi di kiri/kanan), case-insensitive.
+    const EASTER_EGG_REGEX = /^\s*mbulks\s*$/i;
+    function addImageBubble(src, alt='mbulks'){
+      const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = 'ERGO AI';
+      const b = document.createElement('div'); b.className = 'bubble bot';
+      b.innerHTML = `<img src="${src}" alt="${alt}">`;
+      chatEl.appendChild(meta); chatEl.appendChild(b);
+      attachCopyButton(b);
+      b.scrollIntoView({ behavior:'smooth', block:'end' });
+    }
 
     // Drawer
     const drawer = document.getElementById('drawer');
@@ -342,7 +356,6 @@
 
     // ---------- API Helpers (v1 → v1beta) ----------
     async function apiGet(path){
-      // gunakan key acak juga untuk operasi "sync models"
       const KEY = pickKey();
       const versions=['v1','v1beta']; let lastErr;
       for(const v of versions){
@@ -354,10 +367,11 @@
       } throw lastErr;
     }
     async function apiPostGenerateContent(modelName, baseContents, sysText){
-      // pilih 1 key RANDOM tiap kali kirim chat
       const KEY = pickKey();
       const versions = ['v1','v1beta']; let lastErr;
-      const sysParts = [{ text: BASE_SYS }]; if (sysText && sysText.trim()) sysParts.push({ text: sysText.trim() });
+      const sysParts = [{ text: BASE_SYS }];         // default SP
+      if (sysText && sysText.trim()) sysParts.push({ text: sysText.trim() }); // tambahan dari UI
+
       for(const v of versions){
         try{
           const url = `https://generativelanguage.googleapis.com/${v}/models/${encodeURIComponent(modelName)}:generateContent?key=${encodeURIComponent(KEY)}`;
@@ -422,9 +436,24 @@
       }catch(e){ console.error(e); addBubble('Gagal mengambil daftar model: '+e.message,'bot'); }
     }
 
+    // ========== KIRIM PESAN (dengan easter egg) ==========
     async function send(){
       const text = userInput.value.trim(); if(!text) return;
       userInput.value=''; sendBtn.disabled=true; addBubble(text,'me'); addTyping();
+
+      // === EASTER EGG: hanya jika input tepat "mbulks"
+      if (EASTER_EGG_REGEX.test(text)) {
+        removeTyping();
+        addImageBubble('./mbulks.jpg', 'mbulks');
+        contents.push({role:'user',  parts:[{text:text}]});
+        contents.push({role:'model', parts:[{text:'[Easter egg: tampilkan mbulks.jpg]'}]});
+        userInput.style.height = '';
+        syncToolHeight();
+        sendBtn.disabled=false; userInput.focus();
+        return; // stop di sini
+      }
+
+      // === Default: panggil Gemini ===
       try{
         const json = await callGemini(text); removeTyping();
         const reply =
