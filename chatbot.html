@@ -216,6 +216,9 @@
     /* 🔧 SYSTEM PROMPT DEFAULT */
     const BASE_SYS = 'kamu adalah Ergo ai. kamu dibuat oleh ergo company';
 
+    /* 🔒 MODEL DEFAULT (tidak disimpan di localStorage) */
+    const DEFAULT_MODEL = 'gemini-2.5-flash'; // Ergo Ai v2.5, selalu dipakai saat load
+
     // ---------- State ----------
     const chatEl = document.getElementById('chat');
     const userInput = document.getElementById('userInput');
@@ -245,8 +248,7 @@
     const newChatBtn = document.getElementById('newChatBtn');
     const goHomeBtn = document.getElementById('goHomeBtn');
 
-    // localStorage keys (model & system prompt)
-    const LS_MODEL = 'gemini_model';
+    // localStorage keys (HANYA system prompt)
     const LS_SYS   = 'gemini_system_prompt';
 
     const contents = [];
@@ -260,14 +262,18 @@
 
     // ---------- Prefs ----------
     function loadPrefs(){
-      const m = localStorage.getItem(LS_MODEL) || 'gemini-2.5-flash';
+      // Paksa gunakan model default & kunci dropdown (agar user tak mengubah)
+      modelSelect.value = DEFAULT_MODEL;
+      modelSelect.disabled = true;
+
+      // System prompt masih boleh diambil dari localStorage
       const s = localStorage.getItem(LS_SYS) || '';
-      modelSelect.value = m; systemPromptEl.value = s;
+      systemPromptEl.value = s;
     }
     function savePrefs(){
-      localStorage.setItem(LS_MODEL, modelSelect.value);
+      // ❗ Tidak menyimpan model ke localStorage
       localStorage.setItem(LS_SYS, systemPromptEl.value.trim());
-      toast('Model & System Prompt disimpan.');
+      toast('System Prompt disimpan.');
     }
     function toast(msg){ console.log(msg); }
 
@@ -386,7 +392,7 @@
     userInput.addEventListener('input', autoGrow);
 
     // ---------- Gemini call ----------
-    function getModelName(){ return (localStorage.getItem(LS_MODEL) || modelSelect.value).trim(); }
+    function getModelName(){ return DEFAULT_MODEL; } // selalu v2.5 (tanpa localStorage)
     async function callGemini(prompt){
       const model = getModelName();
       const sysText = (localStorage.getItem(LS_SYS) || '').trim();
