@@ -173,13 +173,10 @@
           <option value="gemini-1.5-flash-latest">Ergo Ai v1.5</option>
           <option value="gemini-1.5-pro-latest">Ergo Ai latest version</option>
         </select>
-        <div class="row" style="margin-top:8px">
-          <button id="syncModelsBtn" class="ghost" type="button">Sync Models</button>
-        </div>
 
         <div class="section-title">System Prompt</div>
         <textarea id="systemPrompt" placeholder="isi style"></textarea>
-        <div class="row" style="margin-top:8px">
+        <div class="row" style="margin-top:8px;">
           <button id="applySysBtn" class="primary" type="button">Terapkan</button>
         </div>
 
@@ -225,7 +222,6 @@
     const sendBtn = document.getElementById('sendBtn');
 
     // ====== Easter egg config & helper ======
-    // Hanya cocok jika input tepat "mbulks" (boleh ada spasi di kiri/kanan), case-insensitive.
     const EASTER_EGG_REGEX = /^\s*mbulks\s*$/i;
     function addImageBubble(src, alt='mbulks'){
       const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = 'ERGO AI';
@@ -244,7 +240,6 @@
 
     // Settings (tanpa API key)
     const modelSelect = document.getElementById('model');
-    const syncBtn = document.getElementById('syncModelsBtn');
     const systemPromptEl = document.getElementById('systemPrompt');
     const applySysBtn = document.getElementById('applySysBtn');
     const newChatBtn = document.getElementById('newChatBtn');
@@ -354,23 +349,12 @@
     }
     function removeTyping(){ const el=document.getElementById('typing'); if(el){ el.previousSibling?.remove(); el.remove(); } }
 
-    // ---------- API Helpers (v1 → v1beta) ----------
-    async function apiGet(path){
-      const KEY = pickKey();
-      const versions=['v1','v1beta']; let lastErr;
-      for(const v of versions){
-        try{
-          const url=`https://generativelanguage.googleapis.com/${v}/${path}${path.includes('?')?'&':'?'}key=${encodeURIComponent(KEY)}`;
-          const res=await fetch(url); if(!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
-          return await res.json();
-        }catch(e){ lastErr=e; }
-      } throw lastErr;
-    }
+    // ---------- API Helpers (POST generate only) ----------
     async function apiPostGenerateContent(modelName, baseContents, sysText){
       const KEY = pickKey();
       const versions = ['v1','v1beta']; let lastErr;
-      const sysParts = [{ text: BASE_SYS }];         // default SP
-      if (sysText && sysText.trim()) sysParts.push({ text: sysText.trim() }); // tambahan dari UI
+      const sysParts = [{ text: BASE_SYS }];
+      if (sysText && sysText.trim()) sysParts.push({ text: sysText.trim() });
 
       for(const v of versions){
         try{
@@ -410,38 +394,11 @@
       return apiPostGenerateContent(model, base, sysText);
     }
 
-    // ---------- Sync models ----------
-    async function syncModels(){
-      try{
-        const data = await apiGet('models');
-        const list = (data.models||[]).filter(m=> (m?.supportedGenerationMethods||[]).includes('generateContent'));
-        if(list.length){
-          modelSelect.innerHTML='';
-          list.sort((a,b)=>{
-            const an=a.name||'', bn=b.name||'';
-            const aVer=+(an.match(/(\d+\.\d+)/)?.[1] || 0), bVer=+(bn.match(/(\d+\.\d+)/)?.[1] || 0);
-            if(bVer!==aVer) return bVer-aVer;
-            const aLatest=an.includes('-latest')?1:0, bLatest=bn.includes('-latest')?1:0;
-            if(bLatest!==aLatest) return bLatest-aLatest;
-            return an.localeCompare(bn);
-          });
-          for(const m of list){
-            const opt=document.createElement('option'); opt.value=m.name; opt.textContent=m.name; modelSelect.appendChild(opt);
-          }
-          localStorage.setItem(LS_MODEL, modelSelect.value);
-          addBubble('Daftar model diperbarui. Dipilih: '+modelSelect.value,'bot');
-        }else{
-          addBubble('Tidak ada model yang mendukung generateContent dari ListModels.','bot');
-        }
-      }catch(e){ console.error(e); addBubble('Gagal mengambil daftar model: '+e.message,'bot'); }
-    }
-
     // ========== KIRIM PESAN (dengan easter egg) ==========
     async function send(){
       const text = userInput.value.trim(); if(!text) return;
       userInput.value=''; sendBtn.disabled=true; addBubble(text,'me'); addTyping();
 
-      // === EASTER EGG: hanya jika input tepat "mbulks"
       if (EASTER_EGG_REGEX.test(text)) {
         removeTyping();
         addImageBubble('./mbulks.jpg', 'mbulks');
@@ -450,10 +407,9 @@
         userInput.style.height = '';
         syncToolHeight();
         sendBtn.disabled=false; userInput.focus();
-        return; // stop di sini
+        return;
       }
 
-      // === Default: panggil Gemini ===
       try{
         const json = await callGemini(text); removeTyping();
         const reply =
@@ -484,7 +440,6 @@
     // ---------- Events ----------
     userInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }});
     sendBtn.addEventListener('click', send);
-    syncBtn.addEventListener('click', syncModels);
     applySysBtn.addEventListener('click', applySystemPrompt);
     newChatBtn.addEventListener('click', ()=>{ newChat(); closeDrawer(); });
     goHomeBtn.addEventListener('click', () => { closeDrawer(); window.location.href = 'index.html'; });
